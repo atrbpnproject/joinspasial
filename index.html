@@ -1,0 +1,1039 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Join Buku Tanah</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: satu kolom kerja berurutan (data → pencocokan → atribut → hasil → unduh), lebar terbatas, tabel menggulir di wadahnya sendiri */
+:root{
+  --paper:#F4F6F3; --surface:#FFFFFF; --sunken:#EBEFEB; --ink:#16211E; --muted:#596661; --line:#D7DED9;
+  --accent:#0E6A5B; --accent-soft:#DCEFEA; --on-accent:#FFFFFF;
+  --ochre:#9A6412; --ochre-soft:#F6EBD6; --bad:#B42318; --bad-soft:#FBE5E2; --good:#1D7440; --good-soft:#DFF2E5;
+  --f-display:"Archivo","Segoe UI",system-ui,sans-serif; --f-body:"Public Sans","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0E1412; --surface:#151D1A; --sunken:#1B2521; --ink:#E4EBE8; --muted:#94A39D; --line:#28342F;
+  --accent:#43B9A2; --accent-soft:#16332D; --on-accent:#08201B;
+  --ochre:#E2A947; --ochre-soft:#3A2C12; --bad:#F2806F; --bad-soft:#3D1A16; --good:#62CC8E; --good-soft:#15301F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0E1412; --surface:#151D1A; --sunken:#1B2521; --ink:#E4EBE8; --muted:#94A39D; --line:#28342F;
+  --accent:#43B9A2; --accent-soft:#16332D; --on-accent:#08201B;
+  --ochre:#E2A947; --ochre-soft:#3A2C12; --bad:#F2806F; --bad-soft:#3D1A16; --good:#62CC8E; --good-soft:#15301F; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:30px;font-weight:700}
+h2{font-size:19px;font-weight:600;display:flex;align-items:baseline;gap:10px}
+h2 .n{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:500}
+h3{font-size:14px;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:.92em}
+.small{font-size:13px}
+header{display:flex;flex-direction:column;gap:10px}
+header .lede{max-width:70ch;color:var(--muted)}
+.key{display:flex;flex-wrap:wrap;gap:0;font-family:var(--f-mono);margin-top:6px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);width:fit-content;max-width:100%;overflow:hidden}
+.key span{display:flex;flex-direction:column;padding:7px 12px;border-right:1px solid var(--line)}
+.key span:last-child{border-right:0}
+.key b{font-weight:500;font-size:15px}
+.key i{font-style:normal;font-family:var(--f-body);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.key .hl b{color:var(--accent)}
+section.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--sunken);transition:border-color .15s,background .15s;min-width:0}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop .hint{font-size:13px;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,.btn{font:inherit;font-weight:500;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 13px;cursor:pointer;line-height:1.3}
+button:hover{border-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.primary:hover{filter:brightness(1.07)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted);padding-inline:8px}
+button.ghost:hover{color:var(--ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+select,input[type=text]{font:inherit;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 8px;min-width:0}
+input[type=text].mono{font-family:var(--f-mono)}
+input.err{border-color:var(--bad);background:var(--bad-soft)}
+label.chk{display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);max-height:420px;overflow-y:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+th{position:sticky;top:0;background:var(--sunken);font-weight:600;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;z-index:1}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px;letter-spacing:.02em;background:var(--sunken);color:var(--muted)}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--ochre-soft);color:var(--ochre)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.acc{background:var(--accent-soft);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--f-display);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.stat.good b{color:var(--good)} .stat.bad b{color:var(--bad)} .stat.warn b{color:var(--ochre)}
+.bar{height:8px;border-radius:99px;background:var(--sunken);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.note{border-left:3px solid var(--ochre);background:var(--ochre-soft);padding:9px 12px;border-radius:0 var(--r) var(--r) 0;font-size:13.5px}
+.note.info{border-left-color:var(--accent);background:var(--accent-soft)}
+.note.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
+details{border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details>summary{cursor:pointer;font-weight:600;font-size:14px}
+details[open]>summary{margin-bottom:12px}
+.fieldmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fieldmap label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:500}
+#match-body,#attr-body,#result-body,#dl-body{display:flex;flex-direction:column;gap:16px;min-width:0}
+.status{font-size:13px;color:var(--muted);min-height:1.4em}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50;max-width:calc(100% - 32px)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+@media (max-width:560px){h1{font-size:24px} section.card{padding:14px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Join Buku Tanah</h1>
+    <p class="lede">Menambahkan atribut dari Excel kualitas data Buku Tanah ke shapefile bidang tanah. Kunci gabungnya NIB + desa + kecamatan, jadi NIB yang sama di desa berbeda tidak tertukar. Semua file diproses di browser ini dan tidak dikirim ke server.</p>
+    <div class="key" aria-label="Struktur Nomor Hak">
+      <span><b>23</b><i>Prov</i></span><span><b>09</b><i>Kab</i></span><span class="hl"><b>01</b><i>Kec</i></span><span class="hl"><b>01</b><i>Desa</i></span><span class="hl"><b>1</b><i>Tipe hak</i></span><span><b>00001</b><i>Nomor</i></span><span><b>→ M.00001</b><i>Tipe Hak 2</i></span>
+    </div>
+  </header>
+
+  <section class="card" id="sec-data">
+    <h2><span class="n">1</span>Masukkan data</h2>
+    <p class="muted small">Seret file, folder, atau ZIP ke kotak mana saja. ZIP di dalam ZIP (misalnya satu ZIP kabupaten berisi ZIP per kecamatan) dibuka otomatis. File SHP dan Excel dikenali dari ekstensinya.</p>
+    <div class="grid2">
+      <div class="drop" id="drop-shp">
+        <h3>Bidang tanah (SHP)</h3>
+        <p class="hint">.zip, .shp + .dbf + .shx + .prj (+ .cpg), atau folder</p>
+        <div class="row">
+          <button id="pick-shp">Pilih file</button>
+          <button id="pick-shp-dir">Pilih folder</button>
+        </div>
+        <div id="shp-summary"></div>
+      </div>
+      <div class="drop" id="drop-xls">
+        <h3>Buku Tanah (Excel)</h3>
+        <p class="hint">.xlsx, .csv, ZIP berisi Excel, atau folder. Desa dibaca dari nama file, mis. <span class="mono">23090101_Sekongkang Bawah_BukuTanah.xlsx</span></p>
+        <div class="row">
+          <button id="pick-xls">Pilih file</button>
+          <button id="pick-xls-dir">Pilih folder</button>
+        </div>
+        <div id="xls-summary"></div>
+      </div>
+    </div>
+    <div class="row">
+      <button class="ghost" id="btn-sample">Coba dengan data contoh</button>
+      <button class="ghost" id="btn-clear">Kosongkan semua</button>
+      <span class="status" id="load-status"></span>
+    </div>
+    <input type="file" id="in-files" multiple hidden>
+    <input type="file" id="in-dir" webkitdirectory multiple hidden>
+    <div id="warnings"></div>
+  </section>
+
+  <section class="card" id="sec-match">
+    <h2><span class="n">2</span>Kunci pencocokan</h2>
+    <div id="match-body"><div class="empty">Masukkan SHP untuk memilih kolom NIB, desa, dan kecamatan.</div></div>
+  </section>
+
+  <section class="card" id="sec-attr">
+    <h2><span class="n">3</span>Atribut yang ditambahkan ke SHP</h2>
+    <div id="attr-body"><div class="empty">Masukkan Excel Buku Tanah untuk memilih kolom.</div></div>
+  </section>
+
+  <section class="card" id="sec-result">
+    <h2><span class="n">4</span>Hasil pencocokan</h2>
+    <div id="result-body"><div class="empty">Hasil muncul otomatis setelah SHP dan Excel dimasukkan.</div></div>
+  </section>
+
+  <section class="card" id="sec-dl">
+    <h2><span class="n">5</span>Unduh</h2>
+    <div id="dl-body"><div class="empty">Belum ada hasil untuk diunduh.</div></div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+"use strict";
+/* ================= Utilitas ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Number(n).toLocaleString("id-ID");
+const extOf = p => { const m = /\.([^./]+)$/.exec(p); return m ? m[1].toLowerCase() : ""; };
+const baseName = p => p.split("/").pop();
+const stripExt = n => n.replace(/\.[^.]+$/, "");
+const digits = s => String(s ?? "").replace(/\D+/g, "");
+function normName(s){
+  return String(s ?? "").toLowerCase()
+    .replace(/\b(desa|kelurahan|kel|kecamatan|kec|kabupaten|kab)\b\.?/g, " ")
+    .replace(/[^a-z0-9]+/g, "");
+}
+function lev(a, b){
+  if (a === b) return 0; const m = a.length, n = b.length; if (!m || !n) return m || n;
+  let prev = Array.from({length:n+1}, (_, j) => j), cur = new Array(n+1);
+  for (let i = 1; i <= m; i++){ cur[0] = i;
+    for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+    [prev, cur] = [cur, prev]; }
+  return prev[n];
+}
+let toastT;
+function toast(msg){ let t = $(".toast"); if (!t){ t = document.createElement("div"); t.className = "toast"; t.setAttribute("role","status"); document.body.appendChild(t); }
+  t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3500); }
+function setStatus(html){ $("#load-status").innerHTML = html; }
+
+/* ================= Referensi wilayah & tipe hak ================= */
+const KEC_SEED = { "230901":"Sekongkang","230902":"Jereweh","230903":"Maluk","230904":"Taliwang","230905":"Brang Ene","230906":"Brang Rea","230907":"Seteluk","230908":"Poto Tano" };
+const KAB_SEED = { "2309":"Sumbawa Barat" };
+const TIPE_DEFAULT = [
+  {kode:"1", prefix:"M",   nama:"Hak Milik"},
+  {kode:"2", prefix:"HGU", nama:"Hak Guna Usaha"},
+  {kode:"3", prefix:"B",   nama:"Hak Guna Bangunan"},
+  {kode:"4", prefix:"P",   nama:"Hak Pakai"},
+  {kode:"5", prefix:"HPL", nama:"Hak Pengelolaan"},
+  {kode:"8", prefix:"W",   nama:"Wakaf"},
+];
+
+/* ================= State ================= */
+const S = {
+  leaves: new Map(),      // path -> {path, bytes}
+  zipPrefixes: new Set(), // path prefix yang berupa ZIP
+  layers: [], excel: [], warnings: [],
+  fieldMap: { nib:"", desa:"", kec:"", kode:"" },
+  kecEdits: {},           // kode6 -> nama (diubah pengguna)
+  tipe: TIPE_DEFAULT.map(t => ({...t})),
+  manual: {},             // groupKey -> kode wilayah | "__skip"
+  xlsCode: {},            // path Excel -> kode desa (pilihan pengguna)
+  cols: [],               // kolom Excel {key, on, name}
+  derived: [
+    {key:"TIPE_HAK2", label:"Tipe Hak 2 (mis. M.00001)", on:true,  name:"TIPE_HAK2"},
+    {key:"STAT_JOIN", label:"Status join (COCOK, TIDAK_ADA, …)", on:true, name:"STAT_JOIN"},
+    {key:"KD_WIL",    label:"Kode desa yang dipakai", on:false, name:"KD_WIL"},
+    {key:"NM_DESA",   label:"Nama desa (dari nama file Excel)", on:false, name:"NM_DESA"},
+    {key:"NM_KEC",    label:"Nama kecamatan", on:false, name:"NM_KEC"},
+  ],
+  nibOnly: false, outMode: "nested", filter: "ALL",
+  result: null,
+};
+
+/* ================= Ingest file (ZIP bersarang, folder, file lepas) ================= */
+const SKIP = p => /(^|\/)(__MACOSX|\.DS_Store|Thumbs\.db)(\/|$)/i.test(p) || /(^|\/)\._/.test(p);
+async function addBytes(path, bytes){
+  if (SKIP(path)) return;
+  if (extOf(path) === "zip"){
+    let z; try { z = await JSZip.loadAsync(bytes); } catch(e){ S.warnings.push(`ZIP tidak bisa dibuka: ${path}`); return; }
+    S.zipPrefixes.add(path);
+    const ents = Object.values(z.files).filter(f => !f.dir);
+    for (const f of ents){
+      const u8 = await f.async("uint8array");
+      await addBytes(path + "/" + f.name.replace(/\\/g,"/").replace(/^\/+/,""), u8);
+    }
+  } else S.leaves.set(path, {path, bytes});
+}
+async function ingest(items){ // items: [{path, file}]
+  if (!items.length) return;
+  setStatus(`<span class="spin"></span>Membaca ${items.length} file…`);
+  let i = 0;
+  for (const it of items){
+    i++; setStatus(`<span class="spin"></span>Membaca ${esc(baseName(it.path))} (${i}/${items.length})…`);
+    const buf = new Uint8Array(await it.file.arrayBuffer());
+    await addBytes(it.path.replace(/^\/+/,""), buf);
+  }
+  await rebuildInputs();
+  setStatus("");
+}
+async function entriesFromDrop(dt){
+  const out = [], ents = [];
+  for (const it of dt.items){ const e = it.webkitGetAsEntry && it.webkitGetAsEntry(); if (e) ents.push(e); }
+  if (!ents.length){ for (const f of dt.files) out.push({path:f.name, file:f}); return out; }
+  async function walk(e){
+    if (e.isFile){ const f = await new Promise((res, rej) => e.file(res, rej)); out.push({path:e.fullPath.replace(/^\//,""), file:f}); }
+    else if (e.isDirectory){ const r = e.createReader(); let batch;
+      do { batch = await new Promise((res, rej) => r.readEntries(res, rej)); for (const c of batch) await walk(c); } while (batch.length); }
+  }
+  for (const e of ents) await walk(e);
+  return out;
+}
+
+/* ================= DBF ================= */
+function parseDbf(u8){
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  const version = u8[0], nrecH = dv.getUint32(4, true), hlen = dv.getUint16(8, true), rlen = dv.getUint16(10, true), ldid = u8[29];
+  const fields = []; let p = 32, off = 1;
+  while (p + 32 <= hlen && u8[p] !== 0x0D){
+    let name = ""; for (let k = 0; k < 11 && u8[p+k]; k++) name += String.fromCharCode(u8[p+k]);
+    const f = {name:name.trim(), type:String.fromCharCode(u8[p+11]), len:u8[p+16], dec:u8[p+17], offset:off};
+    fields.push(f); off += f.len; p += 32;
+  }
+  const nrecFile = rlen ? Math.floor((u8.length - hlen) / rlen) : 0;
+  return {version, nrec: Math.min(nrecH, nrecFile), hlen, rlen, ldid, fields, descEnd: p};
+}
+function encFromCpg(txt){
+  const t = String(txt || "").trim().toLowerCase().replace(/^ansi\s*/,"");
+  if (!t) return null;
+  if (/utf-?8|65001/.test(t)) return "utf-8";
+  if (/^(cp|windows-?)?125[0-8]$/.test(t)) return "windows-" + t.match(/125\d/)[0];
+  if (/8859-?1|88591|latin1/.test(t)) return "iso-8859-1";
+  try { new TextDecoder(t); return t; } catch { return null; }
+}
+function sniffUtf8(u8, info){
+  const body = u8.subarray(info.hlen, Math.min(u8.length, info.hlen + 400000));
+  let hi = false; for (let i = 0; i < body.length; i++) if (body[i] > 127){ hi = true; break; }
+  if (!hi) return "utf-8";
+  try { new TextDecoder("utf-8", {fatal:true}).decode(body); return "utf-8"; } catch { return "windows-1252"; }
+}
+
+/* ================= Pembaca XLSX (tanpa pustaka tambahan) ================= */
+const NS = "*";
+const tags = (el, n) => el.getElementsByTagNameNS(NS, n);
+function colIdx(ref){ const m = /^([A-Z]+)/.exec(ref || ""); if (!m) return -1; let n = 0; for (const ch of m[1]) n = n*26 + ch.charCodeAt(0) - 64; return n - 1; }
+function isDateFmt(id, code){
+  if ((id >= 14 && id <= 22) || (id >= 45 && id <= 47) || (id >= 27 && id <= 36) || (id >= 50 && id <= 58)) return true;
+  if (!code) return false;
+  const c = code.replace(/"[^"]*"/g,"").replace(/\[[^\]]*\]/g,"").replace(/\\./g,"");
+  return /[dmyhs]/i.test(c) && !/^[#0.,%\s]*$/.test(c);
+}
+function serialToISO(v, d1904){
+  const ms = Math.round((v + (d1904 ? 1462 : 0)) * 86400000) + Date.UTC(1899, 11, 30);
+  const d = new Date(ms), iso = d.toISOString();
+  return (v % 1) ? iso.slice(0,19).replace("T"," ") : iso.slice(0,10);
+}
+async function readXlsx(u8){
+  const z = await JSZip.loadAsync(u8), dp = new DOMParser();
+  const xml = async p => { const f = z.file(p) || z.file(Object.keys(z.files).find(k => k.toLowerCase() === p.toLowerCase()) || "\0"); return f ? dp.parseFromString((await f.async("string")).replace(/^\uFEFF/, ""), "application/xml") : null; };
+  const wb = await xml("xl/workbook.xml"); if (!wb) throw new Error("bukan file xlsx");
+  const d1904 = [...tags(wb, "workbookPr")].some(e => /^(1|true)$/.test(e.getAttribute("date1904") || ""));
+  const rels = await xml("xl/_rels/workbook.xml.rels"), relMap = {};
+  if (rels) for (const r of tags(rels, "Relationship")) relMap[r.getAttribute("Id")] = r.getAttribute("Target");
+  const ss = []; const ssx = await xml("xl/sharedStrings.xml");
+  if (ssx) for (const si of tags(ssx, "si")){ let s = ""; for (const t of tags(si, "t")) if (t.parentNode.localName !== "rPh") s += t.textContent; ss.push(s); }
+  const dateXf = []; const st = await xml("xl/styles.xml");
+  if (st){ const custom = {}; for (const nf of tags(st, "numFmt")) custom[+nf.getAttribute("numFmtId")] = nf.getAttribute("formatCode");
+    const cx = tags(st, "cellXfs")[0]; if (cx) for (const xf of cx.children){ const id = +(xf.getAttribute("numFmtId") || 0); dateXf.push(isDateFmt(id, custom[id])); } }
+  const sheets = [];
+  for (const sh of tags(wb, "sheet")){
+    const rid = sh.getAttribute("r:id") || sh.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");
+    let tgt = relMap[rid]; if (!tgt) continue;
+    tgt = tgt.startsWith("/") ? tgt.slice(1) : "xl/" + tgt.replace(/^\.\//,"");
+    const doc = await xml(tgt); if (!doc) continue;
+    const rows = [];
+    for (const r of tags(doc, "row")){
+      const ri = (+r.getAttribute("r") || rows.length + 1) - 1, arr = []; let ci = 0;
+      for (const c of r.children){ if (c.localName !== "c") continue;
+        const ref = c.getAttribute("r"); const idx = ref ? colIdx(ref) : ci; ci = idx + 1;
+        const t = c.getAttribute("t"), s = +(c.getAttribute("s") || 0);
+        const vEl = [...c.children].find(x => x.localName === "v"); const v = vEl ? vEl.textContent : null;
+        let val = null;
+        if (t === "s") val = ss[+v] ?? "";
+        else if (t === "inlineStr"){ val = ""; for (const tt of tags(c, "t")) val += tt.textContent; }
+        else if (t === "str" || t === "e") val = v;
+        else if (t === "b") val = v === "1" ? "TRUE" : "FALSE";
+        else if (v !== null && v !== ""){ const n = Number(v); val = isNaN(n) ? v : (dateXf[s] ? serialToISO(n, d1904) : n); }
+        arr[idx] = val;
+      }
+      rows[ri] = arr;
+    }
+    sheets.push({name: sh.getAttribute("name"), rows: Array.from(rows, r => r || [])});
+  }
+  return sheets;
+}
+function readCsv(u8){
+  let txt; try { txt = new TextDecoder("utf-8", {fatal:true}).decode(u8); } catch { txt = new TextDecoder("windows-1252").decode(u8); }
+  txt = txt.replace(/^﻿/, "");
+  const first = txt.split(/\r?\n/)[0] || ""; const cnt = ch => first.split(ch).length;
+  const d = [";", ",", "\t"].sort((a, b) => cnt(b) - cnt(a))[0];
+  const rows = []; let row = [], f = "", q = false;
+  for (let i = 0; i < txt.length; i++){ const ch = txt[i];
+    if (q){ if (ch === '"'){ if (txt[i+1] === '"'){ f += '"'; i++; } else q = false; } else f += ch; }
+    else if (ch === '"') q = true; else if (ch === d){ row.push(f); f = ""; }
+    else if (ch === "\n" || ch === "\r"){ if (ch === "\r" && txt[i+1] === "\n") i++; row.push(f); rows.push(row); row = []; f = ""; }
+    else f += ch; }
+  if (f || row.length){ row.push(f); rows.push(row); }
+  return [{name:"csv", rows: rows.map(r => r.map(v => v === "" ? null : v))}];
+}
+
+/* ================= Parsing kode ================= */
+function parseNomorHak(s){
+  const parts = String(s ?? "").split(/[^0-9]+/).filter(Boolean);
+  if (parts.length < 3) return null;
+  const nomor = parts[parts.length-1], tipe = parts[parts.length-2], wil = parts.slice(0, -2).join("");
+  if (tipe.length !== 1 || ![4,6,8].includes(wil.length)) return null;
+  return {wil, tipe, nomor};
+}
+function parseNib(v){
+  const d = digits(typeof v === "number" ? Math.round(v) : v);
+  if (!d) return null;
+  if (d.length >= 13) return {nib: d.slice(-5), code8: d.slice(0, 8)};
+  return {nib: d.length <= 5 ? d.padStart(5, "0") : d, code8: null};
+}
+function parseFileWil(path){
+  // cari dari nama file, lalu folder: "23090101_Nama Desa_BukuTanah"
+  const segs = path.split("/").map(s => stripExt(s));
+  for (let i = segs.length - 1; i >= 0; i--){
+    const m = /^(\d{2}(?:[.\-]?\d{2}){1,3})(?:[\s_\-]+(.*))?$/.exec(segs[i].trim());
+    if (m){ const code = digits(m[1]);
+      if ([4,6,8].includes(code.length)){
+        const name = (m[2] || "").replace(/[_]+/g, " ").replace(/\s*\bbuku\s*tanah\b.*$/i, "").replace(/\s*\b(bt|kualitas\s*data)\b\s*$/i,"").trim();
+        return {code, name}; } }
+  }
+  const last = segs[segs.length - 1].replace(/[_]+/g, " ")
+    .replace(/\bbuku\s*tanah\b|\bdetail\s*kw\b|\bkualitas\s*data\b/ig, " ")
+    .replace(/(\s+\d{1,8})+\s*$/g, "").replace(/\(\d+\)\s*$/, "").replace(/\s+/g, " ").trim();
+  return {code:"", name:last};
+}
+function pathContext(path){
+  const ctx = {code8:"", code6:"", code4:"", names:[]};
+  for (const seg of path.split("/")){
+    const s = stripExt(seg).trim();
+    const m = /^(\d{2}(?:[.\-]?\d{2}){1,3})(?:[\s_\-]+(.*))?$/.exec(s);
+    let rest = s;
+    if (m){ const c = digits(m[1]); if (c.length === 8) ctx.code8 = c; if (c.length >= 6) ctx.code6 = c.slice(0,6); if (c.length >= 4) ctx.code4 = c.slice(0,4); rest = m[2] || ""; }
+    const n = normName(rest.replace(/^(bidang|persil|hgu|hpl|shp|peta)[_\s-]*/i, ""));
+    if (n) ctx.names.push(n);
+  }
+  return ctx;
+}
+
+/* ================= Bangun ulang daftar layer & Excel ================= */
+const SHP_EXT = new Set(["shp","shx","dbf","prj","cpg","cst","sbn","sbx","qix","qmd","fix","aih","ain","atx","ixs","mxs"]);
+const XLS_EXT = new Set(["xlsx","xlsm","csv"]);
+async function rebuildInputs(){
+  const groups = new Map(); S.warnings = S.warnings.filter(w => w.startsWith("ZIP"));
+  const xlsLeaves = [];
+  for (const lf of S.leaves.values()){
+    const p = lf.path, e = extOf(p);
+    if (/\.shp\.xml$/i.test(p)){ const b = p.slice(0, -8); (groups.get(b.toLowerCase()) || groups.set(b.toLowerCase(), {base:b, files:{}}).get(b.toLowerCase())).files["shp.xml"] = lf; continue; }
+    if (SHP_EXT.has(e)){ const b = p.slice(0, -(e.length+1)); const g = groups.get(b.toLowerCase()) || groups.set(b.toLowerCase(), {base:b, files:{}}).get(b.toLowerCase()); g.files[e] = lf; }
+    else if (XLS_EXT.has(e)) xlsLeaves.push(lf);
+    else if (e === "xls") S.warnings.push(`Format .xls lama belum didukung, simpan ulang sebagai .xlsx: ${baseName(p)}`);
+  }
+  // layer
+  const old = new Map(S.layers.map(l => [l.base, l]));
+  S.layers = [];
+  for (const g of groups.values()){
+    if (!g.files.dbf){ if (g.files.shp) S.warnings.push(`Layer tanpa .dbf dilewati: ${baseName(g.base)}.shp`); continue; }
+    if (!g.files.shp) continue;
+    if (old.has(g.base) && old.get(g.base).dbfLeaf === g.files.dbf){ S.layers.push(old.get(g.base)); continue; }
+    try {
+      const u8 = g.files.dbf.bytes, info = parseDbf(u8);
+      const cpf = g.files.cpg || g.files.cst; let enc = cpf ? encFromCpg(new TextDecoder().decode(cpf.bytes)) : null;
+      const hadCpg = !!enc; if (!enc) enc = sniffUtf8(u8, info);
+      S.layers.push({base:g.base, files:g.files, dbfLeaf:g.files.dbf, info, enc, hadCpg, dec:new TextDecoder(enc), ctx:pathContext(g.base)});
+    } catch(e){ S.warnings.push(`DBF tidak terbaca: ${baseName(g.base)}.dbf (${e.message})`); }
+  }
+  S.layers.sort((a, b) => a.base.localeCompare(b.base));
+  // excel
+  const oldX = new Map(S.excel.map(x => [x.path, x]));
+  S.excel = [];
+  for (const lf of xlsLeaves){
+    if (/(^|\/)~\$/.test(lf.path)) continue;
+    if (oldX.has(lf.path) && oldX.get(lf.path).leaf === lf){ S.excel.push(oldX.get(lf.path)); continue; }
+    try {
+      const sheets = extOf(lf.path) === "csv" ? readCsv(lf.bytes) : await readXlsx(lf.bytes);
+      let header = null, data = [], sheetName = "";
+      for (const sh of sheets){
+        for (let r = 0; r < Math.min(15, sh.rows.length); r++){
+          const row = sh.rows[r] || [];
+          if (row.some(v => v != null && String(v).trim().toLowerCase() === "nib")){
+            const seen = {}; header = Array.from({length: row.length}, (_, i) => { let h = String(row[i] ?? "").trim() || `KOLOM_${i+1}`; if (seen[h]) h += "_" + (++seen[h]); else seen[h] = 1; return h; });
+            data = data.concat(sh.rows.slice(r+1).filter(rw => rw && rw.some(v => v != null && String(v).trim() !== "")));
+            sheetName = sheetName || sh.name; break; }
+        }
+      }
+      const w = parseFileWil(lf.path);
+      if (!header){ S.warnings.push(`Tidak ada kolom NIB di ${baseName(lf.path)}`); continue; }
+      S.excel.push({path:lf.path, leaf:lf, file:baseName(lf.path), header, rows:data, fileCode:w.code, fileName:w.name, sheet:sheetName});
+    } catch(e){ S.warnings.push(`Excel tidak terbaca: ${baseName(lf.path)} (${e.message})`); }
+  }
+  S.excel.sort((a, b) => a.file.localeCompare(b.file));
+  autoFieldMap(); syncCols();
+  recompute();
+}
+
+/* ================= Deteksi kolom SHP ================= */
+function allShpFields(){ const m = new Map(); for (const l of S.layers) for (const f of l.info.fields){ const k = f.name.toUpperCase(); m.set(k, (m.get(k) || 0) + 1); } return [...m.keys()]; }
+function autoFieldMap(){
+  const F = allShpFields(), has = n => F.includes(n);
+  const pick = (exact, test) => exact.find(has) || F.find(test) || "";
+  const fm = S.fieldMap;
+  if (!fm.nib || !has(fm.nib)) fm.nib = pick(["NIB","NO_NIB","NIBEL"], f => /NIB/.test(f));
+  if (!fm.desa || !has(fm.desa)) fm.desa = pick(["DESA","KELURAHAN","DESA_KEL","DESAKEL","NAMA_DESA","NAMADESA","KEL_DESA","DESA_KELUR","WADMKD","NAMOBJ"], f => /DESA|KELUR/.test(f) && !/KODE|KD_|ID/.test(f));
+  if (!fm.kec || !has(fm.kec)) fm.kec = pick(["KECAMATAN","KEC","NAMA_KEC","WADMKC"], f => /KEC/.test(f) && !/KODE|KD_|ID/.test(f));
+  if (fm.kode && !has(fm.kode)) fm.kode = "";
+  if (!fm.kode) fm.kode = pick(["KODE_DESA","KD_DESA","KDDESA","KODEDESA","KODE_WIL","KDEPUM","KD_WIL"], f => /(KODE|KD).*(DESA|WIL|KEL)/.test(f));
+}
+function getVal(layer, i, fname){
+  if (!fname) return "";
+  const f = layer.info.fields.find(x => x.name.toUpperCase() === fname); if (!f) return "";
+  const u8 = layer.dbfLeaf.bytes, st = layer.info.hlen + i * layer.info.rlen + f.offset;
+  if (f.type === "C" || f.type === "N" || f.type === "F" || f.type === "D" || f.type === "L") return layer.dec.decode(u8.subarray(st, st + f.len)).replace(/\0/g,"").trim();
+  if (f.type === "I"){ return String(new DataView(u8.buffer, u8.byteOffset + st, 4).getInt32(0, true)); }
+  if (f.type === "B" || f.type === "O"){ return String(new DataView(u8.buffer, u8.byteOffset + st, 8).getFloat64(0, true)); }
+  return "";
+}
+
+/* ================= Kolom Excel → field DBF ================= */
+function shortName(s){
+  let t = String(s).normalize("NFKD").replace(/[^\w]+/g, "_").replace(/^_+|_+$/g, "");
+  if (!/^[A-Za-z]/.test(t)) t = "F_" + t;
+  if (t.length <= 10) return t;
+  const w = t.split("_").filter(Boolean); if (w.length === 1) return t.slice(0, 10);
+  const n = Math.min(w.length, 3), per = Math.floor((10 - (n - 1)) / n); let extra = (10 - (n - 1)) - per * n;
+  return w.slice(0, n).map(x => { const k = per + (extra > 0 ? 1 : 0); extra--; return x.slice(0, k); }).join("_").slice(0, 10);
+}
+function syncCols(){
+  const keys = []; for (const x of S.excel) for (const h of x.header) if (!keys.includes(h)) keys.push(h);
+  const prev = new Map(S.cols.map(c => [c.key, c]));
+  S.cols = keys.map(k => prev.get(k) || {key:k, on: !/^nib$/i.test(k), name: shortName(k), auto:true});
+  // hindari bentrok nama dengan field SHP & sesama
+  const shpF = new Set(allShpFields());
+  const used = new Set();
+  for (const d of S.derived) if (d.on) used.add(d.name.toUpperCase());
+  for (const c of S.cols){
+    if (!c.auto) { used.add(c.name.toUpperCase()); continue; }
+    let n = shortName(c.key), base = n, k = 1;
+    if (shpF.has(n.toUpperCase())) { base = n.slice(0, 8) + "_X"; n = base; }
+    while (used.has(n.toUpperCase())) { n = base.slice(0, 9 - String(k).length) + "_" + k; k++; }
+    c.name = n; if (c.on) used.add(n.toUpperCase());
+  }
+}
+
+/* ================= Inti: pencocokan ================= */
+function kecDict(){
+  const d = {...KEC_SEED};
+  const learn = p => { for (const seg of p.split("/")){ const m = /^(\d{6})[\s_\-]+(.+)$/.exec(stripExt(seg).trim()); if (m) d[m[1]] = m[2].replace(/_/g," ").trim(); } };
+  for (const p of S.zipPrefixes) learn(p);
+  for (const l of S.layers) learn(l.base);
+  for (const x of S.excel) learn(x.path);
+  return Object.assign(d, S.kecEdits);
+}
+function recompute(){
+  if (!S.layers.length && !S.excel.length){ S.result = null; renderAll(); return; }
+  const kec = kecDict(), kecByName = {};
+  for (const [c, n] of Object.entries(kec)) (kecByName[normName(n)] ||= []).push(c);
+  const tipeMap = Object.fromEntries(S.tipe.map(t => [t.kode, t.prefix]));
+  // --- Excel → indeks
+  const desa = {}; // code8 -> nama
+  const index = new Map(), nibIndex = new Map(), records = [];
+  let wilMismatch = 0, noNibRows = 0;
+  // pelajari kode desa dari SHP (kolom kode / NIB 13 digit) untuk Excel yang nama filenya tanpa kode
+  const learned = {}; // normName(desa) -> {code -> {n, name, kec}}
+  for (const L of S.layers){
+    const fm0 = S.fieldMap; if (!fm0.desa) break;
+    const step = Math.max(1, Math.floor(L.info.nrec / 3000));
+    for (let i = 0; i < L.info.nrec; i += step){
+      let code = ""; const nb = parseNib(getVal(L, i, fm0.nib)); if (nb && nb.code8) code = nb.code8;
+      if (!code && fm0.kode){ const d = digits(getVal(L, i, fm0.kode)); if (d.length >= 8) code = d.slice(0, 8); }
+      const dn = getVal(L, i, fm0.desa); if (!code || !dn) continue;
+      const o = (learned[normName(dn)] ||= {}); const e = (o[code] ||= {n:0, name:dn, kec:getVal(L, i, fm0.kec)}); e.n++;
+    }
+  }
+  const learnedDesa = {}; for (const o of Object.values(learned)) for (const [c, e] of Object.entries(o)){ learnedDesa[c] = learnedDesa[c] || e.name; if (e.kec && !kec[c.slice(0,6)]) kec[c.slice(0,6)] = e.kec; }
+  for (const x of S.excel){
+    x.autoCode = ""; x.autoSrc = "";
+    if (!x.fileCode && x.fileName){
+      const nn = normName(x.fileName), hit = learned[nn];
+      if (hit && Object.keys(hit).length === 1){ x.autoCode = Object.keys(hit)[0]; x.autoSrc = "nama"; }
+      else if (!hit){ let best = null, bd = 99, tie = false;
+        for (const k of Object.keys(learned)){ const d = lev(nn, k); if (d < bd){ bd = d; best = k; tie = false; } else if (d === bd) tie = true; }
+        if (best && !tie && Object.keys(learned[best]).length === 1 && bd <= Math.max(1, Math.floor(Math.min(nn.length, best.length) * 0.25))){ x.autoCode = Object.keys(learned[best])[0]; x.autoSrc = "mirip"; } }
+    }
+    x.code = S.xlsCode[x.path] || x.fileCode || x.autoCode;
+    if (x.code.length === 8) desa[x.code] = x.fileCode ? (x.fileName || learnedDesa[x.code] || "") : (learnedDesa[x.code] || x.fileName);
+    const iN = x.header.findIndex(h => /^nib$/i.test(h.trim()));
+    const iH = x.header.findIndex(h => /^nomor[\s_]*hak$/i.test(h.trim())) >= 0 ? x.header.findIndex(h => /^nomor[\s_]*hak$/i.test(h.trim())) : x.header.findIndex(h => /nomor.*hak|no.*hak/i.test(h));
+    for (const row of x.rows){
+      const nb = parseNib(row[iN]); if (!nb){ noNibRows++; continue; }
+      const nh = iH >= 0 ? parseNomorHak(row[iH]) : null;
+      let wil = x.code;
+      if (nb.code8 && (!wil || nb.code8.startsWith(wil))) wil = nb.code8;
+      else if (nh && nh.wil.length > wil.length && nh.wil.startsWith(wil)) wil = nh.wil;
+      if (nh && nh.wil.length === 8 && wil.length === 8 && nh.wil !== wil) wilMismatch++;
+      if (!wil) wil = "?";
+      const vals = {}; x.header.forEach((h, i) => vals[h] = row[i] ?? null);
+      let tipe2 = nh ? `${tipeMap[nh.tipe] ?? nh.tipe}.${nh.nomor}` : "";
+      if (!nh && iH >= 0){ const m = /^\s*([A-Za-z]{1,4})\s*\.?\s*(\d{1,6})\s*$/.exec(String(row[iH] ?? "")); if (m) tipe2 = `${m[1].toUpperCase()}.${m[2]}`; }
+      const rec = {x, vals, nib:nb.nib, wil, nh, tipe2, used:0, id:records.length};
+      records.push(rec);
+      const k = wil + "|" + nb.nib; (index.get(k) || index.set(k, []).get(k)).push(rec);
+      (nibIndex.get(nb.nib) || nibIndex.set(nb.nib, []).get(nb.nib)).push(rec);
+    }
+  }
+  // kab default (paling sering)
+  const kabCount = {}; for (const r of records) if (r.wil.length >= 4) kabCount[r.wil.slice(0,4)] = (kabCount[r.wil.slice(0,4)] || 0) + 1;
+  const kabDefault = Object.entries(kabCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
+  // desa per kecamatan untuk pencarian nama
+  const desaByKec = {}; for (const [c, n] of Object.entries(desa)) (desaByKec[c.slice(0,6)] ||= []).push({c, n:normName(n)});
+  const allDesa = Object.entries(desa).map(([c, n]) => ({c, n:normName(n)}));
+  function findDesa(name, kec6){
+    const pool = kec6 ? (desaByKec[kec6] || []) : allDesa; if (!name || !pool.length) return null;
+    const ex = pool.filter(d => d.n === name); if (ex.length === 1) return {c:ex[0].c, src:"nama"};
+    if (ex.length > 1) return null;
+    let best = null, bd = 99, tie = false;
+    for (const d of pool){ const dd = lev(name, d.n); if (dd < bd){ bd = dd; best = d; tie = false; } else if (dd === bd) tie = true; }
+    if (best && !tie && bd <= Math.max(1, Math.floor(Math.min(name.length, best.n.length) * 0.25))) return {c:best.c, src:"mirip"};
+    return null;
+  }
+  // --- fitur SHP
+  const fm = S.fieldMap, groups = new Map(), resolveCache = new Map();
+  let tot = 0; const cnt = {COCOK:0, DUPLIKAT:0, TIDAK_ADA:0, WIL_TAK_DIKENAL:0, NIB_KOSONG:0};
+  const shpKeyCount = new Map();
+  for (const L of S.layers){
+    const n = L.info.nrec; L.res = new Array(n); L.stat = {COCOK:0, DUPLIKAT:0, TIDAK_ADA:0, WIL_TAK_DIKENAL:0, NIB_KOSONG:0};
+    for (let i = 0; i < n; i++){
+      tot++;
+      const nibRaw = getVal(L, i, fm.nib), nb = parseNib(nibRaw);
+      const desaTxt = getVal(L, i, fm.desa), kecTxt = getVal(L, i, fm.kec);
+      let wil = "", src = "", gk = "";
+      if (nb && nb.code8){ wil = nb.code8; src = "NIB"; }
+      if (!wil && fm.kode){ const d = digits(getVal(L, i, fm.kode)); if (d.length >= 8){ wil = d.slice(0,8); src = "kode"; } }
+      if (!wil){
+        gk = `${kecTxt}\u0001${desaTxt}\u0001${desaTxt || kecTxt ? "" : L.base}`;
+        if (S.manual[gk]){ if (S.manual[gk] !== "__skip"){ wil = S.manual[gk]; src = "manual"; } }
+        else {
+          let cached = resolveCache.get(L.base + "\u0002" + gk);
+          if (cached === undefined){
+            cached = null;
+            const kn = normName(kecTxt), kc = kn ? (kecByName[kn] || []).filter(c => !kabDefault || c.startsWith(kabDefault)) : [];
+            const kec6 = kc.length === 1 ? kc[0] : (L.ctx.code6 || "");
+            const dn = normName(desaTxt);
+            if (dn){ const r = findDesa(dn, kec6) || (kec6 ? null : null); if (r) cached = {wil:r.c, src:r.src}; }
+            else if (L.ctx.code8) cached = {wil:L.ctx.code8, src:"folder"};
+            else { for (const nm of L.ctx.names.slice().reverse()){ const r = findDesa(nm, kec6 || L.ctx.code6); if (r && r.src === "nama"){ cached = {wil:r.c, src:"folder"}; break; } } }
+            resolveCache.set(L.base + "\u0002" + gk, cached);
+          }
+          if (cached){ wil = cached.wil; src = cached.src; }
+        }
+      }
+      let status, rec = null, nMatch = 0;
+      if (!nb){ status = "NIB_KOSONG"; }
+      else {
+        let hits = wil ? index.get(wil + "|" + nb.nib) : null;
+        if (!hits || !hits.length){ const kab = (wil || L.ctx.code4 || kabDefault).slice(0,4); const kh = kab ? index.get(kab + "|" + nb.nib) : null; if (kh && kh.length){ hits = kh; src = (src ? src + "+" : "") + "kab"; } }
+        if ((!hits || !hits.length) && S.nibOnly){ const g = nibIndex.get(nb.nib); if (g && g.length === 1){ hits = g; src = (src ? src + "+" : "") + "NIB saja"; } }
+        if (hits && hits.length > 1) hits = hits.slice().sort((a, b) => filled(b) - filled(a) || a.id - b.id);
+        if (hits && hits.length){ rec = hits[0]; nMatch = hits.length; status = hits.length > 1 ? "DUPLIKAT" : "COCOK"; hits.forEach(h => h.used++); if (!wil) wil = rec.wil; }
+        else status = wil ? "TIDAK_ADA" : "WIL_TAK_DIKENAL";
+        const sk = (wil || "?") + "|" + nb.nib; shpKeyCount.set(sk, (shpKeyCount.get(sk) || 0) + 1);
+      }
+      if ((src === "mirip" || status === "WIL_TAK_DIKENAL" || src === "manual") && gk){
+        const g = groups.get(gk) || groups.set(gk, {gk, kec:kecTxt, desa:desaTxt, layer:L.base, n:0, src, wil, ok:0}).get(gk);
+        g.n++; if (rec) g.ok++; g.src = src; g.wil = wil;
+      }
+      L.res[i] = {nibRaw, nib: nb ? nb.nib : "", desaTxt, kecTxt, wil, src, status, rec, nMatch};
+      L.stat[status]++; cnt[status]++;
+    }
+  }
+  let shpDup = 0; for (const v of shpKeyCount.values()) if (v > 1) shpDup += v;
+  const unused = records.filter(r => !r.used);
+  S.result = {noNibRows, learnedDesa, tot, cnt, records, unused, groups:[...groups.values()].sort((a, b) => (a.ok ? 1 : 0) - (b.ok ? 1 : 0) || b.n - a.n), desa, kec, kabDefault, wilMismatch, shpDup};
+  renderAll();
+}
+
+function filled(r){ let n = 0; for (const v of Object.values(r.vals)) if (v !== null && v !== "") n++; return n; }
+/* ================= Field keluaran ================= */
+function outFields(){
+  const list = [];
+  for (const d of S.derived) if (d.on) list.push({kind:"d", key:d.key, name:d.name});
+  for (const c of S.cols) if (c.on) list.push({kind:"c", key:c.key, name:c.name});
+  return list;
+}
+function valueFor(f, r){
+  const R = S.result;
+  if (f.kind === "d"){
+    if (f.key === "STAT_JOIN") return r.status;
+    if (f.key === "KD_WIL") return r.wil || "";
+    if (f.key === "NM_DESA") return R.desa[r.wil] || "";
+    if (f.key === "NM_KEC") return r.wil ? (R.kec[r.wil.slice(0,6)] || "") : "";
+    if (!r.rec) return null;
+    if (f.key === "TIPE_HAK2") return r.rec.tipe2;
+  }
+  return r.rec ? r.rec.vals[f.key] : null;
+}
+const u8len = s => new TextEncoder().encode(s).length;
+function inferSpec(f){
+  const vals = []; const R = S.result;
+  if (f.kind === "c") for (const r of R.records) vals.push(r.vals[f.key]);
+  else if (f.key === "TIPE_HAK2") for (const r of R.records) vals.push(r.tipe2);
+  else if (f.key === "STAT_JOIN") return {type:"C", len:15, dec:0};
+  else if (f.key === "KD_WIL") return {type:"C", len:8, dec:0};
+  else if (f.key === "NM_DESA") { let m = 1; for (const n of Object.values(R.desa)) m = Math.max(m, u8len(n)); return {type:"C", len:Math.min(254, m), dec:0}; }
+  else if (f.key === "NM_KEC") { let m = 1; for (const n of Object.values(R.kec)) m = Math.max(m, u8len(n)); return {type:"C", len:Math.min(254, m), dec:0}; }
+  const ne = vals.filter(v => v !== null && v !== undefined && v !== "");
+  if (ne.length && ne.every(v => typeof v === "number" && isFinite(v))){
+    let dec = 0, w = 1;
+    for (const v of ne){ const s = String(v); const dd = s.includes("e") ? 6 : (s.split(".")[1] || "").length; dec = Math.max(dec, Math.min(dd, 6)); }
+    for (const v of ne) w = Math.max(w, v.toFixed(dec).length);
+    if (w <= 19) return {type:"N", len:w, dec};
+  }
+  let m = 1, over = false; for (const v of ne){ const l = u8len(String(v)); if (l > m) m = l; }
+  if (m > 254){ over = true; m = 254; }
+  return {type:"C", len:m, dec:0, over};
+}
+function validateNames(){
+  const errs = {}; const shp = new Set(allShpFields()); const seen = {};
+  for (const f of outFields()){
+    const n = f.name, u = n.toUpperCase(); let e = "";
+    if (!/^[A-Za-z][A-Za-z0-9_]{0,9}$/.test(n)) e = "1–10 huruf/angka/_ , diawali huruf";
+    else if (shp.has(u)) e = "sudah ada di SHP";
+    else if (seen[u]) e = "nama ganda";
+    seen[u] = 1; if (e) errs[f.kind + f.key] = e;
+  }
+  return errs;
+}
+
+/* ================= Tulis DBF baru ================= */
+function encodeStr(s, enc, len){
+  const out = new Uint8Array(len).fill(0x20);
+  if (s === null || s === undefined) return out;
+  s = String(s);
+  if (enc === "utf-8"){
+    let b = new TextEncoder().encode(s);
+    if (b.length > len){ let cut = len; while (cut > 0 && (b[cut] & 0xC0) === 0x80) cut--; b = b.subarray(0, cut); }
+    out.set(b);
+  } else { for (let i = 0; i < Math.min(len, s.length); i++){ const c = s.charCodeAt(i); out[i] = c < 256 ? c : 63; } }
+  return out;
+}
+function encodeNum(v, len, dec){
+  const out = new Uint8Array(len).fill(0x20);
+  if (v === null || v === undefined || v === "") return out;
+  const n = typeof v === "number" ? v : Number(String(v).replace(",", "."));
+  if (!isFinite(n)) return out;
+  let s = n.toFixed(dec); if (s.length > len) s = "*".repeat(len);
+  s = s.padStart(len, " "); for (let i = 0; i < len; i++) out[i] = s.charCodeAt(i);
+  return out;
+}
+function buildDbf(L, specs){
+  const src = L.dbfLeaf.bytes, I = L.info, n = I.fields.length, m = specs.length;
+  const backlink = Math.max(0, I.hlen - (32 + 32 * n + 1));
+  const hlen = 32 + 32 * (n + m) + 1 + backlink;
+  const addLen = specs.reduce((a, s) => a + s.len, 0), rlen = I.rlen + addLen;
+  if (n + m > 255) throw new Error(`${baseName(L.base)}: jumlah field melebihi 255`);
+  if (rlen > 65535) throw new Error(`${baseName(L.base)}: panjang record melebihi batas DBF`);
+  const out = new Uint8Array(hlen + I.nrec * rlen + 1); const dv = new DataView(out.buffer);
+  out.set(src.subarray(0, 32), 0);
+  const now = new Date(); out[1] = now.getFullYear() - 1900; out[2] = now.getMonth() + 1; out[3] = now.getDate();
+  dv.setUint32(4, I.nrec, true); dv.setUint16(8, hlen, true); dv.setUint16(10, rlen, true);
+  out.set(src.subarray(32, 32 + 32 * n), 32);
+  let p = 32 + 32 * n, off = I.rlen;
+  for (const s of specs){
+    for (let k = 0; k < 10 && k < s.name.length; k++) out[p + k] = s.name.charCodeAt(k);
+    out[p + 11] = s.type.charCodeAt(0); dv.setUint32(p + 12, off, true); out[p + 16] = s.len; out[p + 17] = s.dec;
+    p += 32; off += s.len;
+  }
+  out[p] = 0x0D; if (backlink) out.set(src.subarray(32 + 32 * n + 1, I.hlen), p + 1);
+  for (let i = 0; i < I.nrec; i++){
+    const o = hlen + i * rlen;
+    out.set(src.subarray(I.hlen + i * I.rlen, I.hlen + (i + 1) * I.rlen), o);
+    let q = o + I.rlen; const r = L.res[i];
+    for (const s of specs){
+      const v = valueFor(s.f, r);
+      out.set(s.type === "N" ? encodeNum(v, s.len, s.dec) : encodeStr(v, L.enc, s.len), q); q += s.len;
+    }
+  }
+  out[out.length - 1] = 0x1A;
+  return out;
+}
+
+/* ================= Bangun ZIP keluaran ================= */
+async function buildOutputZip(onProg){
+  const specs = outFields().map(f => ({f, name:f.name, ...inferSpec(f)}));
+  const roots = new Set(S.layers.map(l => l.base.split("/")[0]));
+  const repl = new Map(); // path -> bytes
+  let k = 0;
+  for (const L of S.layers){
+    k++; onProg && onProg(`Menulis ${baseName(L.base)}.dbf (${k}/${S.layers.length})`);
+    repl.set(L.dbfLeaf.path, buildDbf(L, specs));
+    if (!L.hadCpg && L.enc === "utf-8") repl.set(L.base + ".cpg", new TextEncoder().encode("UTF-8"));
+    await new Promise(r => setTimeout(r));
+  }
+  const tree = {kids:new Map()};
+  const put = (path, bytes) => { const segs = path.split("/"); let node = tree, acc = "";
+    segs.forEach((s, i) => { acc = acc ? acc + "/" + s : s;
+      if (i === segs.length - 1) node.kids.set(s, {bytes});
+      else { if (!node.kids.has(s)) node.kids.set(s, {kids:new Map(), zip:S.zipPrefixes.has(acc)}); node = node.kids.get(s); } }); };
+  for (const lf of S.leaves.values()) if (roots.has(lf.path.split("/")[0])) put(lf.path, repl.get(lf.path) || lf.bytes);
+  for (const [p, b] of repl) if (!S.leaves.has(p)) put(p, b);
+  const nested = S.outMode === "nested";
+  async function fill(z, node){
+    for (const [name, ch] of node.kids){
+      if (ch.bytes) z.file(name, ch.bytes);
+      else if (ch.zip && nested){ const sub = new JSZip(); await fill(sub, ch); onProg && onProg(`Mengemas ${name}`); z.file(name, await sub.generateAsync({type:"uint8array", compression:"DEFLATE"})); }
+      else await fill(z.folder(ch.zip ? name.replace(/\.zip$/i, "") : name), ch);
+    }
+  }
+  const top = [...tree.kids.entries()];
+  let outZip = new JSZip(), fname;
+  const stamp = new Date().toISOString().slice(0,10).replace(/-/g,"");
+  if (top.length === 1 && top[0][1].zip){ await fill(outZip, top[0][1]); fname = stripExt(top[0][0]) + "_join.zip"; }
+  else { await fill(outZip, tree); fname = `SHP_join_${stamp}.zip`; }
+  onProg && onProg("Mengompres ZIP akhir…");
+  const blob = await outZip.generateAsync({type:"blob", compression:"DEFLATE", mimeType:"application/zip"});
+  return {blob, fname};
+}
+
+/* ================= Laporan XLSX (penulis sederhana) ================= */
+function xlsxBlob(sheets){
+  const z = new JSZip();
+  const xe = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
+  const colL = i => { let s = ""; i++; while (i){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; };
+  z.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}</Types>`);
+  z.file("_rels/.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+  z.file("xl/workbook.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s, i) => `<sheet name="${xe(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("")}</sheets></workbook>`);
+  z.file("xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((_, i) => `<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")}<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`);
+  z.file("xl/styles.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDCEFEA"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`);
+  sheets.forEach((s, i) => {
+    const rows = [s.head, ...s.rows];
+    const widths = s.head.map((h, c) => Math.min(60, Math.max(8, ...rows.slice(0, 500).map(r => String(r[c] ?? "").length + 2))));
+    const body = rows.map((r, ri) => `<row r="${ri+1}">${r.map((v, ci) => {
+      if (v === null || v === undefined || v === "") return "";
+      const ref = colL(ci) + (ri + 1), st = ri === 0 ? ' s="1"' : "";
+      return typeof v === "number" && isFinite(v) ? `<c r="${ref}"${st}><v>${v}</v></c>` : `<c r="${ref}" t="inlineStr"${st}><is><t xml:space="preserve">${xe(v)}</t></is></c>`;
+    }).join("")}</row>`).join("");
+    z.file(`xl/worksheets/sheet${i+1}.xml`, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w, c) => `<col min="${c+1}" max="${c+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${body}</sheetData>${s.rows.length ? `<autoFilter ref="A1:${colL(s.head.length-1)}${s.rows.length+1}"/>` : ""}</worksheet>`);
+  });
+  return z.generateAsync({type:"blob", compression:"DEFLATE", mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+function buildReport(){
+  const R = S.result;
+  const sum = { name:"Ringkasan", head:["Layer SHP","Jumlah bidang","Cocok","Duplikat di Excel","Tidak ada di Excel","Wilayah tak dikenal","NIB kosong","% cocok"], rows:[] };
+  for (const L of S.layers){ const t = L.info.nrec, s = L.stat; sum.rows.push([L.base, t, s.COCOK, s.DUPLIKAT, s.TIDAK_ADA, s.WIL_TAK_DIKENAL, s.NIB_KOSONG, t ? Math.round((s.COCOK + s.DUPLIKAT) / t * 1000) / 10 : 0]); }
+  const bid = { name:"Bidang", head:["Layer SHP","Baris","NIB (SHP)","Desa (SHP)","Kecamatan (SHP)","Kode desa dipakai","Nama desa","Sumber kode","Status","Jumlah baris Excel","Nomor_Hak","Tipe Hak 2","File Excel"], rows:[] };
+  for (const L of S.layers) L.res.forEach((r, i) => bid.rows.push([L.base, i + 1, r.nibRaw, r.desaTxt, r.kecTxt, r.wil, R.desa[r.wil] || "", r.src, r.status, r.nMatch || 0, r.rec?.nh ? r.rec.vals[Object.keys(r.rec.vals).find(k => /nomor.*hak/i.test(k))] : "", r.rec?.tipe2 || "", r.rec?.x.file || ""]));
+  const un = { name:"Excel tanpa bidang", head:["File Excel","Kode desa","Nama desa","NIB","Nomor_Hak","Tipe Hak 2"], rows: R.unused.map(r => [r.x.file, r.wil, R.desa[r.wil] || r.x.fileName, r.nib, r.vals[Object.keys(r.vals).find(k => /nomor.*hak/i.test(k))] ?? "", r.tipe2]) };
+  const dupMap = new Map(); for (const r of R.records){ const k = r.wil + "|" + r.nib; (dupMap.get(k) || dupMap.set(k, []).get(k)).push(r); }
+  const dup = { name:"NIB ganda di Excel", head:["Kode desa","NIB","Jumlah","File","Nomor_Hak"], rows:[] };
+  for (const [k, arr] of dupMap) if (arr.length > 1) for (const r of arr) dup.rows.push([r.wil, r.nib, arr.length, r.x.file, r.vals[Object.keys(r.vals).find(k2 => /nomor.*hak/i.test(k2))] ?? ""]);
+  return [sum, bid, un, dup];
+}
+
+/* ================= Unduhan ================= */
+const dlCap = (window.claude && typeof window.claude.use === "function") ? window.claude.use("downloads").catch(() => null) : Promise.resolve(null);
+async function saveFile(filename, blob){
+  const cap = await Promise.race([dlCap, new Promise(r => setTimeout(() => r(undefined), 1500))]);
+  if (cap){
+    try { await cap.save({filename, data:blob}); toast(`Tersimpan: ${filename}`); }
+    catch(e){ toast(e && e.code === "declined" ? "Unduhan dibatalkan." : `Gagal menyimpan (${e && e.code || "galat"}).`); }
+    return;
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+
+/* ================= Render ================= */
+const STAT_META = {
+  COCOK:{label:"Cocok", cls:"good", color:"var(--good)"},
+  DUPLIKAT:{label:"Cocok, NIB ganda di Excel", cls:"warn", color:"var(--ochre)"},
+  TIDAK_ADA:{label:"Tidak ada di Excel", cls:"bad", color:"var(--bad)"},
+  WIL_TAK_DIKENAL:{label:"Desa tak dikenali", cls:"bad", color:"color-mix(in srgb, var(--bad) 55%, var(--muted))"},
+  NIB_KOSONG:{label:"NIB kosong", cls:"", color:"var(--muted)"},
+};
+function renderInputs(){
+  const L = S.layers;
+  $("#shp-summary").innerHTML = L.length ? `
+    <p class="small"><b>${L.length}</b> layer · <b>${fmt(L.reduce((a, l) => a + l.info.nrec, 0))}</b> bidang</p>
+    <div class="tbl" style="max-height:220px"><table><thead><tr><th>Layer</th><th class="num">Bidang</th><th>Field</th></tr></thead><tbody>
+    ${L.map(l => `<tr><td class="mono" title="${esc(l.base)}">${esc(shortPath(l.base))}</td><td class="num">${fmt(l.info.nrec)}</td><td class="small muted">${l.info.fields.length} · ${esc(l.enc)}</td></tr>`).join("")}
+    </tbody></table></div>` : "";
+  const X = S.excel;
+  $("#xls-summary").innerHTML = X.length ? `
+    <p class="small"><b>${X.length}</b> file · <b>${fmt(X.reduce((a, x) => a + x.rows.length, 0))}</b> baris</p>
+    <div class="tbl" style="max-height:220px"><table><thead><tr><th>Kode</th><th>Desa (dari nama file)</th><th class="num">Baris</th></tr></thead><tbody>
+    ${X.map(x => `<tr><td class="mono">${x.fileCode ? esc(x.fileCode) : codeSelect(x)}</td><td title="${esc(x.path)}">${esc(x.fileName || x.file)}${x.fileCode.length === 4 ? ' <span class="pill acc">kabupaten</span>' : ""}</td><td class="num">${fmt(x.rows.length)}</td></tr>`).join("")}
+    </tbody></table></div>` : "";
+  $("#xls-summary").querySelectorAll("select[data-xc]").forEach(s => s.onchange = () => { if (s.value) S.xlsCode[s.dataset.xc] = s.value; else delete S.xlsCode[s.dataset.xc]; recompute(); });
+  const w = [...new Set(S.warnings)];
+  const noCode = X.filter(x => !x.fileCode).length;
+  if (noCode) w.push(`${noCode} file Excel tidak punya kode desa di nama file. Kode dicari dari Nomor_Hak, lalu dari nama desa yang sama di SHP; periksa kolom Kode di atas.`);
+  $("#warnings").innerHTML = w.length ? `<div class="note">${w.map(esc).join("<br>")}</div>` : "";
+}
+function codeSelect(x){
+  const R = S.result, opts = new Map();
+  if (R){ for (const [c, n] of Object.entries(R.learnedDesa || {})) opts.set(c, n); for (const [c, n] of Object.entries(R.desa)) if (!opts.has(c)) opts.set(c, n); }
+  const cur = S.xlsCode[x.path] || "";
+  return `<select data-xc="${esc(x.path)}" aria-label="Kode desa untuk ${esc(x.file)}"><option value="">${x.autoCode ? "otomatis: " + esc(x.autoCode) : "— pilih desa —"}</option>${[...opts].sort().map(([c, n]) => `<option value="${c}" ${cur === c ? "selected" : ""}>${c} · ${esc(n)}</option>`).join("")}</select>${x.autoCode || cur ? "" : ' <span class="pill bad">kode?</span>'}`;
+}
+function shortPath(p){ const s = p.split("/"); return s.length > 3 ? "…/" + s.slice(-3).join("/") : p; }
+
+function renderMatch(){
+  const el = $("#match-body");
+  if (!S.layers.length){ el.innerHTML = `<div class="empty">Masukkan SHP untuk memilih kolom NIB, desa, dan kecamatan.</div>`; return; }
+  const F = allShpFields();
+  const sel = (id, k, opt) => `<select id="${id}" data-fm="${k}"><option value="">${opt}</option>${F.map(f => `<option ${S.fieldMap[k] === f ? "selected" : ""}>${esc(f)}</option>`).join("")}</select>`;
+  const kec = S.result ? S.result.kec : kecDict();
+  el.innerHTML = `
+    <p class="muted small">Kolom di SHP yang menjadi kunci. Jika NIB di SHP sudah 13 digit (kode desa + NIB), kode desanya dipakai langsung. Jika tidak, desa dicari lewat nama desa + kecamatan dan dicocokkan dengan nama file Excel.</p>
+    <div class="fieldmap">
+      <label>NIB ${sel("fm-nib","nib","— pilih —")}</label>
+      <label>Nama desa ${sel("fm-desa","desa","— tidak ada —")}</label>
+      <label>Nama kecamatan ${sel("fm-kec","kec","— tidak ada —")}</label>
+      <label>Kode desa (opsional) ${sel("fm-kode","kode","— tidak ada —")}</label>
+    </div>
+    ${!S.fieldMap.nib ? `<div class="note bad">Pilih kolom NIB terlebih dahulu.</div>` : ""}
+    <details>
+      <summary>Referensi kecamatan dan tipe hak</summary>
+      <div class="grid2">
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <h3>Kecamatan</h3>
+          <p class="muted small">Diisi dari nama ZIP/folder seperti <span class="mono">230901_Sekongkang</span>. Ubah bila ejaan di SHP berbeda.</p>
+          <div class="tbl" style="max-height:260px"><table><thead><tr><th>Kode</th><th>Nama</th></tr></thead><tbody>
+          ${Object.entries(kec).sort().map(([c, n]) => `<tr><td class="mono">${c}</td><td><input type="text" data-kec="${c}" value="${esc(n)}" aria-label="Nama kecamatan ${c}"></td></tr>`).join("")}
+          </tbody></table></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <h3>Tipe hak → awalan Tipe Hak 2</h3>
+          <p class="muted small">Digit sebelum 5 digit terakhir Nomor_Hak. Hasilnya <span class="mono">awalan.nomor</span>, mis. <span class="mono">M.00001</span>.</p>
+          <div class="tbl" style="max-height:260px"><table><thead><tr><th>Kode</th><th>Awalan</th><th>Jenis</th></tr></thead><tbody>
+          ${S.tipe.map((t, i) => `<tr><td class="mono">${esc(t.kode)}</td><td><input type="text" class="mono" size="5" data-tipe="${i}" value="${esc(t.prefix)}" aria-label="Awalan tipe ${t.kode}"></td><td class="small">${esc(t.nama)}</td></tr>`).join("")}
+          </tbody></table></div>
+        </div>
+      </div>
+    </details>
+    <label class="chk small"><input type="checkbox" id="opt-nibonly" ${S.nibOnly ? "checked" : ""}> Jika desa tidak ketemu, cocokkan dengan NIB saja asalkan NIB itu hanya ada satu di seluruh Excel</label>`;
+  el.querySelectorAll("select[data-fm]").forEach(s => s.onchange = () => { S.fieldMap[s.dataset.fm] = s.value; S.manual = {}; recompute(); });
+  el.querySelectorAll("input[data-kec]").forEach(i => i.onchange = () => { S.kecEdits[i.dataset.kec] = i.value.trim(); recompute(); });
+  el.querySelectorAll("input[data-tipe]").forEach(i => i.onchange = () => { S.tipe[+i.dataset.tipe].prefix = i.value.trim(); recompute(); });
+  $("#opt-nibonly").onchange = e => { S.nibOnly = e.target.checked; recompute(); };
+}
+
+function renderAttr(){
+  const el = $("#attr-body");
+  if (!S.excel.length){ el.innerHTML = `<div class="empty">Masukkan Excel Buku Tanah untuk memilih kolom.</div>`; return; }
+  const errs = validateNames(); const R = S.result;
+  const sample = R && R.records[0];
+  const row = (f, label, kind, exampleVal) => {
+    const spec = R ? inferSpec({kind, key:f.key}) : null, e = errs[kind + f.key];
+    return `<tr>
+      <td><label class="chk"><input type="checkbox" data-on="${kind}|${esc(f.key)}" ${f.on ? "checked" : ""}> ${esc(label)}</label></td>
+      <td><input type="text" class="mono${e && f.on ? " err" : ""}" size="11" maxlength="10" data-nm="${kind}|${esc(f.key)}" value="${esc(f.name)}" aria-label="Nama field untuk ${esc(label)}" ${f.on ? "" : "disabled"}>${e && f.on ? `<div class="small" style="color:var(--bad)">${esc(e)}</div>` : ""}</td>
+      <td class="small muted">${spec ? (spec.type === "N" ? `Angka ${spec.len}${spec.dec ? "," + spec.dec : ""}` : `Teks ${spec.len}`) + (spec.over ? ' <span class="pill warn">dipotong 254</span>' : "") : ""}</td>
+      <td class="mono small muted">${esc(exampleVal ?? "")}</td></tr>`; };
+  const ex = k => { if (!sample) return ""; if (k === "TIPE_HAK2") return sample.tipe2; if (k === "STAT_JOIN") return "COCOK"; if (k === "KD_WIL") return sample.wil; if (k === "NM_DESA") return R.desa[sample.wil] || ""; if (k === "NM_KEC") return R.kec[sample.wil.slice(0,6)] || ""; return sample.vals[k]; };
+  el.innerHTML = `
+    <p class="muted small">Centang kolom yang ingin ditambahkan. Nama field shapefile maksimal 10 karakter dan tidak boleh sama dengan field yang sudah ada di SHP.</p>
+    <div class="row"><button class="ghost" id="cols-all">Pilih semua</button><button class="ghost" id="cols-none">Kosongkan</button></div>
+    <div class="tbl" style="max-height:none"><table><thead><tr><th>Kolom</th><th>Nama field di SHP</th><th>Tipe</th><th>Contoh</th></tr></thead><tbody>
+      <tr><td colspan="4" class="small" style="background:var(--sunken);font-weight:600">Atribut turunan</td></tr>
+      ${S.derived.map(d => row(d, d.label, "d", ex(d.key))).join("")}
+      <tr><td colspan="4" class="small" style="background:var(--sunken);font-weight:600">Kolom dari Excel</td></tr>
+      ${S.cols.map(c => row(c, c.key, "c", ex(c.key))).join("")}
+    </tbody></table></div>`;
+  el.querySelectorAll("input[data-on]").forEach(i => i.onchange = () => { const [k, key] = i.dataset.on.split("|"); const f = (k === "d" ? S.derived : S.cols).find(x => x.key === key); f.on = i.checked; renderAttr(); renderDl(); });
+  el.querySelectorAll("input[data-nm]").forEach(i => i.onchange = () => { const [k, key] = i.dataset.nm.split("|"); const f = (k === "d" ? S.derived : S.cols).find(x => x.key === key); f.name = i.value.trim(); f.auto = false; renderAttr(); renderDl(); });
+  $("#cols-all").onclick = () => { S.cols.forEach(c => c.on = true); syncCols(); renderAttr(); renderDl(); };
+  $("#cols-none").onclick = () => { S.cols.forEach(c => c.on = false); renderAttr(); renderDl(); };
+}
+
+function renderResult(){
+  const el = $("#result-body"), R = S.result;
+  if (!R || !S.layers.length || !S.excel.length){ el.innerHTML = `<div class="empty">Hasil muncul otomatis setelah SHP dan Excel dimasukkan.</div>`; return; }
+  const c = R.cnt, t = R.tot || 1, matched = c.COCOK + c.DUPLIKAT;
+  const bar = Object.entries(STAT_META).map(([k, m]) => c[k] ? `<i style="width:${c[k] / t * 100}%;background:${m.color}" title="${m.label}: ${fmt(c[k])}"></i>` : "").join("");
+  const desaRows = {};
+  for (const L of S.layers) for (const r of L.res){ const k = r.wil || "?"; const d = desaRows[k] ||= {wil:k, n:0, ok:0, dup:0, no:0}; d.n++; if (r.status === "COCOK") d.ok++; else if (r.status === "DUPLIKAT") d.dup++; else d.no++; }
+  const xByWil = {}; for (const r of R.records){ const d = xByWil[r.wil] ||= {n:0, un:0}; d.n++; if (!r.used) d.un++; }
+  for (const k of Object.keys(xByWil)) if (!desaRows[k]) desaRows[k] = {wil:k, n:0, ok:0, dup:0, no:0};
+  const wilName = w => w === "?" ? "—" : (R.desa[w] || (w.length === 4 ? (KAB_SEED[w] || "") + " (kabupaten)" : (R.kec[w.slice(0,6)] ? "" : "")));
+  const filtered = [];
+  for (const L of S.layers){ for (let i = 0; i < L.res.length && filtered.length < 300; i++){ const r = L.res[i]; if (S.filter === "ALL" || r.status === S.filter) filtered.push([L, r]); } }
+  const desaOpts = Object.entries(R.desa).sort().map(([cde, n]) => `<option value="${cde}">${cde} · ${esc(n)} (${esc(R.kec[cde.slice(0,6)] || "")})</option>`).join("");
+  const kabOpts = [...new Set(R.records.map(r => r.wil).filter(w => w.length === 4))].map(w => `<option value="${w}">${w} · tingkat kabupaten</option>`).join("");
+  el.innerHTML = `
+    <div class="stats">
+      <div class="stat"><b>${fmt(R.tot)}</b><span>bidang di SHP</span></div>
+      <div class="stat good"><b>${fmt(c.COCOK)}</b><span>cocok</span></div>
+      <div class="stat warn"><b>${fmt(c.DUPLIKAT)}</b><span>cocok, NIB ganda di Excel</span></div>
+      <div class="stat bad"><b>${fmt(c.TIDAK_ADA + c.WIL_TAK_DIKENAL + c.NIB_KOSONG)}</b><span>tidak cocok</span></div>
+      <div class="stat"><b>${fmt(R.unused.length)}</b><span>baris Excel tanpa bidang</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="bar" role="img" aria-label="${Math.round(matched / t * 100)}% bidang cocok">${bar}</div>
+      <div class="legend">${Object.entries(STAT_META).filter(([k]) => c[k]).map(([k, m]) => `<span><i style="background:${m.color}"></i>${m.label} ${fmt(c[k])}</span>`).join("")}</div>
+    </div>
+    ${R.noNibRows ? `<div class="note info">${fmt(R.noNibRows)} baris Excel tidak punya NIB, jadi tidak ikut dicocokkan.</div>` : ""}
+    ${R.wilMismatch ? `<div class="note">${fmt(R.wilMismatch)} baris Excel punya kode desa di Nomor_Hak yang berbeda dengan kode di nama file. Kode dari nama file yang dipakai.</div>` : ""}
+    ${R.shpDup ? `<div class="note">${fmt(R.shpDup)} bidang di SHP memakai NIB + desa yang sama dengan bidang lain. Semuanya mendapat atribut yang sama; cek di laporan.</div>` : ""}
+    ${R.groups.length ? `
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <h3>Desa yang perlu dicek</h3>
+        <p class="muted small">Nama desa/kecamatan di SHP yang tidak persis sama dengan nama file Excel. Pilih desa yang benar; pilihan langsung diterapkan.</p>
+        <div class="tbl"><table><thead><tr><th>Kecamatan (SHP)</th><th>Desa (SHP)</th><th class="num">Bidang</th><th>Status</th><th>Petakan ke</th></tr></thead><tbody>
+        ${R.groups.map(g => `<tr><td>${esc(g.kec) || '<span class="muted">kosong</span>'}</td><td>${esc(g.desa) || `<span class="muted">kosong</span> <span class="small muted mono">${esc(shortPath(g.layer))}</span>`}</td><td class="num">${fmt(g.n)}</td>
+          <td>${g.src === "mirip" ? `<span class="pill warn">nama mirip</span>` : g.src === "manual" ? `<span class="pill acc">manual</span>` : `<span class="pill bad">tak dikenali</span>`} ${g.ok ? `<span class="small muted">${fmt(g.ok)} cocok</span>` : ""}</td>
+          <td><select data-gk="${esc(g.gk)}" aria-label="Petakan desa"><option value="">${g.src === "mirip" ? "otomatis: " + esc(g.wil + " · " + (R.desa[g.wil] || "")) : "— pilih desa —"}</option>${desaOpts}${kabOpts}<option value="__skip">Abaikan</option></select></td></tr>`).join("")}
+        </tbody></table></div>
+      </div>` : ""}
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h3>Per desa</h3>
+      <div class="tbl"><table><thead><tr><th>Kode</th><th>Desa</th><th>Kecamatan</th><th class="num">Bidang</th><th class="num">Cocok</th><th class="num">Tidak cocok</th><th class="num">Baris Excel</th><th class="num">Excel tanpa bidang</th></tr></thead><tbody>
+      ${Object.values(desaRows).sort((a, b) => a.wil.localeCompare(b.wil)).map(d => `<tr><td class="mono">${esc(d.wil)}</td><td>${esc(wilName(d.wil))}</td><td>${esc(d.wil.length >= 6 ? R.kec[d.wil.slice(0,6)] || "" : "")}</td><td class="num">${fmt(d.n)}</td><td class="num">${d.ok + d.dup ? fmt(d.ok + d.dup) : "0"}</td><td class="num">${d.no ? `<span class="pill bad">${fmt(d.no)}</span>` : "0"}</td><td class="num">${fmt(xByWil[d.wil]?.n || 0)}</td><td class="num">${xByWil[d.wil]?.un ? `<span class="pill warn">${fmt(xByWil[d.wil].un)}</span>` : "0"}</td></tr>`).join("")}
+      </tbody></table></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="row" style="justify-content:space-between"><h3>Pratinjau bidang</h3>
+        <select id="flt" aria-label="Saring status"><option value="ALL">Semua status</option>${Object.entries(STAT_META).map(([k, m]) => `<option value="${k}" ${S.filter === k ? "selected" : ""}>${m.label}</option>`).join("")}</select></div>
+      ${filtered.length ? `<div class="tbl"><table><thead><tr><th>Layer</th><th>NIB (SHP)</th><th>Desa (SHP)</th><th>Kode desa</th><th>Sumber</th><th>Status</th><th>Nomor Hak</th><th>Tipe Hak 2</th></tr></thead><tbody>
+      ${filtered.map(([L, r]) => `<tr><td class="mono small" title="${esc(L.base)}">${esc(baseName(L.base))}</td><td class="mono">${esc(r.nibRaw)}</td><td>${esc(r.desaTxt)}</td><td class="mono">${esc(r.wil)}</td><td class="small muted">${esc(r.src)}</td><td><span class="pill ${STAT_META[r.status].cls}">${STAT_META[r.status].label}</span></td><td class="mono">${esc(r.rec ? (Object.entries(r.rec.vals).find(([k]) => /nomor.*hak/i.test(k)) || [])[1] ?? "" : "")}</td><td class="mono">${esc(r.rec?.tipe2 || "")}</td></tr>`).join("")}
+      </tbody></table></div><p class="small muted">Menampilkan maksimal 300 baris. Daftar lengkap ada di laporan Excel.</p>` : `<div class="empty">Tidak ada bidang dengan status ini.</div>`}
+    </div>`;
+  el.querySelectorAll("select[data-gk]").forEach(s => { if (S.manual[s.dataset.gk]) s.value = S.manual[s.dataset.gk];
+    s.onchange = () => { if (s.value) S.manual[s.dataset.gk] = s.value; else delete S.manual[s.dataset.gk]; recompute(); }; });
+  $("#flt").onchange = e => { S.filter = e.target.value; renderResult(); };
+}
+
+function renderDl(){
+  const el = $("#dl-body"), R = S.result;
+  if (!R || !S.layers.length || !S.excel.length){ el.innerHTML = `<div class="empty">Belum ada hasil untuk diunduh.</div>`; return; }
+  const errs = validateNames(), nErr = Object.keys(errs).length, nf = outFields().length;
+  const nested = S.zipPrefixes.size > 0;
+  el.innerHTML = `
+    <p class="small">${fmt(nf)} field baru ditambahkan ke ${fmt(S.layers.length)} layer. Geometri (.shp, .shx) dan proyeksi (.prj) disalin apa adanya; hanya .dbf yang ditulis ulang.</p>
+    ${nested ? `<div class="row small">
+      <label class="chk"><input type="radio" name="om" value="nested" ${S.outMode === "nested" ? "checked" : ""}> Pertahankan struktur ZIP di dalam ZIP</label>
+      <label class="chk"><input type="radio" name="om" value="flat" ${S.outMode === "flat" ? "checked" : ""}> Jadikan folder dalam satu ZIP</label></div>` : ""}
+    ${nErr ? `<div class="note bad">Perbaiki ${nErr} nama field di langkah 3 sebelum mengunduh.</div>` : ""}
+    <div class="row">
+      <button class="primary" id="dl-zip" ${nErr || !nf ? "disabled" : ""}>Unduh SHP hasil join (.zip)</button>
+      <button id="dl-rep">Unduh laporan pencocokan (.xlsx)</button>
+      <span class="status" id="dl-status"></span>
+    </div>`;
+  el.querySelectorAll("input[name=om]").forEach(r => r.onchange = () => { S.outMode = r.value; });
+  $("#dl-zip").onclick = async e => {
+    const b = e.currentTarget; b.disabled = true; const st = $("#dl-status");
+    try { const {blob, fname} = await buildOutputZip(m => st.innerHTML = `<span class="spin"></span>${esc(m)}`); st.textContent = ""; await saveFile(fname, blob); }
+    catch(err){ st.textContent = ""; toast("Gagal membuat ZIP: " + err.message); console.error(err); }
+    b.disabled = false; };
+  $("#dl-rep").onclick = async () => { try { await saveFile(`Laporan_join_${new Date().toISOString().slice(0,10)}.xlsx`, await xlsxBlob(buildReport())); } catch(err){ toast("Gagal membuat laporan: " + err.message); } };
+}
+function renderAll(){ renderInputs(); renderMatch(); renderAttr(); renderResult(); renderDl(); }
+
+/* ================= Event ================= */
+let pickTarget = null;
+for (const id of ["shp","xls"]){
+  const dz = $("#drop-" + id);
+  dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("over"); });
+  dz.addEventListener("dragleave", () => dz.classList.remove("over"));
+  dz.addEventListener("drop", async e => { e.preventDefault(); dz.classList.remove("over"); try { await ingest(await entriesFromDrop(e.dataTransfer)); } catch(err){ setStatus(""); toast("Gagal membaca: " + err.message); } });
+  $("#pick-" + id).onclick = () => $("#in-files").click();
+  $("#pick-" + id + "-dir").onclick = () => $("#in-dir").click();
+}
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => e.preventDefault());
+for (const id of ["#in-files", "#in-dir"]){
+  $(id).onchange = async e => { const fs = [...e.target.files].map(f => ({path: f.webkitRelativePath || f.name, file:f})); e.target.value = ""; try { await ingest(fs); } catch(err){ setStatus(""); toast("Gagal membaca: " + err.message); } };
+}
+$("#btn-clear").onclick = () => { S.xlsCode = {}; S.leaves.clear(); S.zipPrefixes.clear(); S.layers = []; S.excel = []; S.warnings = []; S.manual = {}; S.cols = []; S.result = null; renderAll(); };
+const SAMPLE = {"Contoh_SHP_Sumbawa_Barat.zip": "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", "Contoh_Excel_BukuTanah.zip": "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"};
+$("#btn-sample").onclick = async () => {
+  const items = Object.entries(SAMPLE).map(([name, b64]) => { const bin = atob(b64), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); return {path:name, file:new Blob([u8])}; });
+  await ingest(items); toast("Data contoh dimuat (fiktif, untuk mencoba alur).");
+};
+renderAll();
+</script>
+
+</body></html>
