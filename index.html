@@ -89,6 +89,9 @@ details[open]>summary{margin-bottom:12px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50;max-width:calc(100% - 32px)}
 .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.topnav{display:flex;gap:14px;font-size:13.5px}
+.topnav a{color:var(--accent);text-decoration:none;font-weight:500}
+.topnav a:hover{text-decoration:underline}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
@@ -97,6 +100,7 @@ details[open]>summary{margin-bottom:12px}
 
 <div class="wrap">
   <header>
+    <nav class="topnav"><a href="peta.html">Peta Indikatif Bidang →</a></nav>
     <h1>Join Buku Tanah</h1>
     <p class="lede">Menambahkan atribut dari Excel kualitas data Buku Tanah ke shapefile bidang tanah. Kunci gabungnya NIB + desa + kecamatan, jadi NIB yang sama di desa berbeda tidak tertukar. Semua file diproses di browser ini dan tidak dikirim ke server.</p>
     <div class="key" aria-label="Struktur Nomor Hak">
@@ -986,6 +990,9 @@ function renderResult(){
   $("#flt").onchange = e => { S.filter = e.target.value; renderResult(); };
 }
 
+/* Serah-terima hasil join ke halaman peta (IndexedDB, satu origin) */
+function idb(){ return new Promise((res, rej) => { const r = indexedDB.open("joinspasial", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function kvSet(k, v){ const db = await idb(); return new Promise((res, rej) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = () => res(); t.onerror = () => rej(t.error); }); }
 function renderDl(){
   const el = $("#dl-body"), R = S.result;
   if (!R || !S.layers.length || !S.excel.length){ el.innerHTML = `<div class="empty">Belum ada hasil untuk diunduh.</div>`; return; }
@@ -1000,6 +1007,7 @@ function renderDl(){
     <div class="row">
       <button class="primary" id="dl-zip" ${nErr || !nf ? "disabled" : ""}>Unduh SHP hasil join (.zip)</button>
       <button id="dl-rep">Unduh laporan pencocokan (.xlsx)</button>
+      <button id="dl-peta" ${nErr || !nf ? "disabled" : ""}>Buat peta indikatif →</button>
       <span class="status" id="dl-status"></span>
     </div>`;
   el.querySelectorAll("input[name=om]").forEach(r => r.onchange = () => { S.outMode = r.value; });
@@ -1008,6 +1016,14 @@ function renderDl(){
     try { const {blob, fname} = await buildOutputZip(m => st.innerHTML = `<span class="spin"></span>${esc(m)}`); st.textContent = ""; await saveFile(fname, blob); }
     catch(err){ st.textContent = ""; toast("Gagal membuat ZIP: " + err.message); console.error(err); }
     b.disabled = false; };
+  $("#dl-peta").onclick = async e => {
+    const b = e.currentTarget; b.disabled = true; const st = $("#dl-status");
+    try {
+      const {blob, fname} = await buildOutputZip(m => st.innerHTML = `<span class="spin"></span>${esc(m)}`);
+      await kvSet("peta", {name: fname, bytes: await blob.arrayBuffer(), time: Date.now()});
+      location.href = "peta.html?dari=join";
+    } catch(err){ st.textContent = ""; toast("Tidak bisa membuka halaman peta otomatis. Unduh ZIP hasil join lalu masukkan ke halaman Peta Indikatif."); console.error(err); b.disabled = false; }
+  };
   $("#dl-rep").onclick = async () => { try { await saveFile(`Laporan_join_${new Date().toISOString().slice(0,10)}.xlsx`, await xlsxBlob(buildReport())); } catch(err){ toast("Gagal membuat laporan: " + err.message); } };
 }
 function renderAll(){ renderInputs(); renderMatch(); renderAttr(); renderResult(); renderDl(); }
