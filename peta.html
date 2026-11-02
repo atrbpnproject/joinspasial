@@ -199,9 +199,16 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <label>Warnai bidang berdasarkan<select id="c-color"></select></label>
       <label>Cara pengelompokan<select id="c-symmode"><option value="kategori">Per nilai unik (kategori)</option><option value="kelas">Rentang nilai (kelas angka)</option></select></label>
       <label>Jumlah kelas<select id="c-ncls"><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
-      <label>Judul legenda<input type="text" id="c-legtitle" placeholder="otomatis dari nama kolom"></label>
     </div>
     <div id="sym-body"></div>
+    <h3>Teks legenda</h3>
+    <p class="muted small">Kosongkan isian untuk memakai teks otomatis (terlihat samar di dalam kotak). Keterangan tiap kelompok warna diubah di daftar warna di atas, dan untuk layer tambahan di kartu layernya.</p>
+    <div class="form">
+      <label>Judul legenda<input type="text" id="c-legtitle"></label>
+      <label>Keterangan bidang (bila satu warna)<input type="text" id="c-legParcel"></label>
+      <label>Keterangan label bidang<input type="text" id="c-legLabel"></label>
+      <label class="chk" style="flex-direction:row;align-self:end"><input type="checkbox" id="c-legCount"> Tampilkan jumlah bidang, mis. (4)</label>
+    </div>
     <h3>Gaya bidang</h3>
     <div class="form">
       <label>Opasitas isi bidang (0% = tembus pandang) <span class="mono" id="v-pFillOp"></span><input type="range" id="c-pFillOp" min="0" max="100" step="5"></label>
@@ -356,7 +363,7 @@ const DEF = {
   sumber: "Peta bidang tanah terdaftar dan Buku Tanah (hasil join spasial)",
   catatan: "Peta ini bersifat indikatif, bukan penetapan batas bidang tanah.",
   paper: "A3", orient: "landscape", scale: "auto", order: "spasial", lab1: "__no", lab2: "", lab3: "", lsize: "1",
-  symmode: "kategori", ncls: "5", legtitle: "", symColors: {}, symLabels: {},
+  symmode: "kategori", ncls: "5", legtitle: "", legParcel: "", legLabel: "", legCount: true, symColors: {}, symLabels: {},
   color: "", fill: "#FCE59A", grid: true, total: true,
   pFillOp: "90", pStroke: "#C62828", pStrokeW: "0.28", pDash: false,
   bm: "", bmOpacity: "100", bmDetail: "0", ovs: [],
@@ -767,23 +774,23 @@ function buildPages(){
     const ls = 2.3 * u, lh = 4.6 * u, sw = 7 * u, sh = 3.4 * u;
     const items = [];
     const pst = {stroke:cfg.pStroke, op:Number(cfg.pFillOp) / 100, dash:cfg.pDash};
-    if (sym){ for (const c of sym.classes) items.push({type:"fill", color:c.color, ...pst, text:`${c.label} (${c.n})`}); }
-    else items.push({type:"fill", color:cfg.fill, ...pst, text:"Bidang tanah objek pengadaan tanah"});
+    if (sym){ for (const c of sym.classes) items.push({type:"fill", color:c.color, ...pst, text: cfg.legCount ? `${c.label} (${c.n})` : c.label}); }
+    else items.push({type:"fill", color:cfg.fill, ...pst, text: cfg.legParcel || LEG_PARCEL});
     const labKeys = [cfg.lab1, cfg.lab2, cfg.lab3].filter(Boolean);
     if (labKeys.length) items.push({type:"num", sample: labKeys[0] === "__no" ? "12" : "Abc",
-      text: labKeys.length === 1 && labKeys[0] === "__no" ? "Nomor urut bidang (lihat tabel)" : "Label bidang: " + labKeys.map(labelName).join(" / ")});
+      text: cfg.legLabel || autoLegLabel()});
     for (const ov of P.overlays){
       if (!ov.feats || ov.hidden || !ov.style.legend) continue;
       const st = ov.style, ost = {stroke:Number(st.strokeW) > 0 ? st.stroke : "none", op:Number(st.fillOp) / 100, dash:st.dash};
       const vis = ov.feats.filter(f => featInExt(f, ext));
       if (!vis.length) continue;
-      items.push({type:"head", text: ov.label + (st.by ? ` (${st.by})` : "")});
+      items.push({type:"head", text: st.title || ovAutoTitle(ov)});
       if (st.by){ const cm = ovColorMap(ov), cnt = new Map(); for (const f of vis){ const v = ovVal(ov, f); cnt.set(v, (cnt.get(v) || 0) + 1); }
-        for (const v of [...cnt.keys()].sort((a, b) => a.localeCompare(b, "id", {numeric:true}))) items.push({type:"fill", color:cm.get(v), ...ost, text:v}); }
-      else items.push({type:"fill", color:st.fill, ...ost, text:ov.label});
+        for (const v of [...cnt.keys()].sort((a, b) => a.localeCompare(b, "id", {numeric:true}))) items.push({type:"fill", color:cm.get(v), ...ost, text:(st.labels && st.labels[v]) || v}); }
+      else items.push({type:"fill", color:st.fill, ...ost, text:(st.labels && st.labels.__all) || ov.label});
     }
     const lines = items.map(it => ({...it, lines:wrap(it.text, it.type === "head" ? ls * 1.02 : ls, it.type === "head", it.type === "head" ? w - 2 * pad : w - 2 * pad - sw - 2 * u)}));
-    const head = cfg.legtitle ? `LEGENDA — ${cfg.legtitle}` : (sym ? `LEGENDA — ${labelName(sym.field)}` : "LEGENDA");
+    const head = cfg.legtitle || autoLegTitle();
     const rhOf = l => l.type === "head" ? l.lines.length * ls * 1.3 + 1.6 * u : Math.max(lh, l.lines.length * ls * 1.25 + 1.2 * u);
     const h = pad + 3 * u + lines.reduce((a, l) => a + rhOf(l), 0) + pad * 0.6;
     return {h, draw:(x, y) => {
@@ -1046,6 +1053,11 @@ function computeSym(feats){
   }
   return {field:k, classes, of};
 }
+const LEG_PARCEL = "Bidang tanah objek pengadaan tanah";
+function autoLegTitle(){ return P.cfg.color ? `LEGENDA — ${labelName(P.cfg.color)}` : "LEGENDA"; }
+function autoLegLabel(){ const ks = [P.cfg.lab1, P.cfg.lab2, P.cfg.lab3].filter(Boolean);
+  return ks.length === 1 && ks[0] === "__no" ? "Nomor urut bidang (lihat tabel)" : "Label bidang: " + ks.map(labelName).join(" / "); }
+const ovAutoTitle = ov => ov.label + (ov.style.by ? ` (${ov.style.by})` : "");
 function labelName(k){ if (k === "__no") return "Nomor urut"; const c = P.cols.find(c => c.key === k); return c && c.label && c.label !== k ? c.label : k; }
 
 /* ================= Proyeksi (Transverse Mercator ↔ geografis) ================= */
@@ -1285,7 +1297,9 @@ function renderForm(){
   const c = P.cfg;
   for (const k of ["title", "lokasi", "instansi", "tanggal", "sumber", "catatan"]) { const e = $("#c-" + k); if (document.activeElement !== e) e.value = c[k] || ""; }
   $("#c-paper").value = c.paper; $("#c-orient").value = c.orient; $("#c-lsize").value = c.lsize; $("#c-symmode").value = c.symmode; $("#c-ncls").value = c.ncls;
-  if (document.activeElement !== $("#c-legtitle")) $("#c-legtitle").value = c.legtitle || "";
+  for (const [id, k, auto] of [["#c-legtitle", "legtitle", autoLegTitle()], ["#c-legParcel", "legParcel", LEG_PARCEL], ["#c-legLabel", "legLabel", autoLegLabel()]]){
+    const e = $(id); e.placeholder = auto; if (document.activeElement !== e) e.value = c[k] || ""; }
+  $("#c-legParcel").disabled = !!c.color; $("#c-legCount").checked = c.legCount !== false;
   $("#c-grid").checked = !!c.grid; $("#c-total").checked = !!c.total;
   fillSelect($("#c-scale"), [["auto", "Otomatis (menyesuaikan kertas)"], ...NICE_SCALES.filter(s => s >= 250 && s <= 250000).map(s => [String(s), "1 : " + s.toLocaleString("id-ID")])], c.scale);
   const fopts = P.fields.map(f => ["f:" + f.name, "Kolom " + f.name]);
@@ -1344,7 +1358,9 @@ function renderOverlays(){
         <label class="chk"><input type="checkbox" data-k="legend" ${st.legend ? "checked" : ""}> Tampilkan di legenda</label>
         <label class="chk"><input type="checkbox" data-k="hidden" ${ov.hidden ? "checked" : ""}> Sembunyikan sementara</label>
       </div>
-      ${st.by && cm.size ? `<details><summary>Warna per ${esc(st.by)} (${cm.size})</summary><div class="symlist">${[...cm].map(([v, c]) => `<div class="symrow"><input type="color" data-cat="${esc(v)}" value="${esc(c)}" aria-label="Warna ${esc(v)}"><span>${esc(v)}</span><span></span></div>`).join("")}</div></details>` : ""}
+      <div class="form"><label>Judul layer di legenda<input type="text" data-k="title" value="${esc(st.title || "")}" placeholder="${esc(ovAutoTitle(ov))}"></label>
+        ${st.by ? "" : `<label>Keterangan di legenda<input type="text" data-lab="__all" value="${esc((st.labels || {}).__all || "")}" placeholder="${esc(ov.label)}"></label>`}</div>
+      ${st.by && cm.size ? `<details><summary>Warna dan keterangan per ${esc(st.by)} (${cm.size})</summary><div class="symlist">${[...cm].map(([v, c]) => `<div class="symrow"><input type="color" data-cat="${esc(v)}" value="${esc(c)}" aria-label="Warna ${esc(v)}"><input type="text" data-lab="${esc(v)}" value="${esc((st.labels || {})[v] || "")}" placeholder="${esc(v)}" aria-label="Keterangan ${esc(v)}"><span></span></div>`).join("")}</div></details>` : ""}
     </div>`; }).join("");
   el.querySelectorAll(".ovcard[data-i]").forEach(card => {
     const ov = P.overlays[+card.dataset.i];
@@ -1354,7 +1370,7 @@ function renderOverlays(){
       else { const j = i + (a === "up" ? -1 : 1); [P.overlays[i], P.overlays[j]] = [P.overlays[j], P.overlays[i]]; }
       saveOvPrefs(); renderOverlays(); renderBrList(); changed(); });
     card.querySelectorAll("[data-k]").forEach(inp => {
-      const k = inp.dataset.k, ev = inp.type === "range" || inp.type === "color" ? "oninput" : "onchange";
+      const k = inp.dataset.k, ev = ["range", "color", "text"].includes(inp.type) ? "oninput" : "onchange";
       inp[ev] = () => {
         if (k === "hidden") ov.hidden = inp.checked;
         else ov.style[k] = inp.type === "checkbox" ? inp.checked : inp.value;
@@ -1362,6 +1378,7 @@ function renderOverlays(){
         saveOvPrefs(); if (k === "by") renderOverlays(); changed(); };
     });
     card.querySelectorAll("[data-cat]").forEach(inp => inp.oninput = () => { ov.style.colors[inp.dataset.cat] = inp.value; saveOvPrefs(); changed(); });
+    card.querySelectorAll("[data-lab]").forEach(inp => inp.oninput = () => { (ov.style.labels = ov.style.labels || {})[inp.dataset.lab] = inp.value; saveOvPrefs(); changed(); });
   });
 }
 function saveOvPrefs(){ P.cfg.ovs = P.overlays.filter(o => !o.error).map(o => ({key:o.key, style:o.style, hidden:!!o.hidden})); savePrefs(); }
@@ -1524,9 +1541,10 @@ for (const id of ["#in-files", "#in-dir"]){
 }
 $("#btn-clear").onclick = () => { P.overlays = []; BR_AVAIL = null; P.leaves.clear(); P.layers = []; P.feats = []; P.fields = []; P.warnings = []; P.cols = []; renderAll(); };
 for (const k of ["title", "lokasi", "instansi", "tanggal", "sumber", "catatan"]) $("#c-" + k).oninput = e => { P.cfg[k] = e.target.value; changed(); };
-for (const k of ["paper", "orient", "scale", "order", "lab1", "lab2", "lab3", "lsize"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; changed(); };
+for (const k of ["paper", "orient", "scale", "order", "lab1", "lab2", "lab3", "lsize"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; if (/^lab/.test(k)) $("#c-legLabel").placeholder = autoLegLabel(); changed(); };
 for (const k of ["color", "symmode", "ncls"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; renderForm(); changed(); };
-$("#c-legtitle").oninput = e => { P.cfg.legtitle = e.target.value; changed(); };
+for (const k of ["legtitle", "legParcel", "legLabel"]) $("#c-" + k).oninput = e => { P.cfg[k] = e.target.value; changed(); };
+$("#c-legCount").onchange = e => { P.cfg.legCount = e.target.checked; changed(); };
 for (const k of ["pFillOp", "bmOpacity"]) $("#c-" + k).oninput = e => { P.cfg[k] = e.target.value; $("#v-" + k).textContent = e.target.value + "%"; changed(); };
 $("#c-pStroke").oninput = e => { P.cfg.pStroke = e.target.value; changed(); };
 for (const k of ["pStrokeW", "bmDetail"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; changed(); };
