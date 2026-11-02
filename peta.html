@@ -1,0 +1,1063 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Peta Indikatif Bidang</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: satu kolom kerja berurutan (data → pencocokan → atribut → hasil → unduh), lebar terbatas, tabel menggulir di wadahnya sendiri */
+:root{
+  --paper:#F4F6F3; --surface:#FFFFFF; --sunken:#EBEFEB; --ink:#16211E; --muted:#596661; --line:#D7DED9;
+  --accent:#0E6A5B; --accent-soft:#DCEFEA; --on-accent:#FFFFFF;
+  --ochre:#9A6412; --ochre-soft:#F6EBD6; --bad:#B42318; --bad-soft:#FBE5E2; --good:#1D7440; --good-soft:#DFF2E5;
+  --f-display:"Archivo","Segoe UI",system-ui,sans-serif; --f-body:"Public Sans","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0E1412; --surface:#151D1A; --sunken:#1B2521; --ink:#E4EBE8; --muted:#94A39D; --line:#28342F;
+  --accent:#43B9A2; --accent-soft:#16332D; --on-accent:#08201B;
+  --ochre:#E2A947; --ochre-soft:#3A2C12; --bad:#F2806F; --bad-soft:#3D1A16; --good:#62CC8E; --good-soft:#15301F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0E1412; --surface:#151D1A; --sunken:#1B2521; --ink:#E4EBE8; --muted:#94A39D; --line:#28342F;
+  --accent:#43B9A2; --accent-soft:#16332D; --on-accent:#08201B;
+  --ochre:#E2A947; --ochre-soft:#3A2C12; --bad:#F2806F; --bad-soft:#3D1A16; --good:#62CC8E; --good-soft:#15301F; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:30px;font-weight:700}
+h2{font-size:19px;font-weight:600;display:flex;align-items:baseline;gap:10px}
+h2 .n{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:500}
+h3{font-size:14px;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:.92em}
+.small{font-size:13px}
+header{display:flex;flex-direction:column;gap:10px}
+header .lede{max-width:70ch;color:var(--muted)}
+.key{display:flex;flex-wrap:wrap;gap:0;font-family:var(--f-mono);margin-top:6px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);width:fit-content;max-width:100%;overflow:hidden}
+.key span{display:flex;flex-direction:column;padding:7px 12px;border-right:1px solid var(--line)}
+.key span:last-child{border-right:0}
+.key b{font-weight:500;font-size:15px}
+.key i{font-style:normal;font-family:var(--f-body);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.key .hl b{color:var(--accent)}
+section.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--sunken);transition:border-color .15s,background .15s;min-width:0}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop .hint{font-size:13px;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,.btn{font:inherit;font-weight:500;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 13px;cursor:pointer;line-height:1.3}
+button:hover{border-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.primary:hover{filter:brightness(1.07)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted);padding-inline:8px}
+button.ghost:hover{color:var(--ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+select,input[type=text]{font:inherit;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 8px;min-width:0}
+input[type=text].mono{font-family:var(--f-mono)}
+input.err{border-color:var(--bad);background:var(--bad-soft)}
+label.chk{display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);max-height:420px;overflow-y:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+th{position:sticky;top:0;background:var(--sunken);font-weight:600;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;z-index:1}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px;letter-spacing:.02em;background:var(--sunken);color:var(--muted)}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--ochre-soft);color:var(--ochre)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.acc{background:var(--accent-soft);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--f-display);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.stat.good b{color:var(--good)} .stat.bad b{color:var(--bad)} .stat.warn b{color:var(--ochre)}
+.bar{height:8px;border-radius:99px;background:var(--sunken);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.note{border-left:3px solid var(--ochre);background:var(--ochre-soft);padding:9px 12px;border-radius:0 var(--r) var(--r) 0;font-size:13.5px}
+.note.info{border-left-color:var(--accent);background:var(--accent-soft)}
+.note.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
+details{border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details>summary{cursor:pointer;font-weight:600;font-size:14px}
+details[open]>summary{margin-bottom:12px}
+.fieldmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fieldmap label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:500}
+#match-body,#attr-body,#result-body,#dl-body{display:flex;flex-direction:column;gap:16px;min-width:0}
+.status{font-size:13px;color:var(--muted);min-height:1.4em}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50;max-width:calc(100% - 32px)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+@media (max-width:560px){h1{font-size:24px} section.card{padding:14px}}
+</style>
+<style>
+/* Tambahan halaman peta: panel pengaturan di atas, pratinjau lembar peta di bawah */
+.topnav{display:flex;gap:14px;font-size:13.5px}
+.topnav a{color:var(--accent);text-decoration:none;font-weight:500}
+.topnav a:hover{text-decoration:underline}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 16px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:500;min-width:0}
+.form label.wide{grid-column:1/-1}
+textarea{font:inherit;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 8px;resize:vertical;min-height:2.4em}
+textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=color]{width:46px;height:30px;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:2px}
+.cols{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.colrow{display:grid;grid-template-columns:auto minmax(90px,160px) minmax(0,1fr) minmax(0,200px) auto;gap:10px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);background:var(--surface)}
+.colrow:last-child{border-bottom:0}
+.colrow.off{background:var(--sunken)}
+.colrow.off .mono{color:var(--muted)}
+.colrow .ex{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.colrow .mv{display:flex;gap:2px}
+.colrow .mv button{padding:3px 8px;font-size:12px}
+.pages{display:flex;flex-direction:column;gap:18px;align-items:center}
+.page{width:100%;max-width:1060px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18),0 6px 20px rgba(0,0,0,.08);border-radius:2px;line-height:0}
+.page svg{width:100%;height:auto;display:block}
+.pagecap{font-size:12px;color:var(--muted);align-self:flex-start}
+#print-area{display:none}
+@media (max-width:560px){.colrow{grid-template-columns:auto 1fr auto}.colrow .ex{display:none}.colrow input[type=text]{grid-column:2/3}}
+@media print{
+  body{background:#fff}
+  .wrap,.toast{display:none!important}
+  #print-area{display:block}
+  #print-area svg{display:block;break-after:page;page-break-after:always}
+  #print-area svg:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <nav class="topnav"><a href="index.html">← Join Buku Tanah</a></nav>
+    <h1>Peta Indikatif Bidang Tanah</h1>
+    <p class="lede">Membuat lembar peta siap cetak dari shapefile bidang tanah (misalnya hasil Join Buku Tanah): peta dengan nomor urut bidang, judul, legenda, arah utara, skala, grid koordinat, dan tabel daftar bidang yang kolomnya bisa dipilih. Semua file diproses di browser ini dan tidak dikirim ke server.</p>
+  </header>
+
+  <section class="card" id="sec-data">
+    <h2><span class="n">1</span>Masukkan SHP bidang tanah</h2>
+    <div class="drop" id="drop-shp">
+      <p class="hint">Seret .zip, folder, atau .shp + .dbf + .shx + .prj (+ .cpg) ke sini. Beberapa layer sekaligus akan digabung dalam satu peta.</p>
+      <div class="row">
+        <button id="pick-shp">Pilih file</button>
+        <button id="pick-shp-dir">Pilih folder</button>
+        <button id="btn-handoff" class="primary" hidden>Pakai hasil join terakhir</button>
+        <button class="ghost" id="btn-clear">Kosongkan</button>
+        <span class="status" id="load-status"></span>
+      </div>
+      <div id="shp-summary"></div>
+    </div>
+    <input type="file" id="in-files" multiple hidden>
+    <input type="file" id="in-dir" webkitdirectory multiple hidden>
+    <div id="warnings"></div>
+  </section>
+
+  <section class="card" id="sec-tpl">
+    <h2><span class="n">2</span>Isi template</h2>
+    <div class="form">
+      <label class="wide">Judul peta<textarea id="c-title" rows="2"></textarea></label>
+      <label class="wide">Lokasi (terisi otomatis dari data, bisa diubah)<textarea id="c-lokasi" rows="2"></textarea></label>
+      <label>Instansi / penyusun<textarea id="c-instansi" rows="3"></textarea></label>
+      <label>Tempat, tanggal<input type="text" id="c-tanggal"></label>
+      <label>Sumber data<textarea id="c-sumber" rows="2"></textarea></label>
+      <label>Catatan<textarea id="c-catatan" rows="2"></textarea></label>
+    </div>
+    <div class="form">
+      <label>Ukuran kertas<select id="c-paper"><option>A4</option><option>A3</option><option>A2</option><option>A1</option><option>A0</option></select></label>
+      <label>Orientasi<select id="c-orient"><option value="landscape">Mendatar (landscape)</option><option value="portrait">Tegak (portrait)</option></select></label>
+      <label>Skala peta<select id="c-scale"></select></label>
+      <label>Urutan nomor bidang<select id="c-order"></select></label>
+      <label>Isi label di peta<select id="c-label"><option value="no">Nomor urut</option><option value="no_nib">Nomor urut + NIB</option></select></label>
+      <label>Ukuran label<select id="c-lsize"><option value="0.75">Kecil</option><option value="1">Sedang</option><option value="1.3">Besar</option><option value="1.7">Sangat besar</option></select></label>
+      <label>Warnai bidang berdasarkan<select id="c-color"></select></label>
+      <label>Warna isi bidang<input type="color" id="c-fill"></label>
+    </div>
+    <div class="row small">
+      <label class="chk"><input type="checkbox" id="c-grid"> Garis grid koordinat</label>
+      <label class="chk"><input type="checkbox" id="c-total"> Baris jumlah luas di tabel</label>
+      <button class="ghost" id="btn-reset">Kembalikan isian bawaan</button>
+    </div>
+  </section>
+
+  <section class="card" id="sec-cols">
+    <h2><span class="n">3</span>Kolom tabel daftar bidang</h2>
+    <p class="muted small">Centang kolom yang ingin ditampilkan, ubah judul kolomnya, dan atur urutannya. Kolom yang cocok (nama, luas, nomor hak, NIB, nomor SU) dipilih otomatis.</p>
+    <div id="cols-body"><div class="empty">Masukkan SHP untuk memilih kolom.</div></div>
+  </section>
+
+  <section class="card" id="sec-prev">
+    <h2><span class="n">4</span>Pratinjau dan unduh</h2>
+    <div class="row">
+      <button class="primary" id="dl-pdf" disabled>Unduh PDF</button>
+      <button id="dl-png" disabled>Unduh PNG</button>
+      <button id="dl-svg" disabled>Unduh SVG</button>
+      <button id="dl-xlsx" disabled>Unduh tabel (.xlsx)</button>
+      <button class="ghost" id="btn-print" disabled>Cetak</button>
+      <span class="status" id="dl-status"></span>
+    </div>
+    <div id="prev-body"><div class="empty">Pratinjau muncul setelah SHP dimasukkan.</div></div>
+  </section>
+</div>
+<div id="print-area"></div>
+<style id="page-style"></style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+"use strict";
+/* ================= Utilitas ================= */
+/* ================= Utilitas ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Number(n).toLocaleString("id-ID");
+const extOf = p => { const m = /\.([^./]+)$/.exec(p); return m ? m[1].toLowerCase() : ""; };
+const baseName = p => p.split("/").pop();
+const stripExt = n => n.replace(/\.[^.]+$/, "");
+const digits = s => String(s ?? "").replace(/\D+/g, "");
+let toastT;
+function toast(msg){ let t = $(".toast"); if (!t){ t = document.createElement("div"); t.className = "toast"; t.setAttribute("role","status"); document.body.appendChild(t); }
+  t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3500); }
+
+async function entriesFromDrop(dt){
+  const out = [], ents = [];
+  for (const it of dt.items){ const e = it.webkitGetAsEntry && it.webkitGetAsEntry(); if (e) ents.push(e); }
+  if (!ents.length){ for (const f of dt.files) out.push({path:f.name, file:f}); return out; }
+  async function walk(e){
+    if (e.isFile){ const f = await new Promise((res, rej) => e.file(res, rej)); out.push({path:e.fullPath.replace(/^\//,""), file:f}); }
+    else if (e.isDirectory){ const r = e.createReader(); let batch;
+      do { batch = await new Promise((res, rej) => r.readEntries(res, rej)); for (const c of batch) await walk(c); } while (batch.length); }
+  }
+  for (const e of ents) await walk(e);
+  return out;
+}
+
+/* ================= DBF ================= */
+function parseDbf(u8){
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  const version = u8[0], nrecH = dv.getUint32(4, true), hlen = dv.getUint16(8, true), rlen = dv.getUint16(10, true), ldid = u8[29];
+  const fields = []; let p = 32, off = 1;
+  while (p + 32 <= hlen && u8[p] !== 0x0D){
+    let name = ""; for (let k = 0; k < 11 && u8[p+k]; k++) name += String.fromCharCode(u8[p+k]);
+    const f = {name:name.trim(), type:String.fromCharCode(u8[p+11]), len:u8[p+16], dec:u8[p+17], offset:off};
+    fields.push(f); off += f.len; p += 32;
+  }
+  const nrecFile = rlen ? Math.floor((u8.length - hlen) / rlen) : 0;
+  return {version, nrec: Math.min(nrecH, nrecFile), hlen, rlen, ldid, fields, descEnd: p};
+}
+function encFromCpg(txt){
+  const t = String(txt || "").trim().toLowerCase().replace(/^ansi\s*/,"");
+  if (!t) return null;
+  if (/utf-?8|65001/.test(t)) return "utf-8";
+  if (/^(cp|windows-?)?125[0-8]$/.test(t)) return "windows-" + t.match(/125\d/)[0];
+  if (/8859-?1|88591|latin1/.test(t)) return "iso-8859-1";
+  try { new TextDecoder(t); return t; } catch { return null; }
+}
+function sniffUtf8(u8, info){
+  const body = u8.subarray(info.hlen, Math.min(u8.length, info.hlen + 400000));
+  let hi = false; for (let i = 0; i < body.length; i++) if (body[i] > 127){ hi = true; break; }
+  if (!hi) return "utf-8";
+  try { new TextDecoder("utf-8", {fatal:true}).decode(body); return "utf-8"; } catch { return "windows-1252"; }
+}
+
+/* ================= XLSX & simpan file ================= */
+function xlsxBlob(sheets){
+  const z = new JSZip();
+  const xe = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
+  const colL = i => { let s = ""; i++; while (i){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; };
+  z.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}</Types>`);
+  z.file("_rels/.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+  z.file("xl/workbook.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s, i) => `<sheet name="${xe(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("")}</sheets></workbook>`);
+  z.file("xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((_, i) => `<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")}<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`);
+  z.file("xl/styles.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDCEFEA"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`);
+  sheets.forEach((s, i) => {
+    const rows = [s.head, ...s.rows];
+    const widths = s.head.map((h, c) => Math.min(60, Math.max(8, ...rows.slice(0, 500).map(r => String(r[c] ?? "").length + 2))));
+    const body = rows.map((r, ri) => `<row r="${ri+1}">${r.map((v, ci) => {
+      if (v === null || v === undefined || v === "") return "";
+      const ref = colL(ci) + (ri + 1), st = ri === 0 ? ' s="1"' : "";
+      return typeof v === "number" && isFinite(v) ? `<c r="${ref}"${st}><v>${v}</v></c>` : `<c r="${ref}" t="inlineStr"${st}><is><t xml:space="preserve">${xe(v)}</t></is></c>`;
+    }).join("")}</row>`).join("");
+    z.file(`xl/worksheets/sheet${i+1}.xml`, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w, c) => `<col min="${c+1}" max="${c+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${body}</sheetData>${s.rows.length ? `<autoFilter ref="A1:${colL(s.head.length-1)}${s.rows.length+1}"/>` : ""}</worksheet>`);
+  });
+  return z.generateAsync({type:"blob", compression:"DEFLATE", mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+
+const dlCap = (window.claude && typeof window.claude.use === "function") ? window.claude.use("downloads").catch(() => null) : Promise.resolve(null);
+async function saveFile(filename, blob){
+  const cap = await Promise.race([dlCap, new Promise(r => setTimeout(() => r(undefined), 1500))]);
+  if (cap){
+    try { await cap.save({filename, data:blob}); toast(`Tersimpan: ${filename}`); }
+    catch(e){ toast(e && e.code === "declined" ? "Unduhan dibatalkan." : `Gagal menyimpan (${e && e.code || "galat"}).`); }
+    return;
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+
+/* ================= Referensi wilayah ================= */
+const KAB_SEED = { "2309":"Sumbawa Barat" };
+const PROV_SEED = { "23":"Nusa Tenggara Barat" };
+const BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const todayStr = () => { const d = new Date(); return `${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`; };
+
+/* ================= State ================= */
+const DEF = {
+  title: "PETA INDIKATIF BIDANG TANAH OBJEK PENGADAAN TANAH BATALYON INFANTERI",
+  instansi: "KEMENTERIAN AGRARIA DAN TATA RUANG/\nBADAN PERTANAHAN NASIONAL",
+  sumber: "Peta bidang tanah terdaftar dan Buku Tanah (hasil join spasial)",
+  catatan: "Peta ini bersifat indikatif, bukan penetapan batas bidang tanah.",
+  paper: "A3", orient: "landscape", scale: "auto", order: "spasial", label: "no", lsize: "1",
+  color: "", fill: "#FCE59A", grid: true, total: true,
+};
+const P = {
+  leaves: new Map(), layers: [], warnings: [],
+  feats: [], fields: [], crs: null,
+  cfg: {...DEF, lokasi: "", tanggal: ""},
+  lokasiAuto: "", instansiAuto: "",
+  cols: [], luasKey: null, nibKey: null,
+  pages: [], pageSize: [420, 297],
+};
+const LS_KEY = "petaIndikatif.v1";
+function loadPrefs(){
+  try { const s = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (s && typeof s === "object"){ for (const k of Object.keys(DEF)) if (k in s) P.cfg[k] = s[k]; if (s.colPrefs) P.colPrefs = s.colPrefs; } } catch {}
+}
+function savePrefs(){
+  try { const o = {}; for (const k of Object.keys(DEF)) o[k] = P.cfg[k];
+    o.colPrefs = P.cols.map(c => ({key:c.key, label:c.label, on:c.on}));
+    localStorage.setItem(LS_KEY, JSON.stringify(o)); } catch {}
+}
+
+/* ================= Ingest file ================= */
+const SHP_EXT = new Set(["shp","shx","dbf","prj","cpg","cst"]);
+const SKIP = p => /(^|\/)(__MACOSX|\.DS_Store|Thumbs\.db)(\/|$)/i.test(p) || /(^|\/)\._/.test(p);
+async function addBytes(path, bytes){
+  if (SKIP(path)) return;
+  if (extOf(path) === "zip"){
+    let z; try { z = await JSZip.loadAsync(bytes); } catch(e){ P.warnings.push(`ZIP tidak bisa dibuka: ${path}`); return; }
+    for (const f of Object.values(z.files).filter(f => !f.dir)){
+      const e = extOf(f.name); if (e !== "zip" && !SHP_EXT.has(e)) continue;
+      await addBytes(path + "/" + f.name.replace(/\\/g,"/").replace(/^\/+/,""), await f.async("uint8array"));
+    }
+  } else if (SHP_EXT.has(extOf(path))) P.leaves.set(path, {path, bytes});
+}
+async function ingest(items){
+  if (!items.length) return;
+  setStatus(`<span class="spin"></span>Membaca ${items.length} file…`);
+  for (const it of items){
+    const buf = it.bytes || new Uint8Array(await it.file.arrayBuffer());
+    await addBytes(it.path.replace(/^\/+/,""), buf);
+  }
+  rebuild();
+  setStatus("");
+}
+function setStatus(html){ $("#load-status").innerHTML = html; }
+
+/* ================= SHP ================= */
+function parseShp(u8){
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  if (dv.getInt32(0, false) !== 9994) throw new Error("bukan file .shp");
+  const type = dv.getInt32(32, true), geoms = [];
+  let p = 100;
+  while (p + 12 <= u8.length){
+    const clen = dv.getInt32(p + 4, false) * 2, st = p + 8;
+    if (st + clen > u8.length) break;
+    const t = dv.getInt32(st, true);
+    let rings = null;
+    if (t === 5 || t === 15 || t === 25){
+      const np = dv.getInt32(st + 36, true), npt = dv.getInt32(st + 40, true), pb = st + 44 + 4 * np;
+      const parts = []; for (let i = 0; i < np; i++) parts.push(dv.getInt32(st + 44 + 4 * i, true));
+      rings = [];
+      for (let k = 0; k < np; k++){
+        const a = parts[k], b = k + 1 < np ? parts[k + 1] : npt, r = [];
+        for (let j = a; j < b; j++) r.push([dv.getFloat64(pb + 16 * j, true), dv.getFloat64(pb + 16 * j + 8, true)]);
+        if (r.length > 2) rings.push(r);
+      }
+    }
+    geoms.push(rings);
+    p = st + clen;
+  }
+  return {type, geoms};
+}
+function parsePrj(txt){
+  const t = String(txt || "").trim();
+  if (!t) return {name:"Tidak diketahui (tanpa .prj)", geographic:false};
+  const m = /^(PROJCS|GEOGCS|PROJCRS|GEOGCRS|GEODCRS)\["([^"]*)"/i.exec(t);
+  const geographic = /^GEO/i.test(t);
+  let name = m ? m[2] : "Tidak diketahui";
+  const tm = /TM-?3\D*(\d+\.\d)/i.exec(name);
+  const datum = /DATUM\["([^"]*)"/i.exec(t);
+  return {name, geographic, tm3: tm ? tm[1] : null, datum: datum ? datum[1].replace(/_/g," ") : null};
+}
+function readDbfRecords(L){
+  const {info, dec} = L, u8 = L.dbfLeaf.bytes, out = [];
+  for (let i = 0; i < info.nrec; i++){
+    const base = info.hlen + i * info.rlen, rec = {};
+    if (u8[base] === 0x2A){ out.push(null); continue; }
+    for (const f of info.fields){
+      const raw = u8.subarray(base + f.offset, base + f.offset + f.len);
+      let v;
+      if (f.type === "N" || f.type === "F"){ const s = new TextDecoder("ascii").decode(raw).trim(); v = s === "" || /^\*+$/.test(s) ? null : Number(s); if (v !== null && !isFinite(v)) v = null; }
+      else if (f.type === "D"){ const s = new TextDecoder("ascii").decode(raw).trim(); v = /^\d{8}$/.test(s) ? `${s.slice(6,8)}-${s.slice(4,6)}-${s.slice(0,4)}` : ""; }
+      else if (f.type === "L"){ const c = String.fromCharCode(raw[0] || 32).toUpperCase(); v = "YT".includes(c) ? "Ya" : "NF".includes(c) ? "Tidak" : ""; }
+      else v = cleanStr(dec.decode(raw));
+      rec[f.name] = v;
+    }
+    out.push(rec);
+  }
+  return out;
+}
+const cleanStr = s => String(s ?? "").replace(/\0/g, "").replace(/\s*;\s*$/, "").replace(/\s*[\r\n]+\s*/g, " ").replace(/\s*;\s*/g, "; ").replace(/\s*;\s*$/, "").trim();
+
+function rebuild(){
+  P.warnings = P.warnings.filter(w => w.startsWith("ZIP"));
+  const groups = new Map();
+  for (const lf of P.leaves.values()){
+    const e = extOf(lf.path), b = lf.path.slice(0, -(e.length + 1)), k = b.toLowerCase();
+    (groups.get(k) || groups.set(k, {base:b, files:{}}).get(k)).files[e] = lf;
+  }
+  P.layers = []; P.feats = [];
+  const fieldSet = new Map();
+  for (const g of [...groups.values()].sort((a, b) => a.base.localeCompare(b.base))){
+    if (!g.files.shp){ continue; }
+    if (!g.files.dbf){ P.warnings.push(`Layer tanpa .dbf dilewati: ${baseName(g.base)}.shp`); continue; }
+    try {
+      const shp = parseShp(g.files.shp.bytes);
+      if (![5, 15, 25].includes(shp.type)){ P.warnings.push(`Bukan layer poligon, dilewati: ${baseName(g.base)}.shp`); continue; }
+      const u8 = g.files.dbf.bytes, info = parseDbf(u8);
+      const cpf = g.files.cpg || g.files.cst; let enc = cpf ? encFromCpg(new TextDecoder().decode(cpf.bytes)) : null;
+      if (!enc) enc = sniffUtf8(u8, info);
+      const L = {base:g.base, files:g.files, dbfLeaf:g.files.dbf, info, enc, dec:new TextDecoder(enc),
+        prj: parsePrj(g.files.prj ? new TextDecoder().decode(g.files.prj.bytes) : "")};
+      const recs = readDbfRecords(L);
+      let nNull = 0;
+      shp.geoms.forEach((rings, i) => {
+        if (!rings || !rings.length || !recs[i]){ nNull++; return; }
+        P.feats.push({rings, attrs:recs[i], layer:L});
+      });
+      if (nNull) P.warnings.push(`${fmt(nNull)} record tanpa geometri dilewati di ${baseName(g.base)}.shp`);
+      for (const f of info.fields){ const k = f.name; if (!fieldSet.has(k)) fieldSet.set(k, f); }
+      L.n = shp.geoms.length - nNull;
+      P.layers.push(L);
+    } catch(e){ P.warnings.push(`Layer tidak terbaca: ${baseName(g.base)} (${e.message})`); }
+  }
+  P.fields = [...fieldSet.values()];
+  const prjs = [...new Set(P.layers.map(l => l.prj.name))];
+  if (prjs.length > 1) P.warnings.push(`Layer memakai sistem koordinat berbeda (${prjs.join(", ")}). Samakan dulu agar posisi bidang benar.`);
+  P.crs = P.layers.length ? P.layers[0].prj : null;
+  prepareGeometry();
+  autoLokasi();
+  autoCols();
+  renderAll();
+}
+
+/* ================= Geometri ================= */
+function prepareGeometry(){
+  if (!P.feats.length){ P.proj = null; return; }
+  const geo = P.crs && P.crs.geographic;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const f of P.feats) for (const r of f.rings) for (const [x, y] of r){ if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  if (geo){
+    const lat0 = (y0 + y1) / 2, kx = 111320 * Math.cos(lat0 * Math.PI / 180), ky = 110574;
+    P.proj = {geo:true, fwd:(x, y) => [x * kx, y * ky], inv:(x, y) => [x / kx, y / ky]};
+  } else P.proj = {geo:false, fwd:(x, y) => [x, y], inv:(x, y) => [x, y]};
+  const bb = [Infinity, Infinity, -Infinity, -Infinity];
+  for (const f of P.feats){
+    f.mr = f.rings.map(r => r.map(([x, y]) => P.proj.fwd(x, y)));
+    let a = 0; f.bb = [Infinity, Infinity, -Infinity, -Infinity];
+    for (const r of f.mr){
+      for (let i = 0, j = r.length - 1; i < r.length; j = i++){ a += (r[j][0] - r[i][0]) * (r[j][1] + r[i][1]); }
+      for (const [x, y] of r){ if (x < f.bb[0]) f.bb[0] = x; if (x > f.bb[2]) f.bb[2] = x; if (y < f.bb[1]) f.bb[1] = y; if (y > f.bb[3]) f.bb[3] = y; }
+    }
+    f.area = Math.abs(a / 2);
+    f.lab = polylabel(f.mr, Math.max(0.05, Math.sqrt(f.area) / 200));
+    bb[0] = Math.min(bb[0], f.bb[0]); bb[1] = Math.min(bb[1], f.bb[1]); bb[2] = Math.max(bb[2], f.bb[2]); bb[3] = Math.max(bb[3], f.bb[3]);
+  }
+  P.bbox = bb;
+}
+function ptSegDist2(px, py, a, b){
+  let x = a[0], y = a[1], dx = b[0] - x, dy = b[1] - y;
+  if (dx || dy){ const t = ((px - x) * dx + (py - y) * dy) / (dx * dx + dy * dy); if (t > 1){ x = b[0]; y = b[1]; } else if (t > 0){ x += dx * t; y += dy * t; } }
+  dx = px - x; dy = py - y; return dx * dx + dy * dy;
+}
+function signedDist(x, y, rings){
+  let inside = false, md = Infinity;
+  for (const r of rings) for (let i = 0, j = r.length - 1; i < r.length; j = i++){
+    const a = r[i], b = r[j];
+    if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) inside = !inside;
+    md = Math.min(md, ptSegDist2(x, y, a, b));
+  }
+  return (inside ? 1 : -1) * Math.sqrt(md);
+}
+function polylabel(rings, precision){
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const r of rings) for (const [x, y] of r){ if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  const w = x1 - x0, h = y1 - y0, cs = Math.min(w, h);
+  if (!cs) return [x0, y0];
+  const cell = (x, y, hh) => { const d = signedDist(x, y, rings); return {x, y, h:hh, d, max:d + hh * Math.SQRT2}; };
+  const q = [];
+  for (let x = x0; x < x1; x += cs) for (let y = y0; y < y1; y += cs) q.push(cell(x + cs / 2, y + cs / 2, cs / 2));
+  // titik berat cincin terluar sebagai tebakan awal
+  let cx = 0, cy = 0, A = 0; const r0 = rings[0];
+  for (let i = 0, j = r0.length - 1; i < r0.length; j = i++){ const f = r0[i][0] * r0[j][1] - r0[j][0] * r0[i][1]; cx += (r0[i][0] + r0[j][0]) * f; cy += (r0[i][1] + r0[j][1]) * f; A += f * 3; }
+  let best = A ? cell(cx / A, cy / A, 0) : cell(x0 + w / 2, y0 + h / 2, 0);
+  const bb = cell(x0 + w / 2, y0 + h / 2, 0); if (bb.d > best.d) best = bb;
+  let guard = 0;
+  while (q.length && guard++ < 20000){
+    let bi = 0; for (let i = 1; i < q.length; i++) if (q[i].max > q[bi].max) bi = i;
+    const c = q[bi]; q[bi] = q[q.length - 1]; q.pop();
+    if (c.d > best.d) best = c;
+    if (c.max - best.d <= precision) continue;
+    const hh = c.h / 2;
+    q.push(cell(c.x - hh, c.y - hh, hh), cell(c.x + hh, c.y - hh, hh), cell(c.x - hh, c.y + hh, hh), cell(c.x + hh, c.y + hh, hh));
+  }
+  return [best.x, best.y];
+}
+
+/* ================= Kolom & nilai ================= */
+const findField = (...res) => { for (const re of res){ const f = P.fields.find(f => re.test(f.name)); if (f) return f.name; } return null; };
+function autoCols(){
+  const nama = findField(/^pemil_?akh/i, /^pemilik/i, /^nama_?pem/i, /^nama/i, /pemil/i);
+  const luas = findField(/^luas$/i, /^luastertul/i, /^luas_?tert/i, /^luas_?sert/i, /^luas/i);
+  const hak = findField(/^tipe_?hak_?2$/i, /^nomor_?hak$/i, /^no_?hak/i, /^nohak/i);
+  const nib = findField(/^nib$/i, /nib/i);
+  const su = findField(/^surat_?ukur$/i, /^no_?su$/i, /^nosu$/i, /^su$/i, /surat/i);
+  P.luasKey = luas; P.nibKey = nib;
+  const preset = [["__no","No"], [nama,"Nama Pemegang Hak"], [luas,"Luas (m²)"], [hak,"No. Hak"], [nib,"NIB"], [su,"No. Surat Ukur"]].filter(x => x[0]);
+  const used = new Set(preset.map(x => x[0]));
+  let cols = [...preset.map(([key, label]) => ({key, label, on:true})), ...P.fields.filter(f => !used.has(f.name)).map(f => ({key:f.name, label:f.name, on:false}))];
+  // pakai pilihan kolom tersimpan bila nama field-nya ada
+  const saved = P.colPrefs;
+  if (saved && saved.length){
+    const have = new Map(cols.map(c => [c.key, c]));
+    const order = [];
+    for (const s of saved) if (have.has(s.key)){ const c = have.get(s.key); c.on = !!s.on; if (s.label) c.label = s.label; order.push(c); have.delete(s.key); }
+    if (order.filter(c => c.on).length > 1) cols = [...order, ...have.values()];
+  }
+  P.cols = cols;
+  // pilihan urutan & warna
+  if (P.cfg.order.startsWith("f:") && !P.fields.some(f => "f:" + f.name === P.cfg.order)) P.cfg.order = "spasial";
+  if (P.cfg.color && !P.fields.some(f => f.name === P.cfg.color)) P.cfg.color = "";
+}
+function autoLokasi(){
+  const uniq = k => { if (!k) return []; const s = new Set(); for (const f of P.feats){ const v = f.attrs[k]; if (v !== null && v !== "") s.add(String(v).trim().replace(/\s+/g, " ").toUpperCase()); } return [...s]; };
+  const desaK = findField(/^kelurahan$/i, /^desa$/i, /^nm_?desa$/i, /^namadesa$/i, /^kel/i);
+  const kecK = findField(/^kecamatan$/i, /^nm_?kec$/i, /^kec/i);
+  const kodeK = findField(/^kodewilaya/i, /^kode_?wil/i, /^kd_?wil/i);
+  const desa = uniq(desaK), kec = uniq(kecK), kode = uniq(kodeK).map(digits);
+  const kab = [...new Set(kode.map(k => KAB_SEED[k.slice(0, 4)]).filter(Boolean))];
+  const prov = [...new Set(kode.map(k => PROV_SEED[k.slice(0, 2)]).filter(Boolean))];
+  const tc = s => s.toUpperCase();
+  const parts = [];
+  if (desa.length) parts.push((desa.length > 1 ? "DESA " : "DESA ") + desa.map(tc).join(", "));
+  if (kec.length) parts.push("KECAMATAN " + kec.map(tc).join(", "));
+  if (kab.length) parts.push("KABUPATEN " + kab.map(tc).join(", "));
+  if (prov.length) parts.push("PROVINSI " + prov.map(tc).join(", "));
+  const auto = parts.join(", ");
+  if (!P.cfg.lokasi || P.cfg.lokasi === P.lokasiAuto) P.cfg.lokasi = auto;
+  P.lokasiAuto = auto;
+  const inst = DEF.instansi + (kab.length === 1 ? `\nKANTOR PERTANAHAN KABUPATEN ${tc(kab[0])}` : "");
+  if (!P.cfg.instansi || P.cfg.instansi === DEF.instansi || P.cfg.instansi === P.instansiAuto) P.cfg.instansi = inst;
+  P.instansiAuto = inst;
+  if (!P.cfg.tanggal || P.cfg.tanggal === todayStr()) P.cfg.tanggal = (kab.length === 1 ? `${kab[0]}, ` : "") + todayStr();
+}
+const isLuas = k => /luas|area/i.test(k || "");
+function fmtVal(key, v){
+  if (v === null || v === undefined) return "";
+  if (typeof v === "number"){
+    if (isLuas(key)) return v.toLocaleString("id-ID", {maximumFractionDigits:2});
+    return Number.isInteger(v) ? String(v) : String(v);
+  }
+  return String(v);
+}
+function orderedFeats(){
+  const fs = P.feats.slice(), o = P.cfg.order;
+  if (o === "file") return fs;
+  if (o.startsWith("f:")){
+    const k = o.slice(2);
+    const val = f => f.attrs[k];
+    return fs.sort((a, b) => { const x = val(a), y = val(b);
+      if (typeof x === "number" && typeof y === "number") return x - y;
+      return String(x ?? "").localeCompare(String(y ?? ""), "id", {numeric:true}); });
+  }
+  // spasial: pita utara→selatan, tiap pita barat→timur
+  const sizes = fs.map(f => Math.sqrt(f.area)).sort((a, b) => a - b);
+  const band = Math.max(1e-9, sizes[Math.floor(sizes.length / 2)] || 1);
+  const top = P.bbox[3];
+  return fs.sort((a, b) => { const ba = Math.floor((top - a.lab[1]) / band), bb = Math.floor((top - b.lab[1]) / band); return ba - bb || a.lab[0] - b.lab[0]; });
+}
+function tableRows(feats){
+  const cols = P.cols.filter(c => c.on);
+  return feats.map((f, i) => cols.map(c => c.key === "__no" ? String(i + 1) : fmtVal(c.key, f.attrs[c.key])));
+}
+function luasTotal(){
+  if (!P.luasKey) return null;
+  let s = 0, n = 0; for (const f of P.feats){ const v = f.attrs[P.luasKey]; if (typeof v === "number"){ s += v; n++; } else if (v !== null && v !== "" && isFinite(Number(String(v).replace(",", ".")))){ s += Number(String(v).replace(",", ".")); n++; } }
+  return n ? s : null;
+}
+
+/* ================= Ukur teks ================= */
+const FF = "Arial, Helvetica, sans-serif";
+const mctx = document.createElement("canvas").getContext("2d");
+function tw(s, size, bold){ mctx.font = `${bold ? "bold " : ""}100px Arial, Helvetica, sans-serif`; return mctx.measureText(String(s)).width * size / 100; }
+function wrap(text, size, bold, maxW){
+  const out = [];
+  for (const para of String(text || "").split(/\n/)){
+    const words = para.split(/\s+/).filter(Boolean); let line = "";
+    for (const w of words){ const t = line ? line + " " + w : w; if (!line || tw(t, size, bold) <= maxW) line = t; else { out.push(line); line = w; } }
+    if (line) out.push(line);
+  }
+  return out;
+}
+function clip(s, size, bold, maxW){
+  s = String(s); if (tw(s, size, bold) <= maxW) return s;
+  let lo = 0, hi = s.length;
+  while (lo < hi){ const mid = (lo + hi + 1) >> 1; if (tw(s.slice(0, mid) + "…", size, bold) <= maxW) lo = mid; else hi = mid - 1; }
+  return s.slice(0, lo) + "…";
+}
+const n2 = v => +v.toFixed(2);
+function T(x, y, s, o = {}){
+  return `<text x="${n2(x)}" y="${n2(y)}" font-size="${n2(o.size || 3)}"${o.bold ? ' font-weight="bold"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""}${o.fill ? ` fill="${o.fill}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${n2(x)} ${n2(y)})"` : ""}${o.extra || ""}>${esc(s)}</text>`;
+}
+
+/* ================= Layout lembar ================= */
+const PAPER = {A0:[1189, 841], A1:[841, 594], A2:[594, 420], A3:[420, 297], A4:[297, 210]};
+const NICE_SCALES = [100, 200, 250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7500, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000, 150000, 200000, 250000, 500000, 1000000];
+const PALETTE = ["#F6D36B", "#9FD3A8", "#8EC5E8", "#F4A99A", "#C9B3E6", "#F2C38B", "#B9D97C", "#E8A6C8", "#9ED9D2", "#D8C3A5", "#AFC0E8", "#E3E08A"];
+const stepDown = v => { const p = Math.pow(10, Math.floor(Math.log10(v) + 1e-9)), m = Math.round(v / p * 100) / 100; return (m > 5 ? 5 : m > 2.5 ? 2.5 : m > 2 ? 2 : m > 1 ? 1 : 0.5) * p; };
+const niceStep = v => { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m < 1.5 ? 1 : m < 2.25 ? 2 : m < 3.5 ? 2.5 : m < 7.5 ? 5 : 10) * p; };
+
+function buildPages(){
+  const cfg = P.cfg;
+  const [pw, ph] = PAPER[cfg.paper] || PAPER.A3;
+  const [W, H] = cfg.orient === "portrait" ? [Math.min(pw, ph), Math.max(pw, ph)] : [Math.max(pw, ph), Math.min(pw, ph)];
+  P.pageSize = [W, H];
+  const u = Math.min(W, H) / 297;                // satuan relatif terhadap A3
+  const M = 10, IW = W - 2 * M, IH = H - 2 * M;   // margin & area dalam
+  const pad = 2.6 * u, lw = Math.max(0.2, 0.3 * u);
+  const feats = orderedFeats();
+  const cols = P.cols.filter(c => c.on);
+  const rows = tableRows(feats);
+  const total = luasTotal();
+  const luasIdx = cols.findIndex(c => c.key === P.luasKey);
+  const showTotal = cfg.total && total !== null && luasIdx > 0;
+  // warna kategori
+  let cats = null;
+  if (cfg.color){
+    const cnt = new Map(); for (const f of feats){ const v = fmtVal(cfg.color, f.attrs[cfg.color]) || "(kosong)"; cnt.set(v, (cnt.get(v) || 0) + 1); }
+    const keys = [...cnt.keys()].sort((a, b) => a.localeCompare(b, "id", {numeric:true}));
+    cats = new Map(); keys.forEach((k, i) => cats.set(k, {color: i < PALETTE.length ? PALETTE[i] : "#D9D9D9", n: cnt.get(k), label: i < PALETTE.length ? k : "Lainnya"}));
+  }
+  const fillOf = f => cats ? cats.get(fmtVal(cfg.color, f.attrs[cfg.color]) || "(kosong)").color : cfg.fill;
+
+  // --- tabel: ukuran huruf & lebar kolom
+  let fs = Math.max(1.75, 2.3 * u);
+  const natural = size => cols.map((c, ci) => Math.max(tw(c.label, size, true), ...rows.map(r => tw(r[ci], size, false)), ci === luasIdx && showTotal ? tw(fmtVal(P.luasKey, total), size, true) : 0) + size * 1.3);
+  const panelMax = cfg.orient === "landscape" ? IW * 0.46 : IW * 0.62;
+  const panelMin = cfg.orient === "landscape" ? IW * 0.27 : IW * 0.5;
+  let nat = natural(fs), natW = nat.reduce((a, b) => a + b, 0);
+  if (natW > panelMax - 2 * pad){ fs = Math.max(1.35, fs * (panelMax - 2 * pad) / natW); nat = natural(fs); natW = nat.reduce((a, b) => a + b, 0); }
+  let rowH, headH, capH;
+  const setFs = v => { fs = v; nat = natural(fs); natW = nat.reduce((a, b) => a + b, 0); rowH = fs * 1.75; headH = fs * 2.1; capH = fs * 2.6; };
+  setFs(fs);
+  // perbesar huruf tabel bila ruang masih lega (dibatasi lebar panel)
+  const growFs = (w, h) => {
+    const byH = (h - pad * 1.5) / ((rows.length + (showTotal ? 1.1 : 0)) * 1.75 + 2.1 + 2.6);
+    const byW = fs * (w - 2 * pad) / natW;
+    const v = Math.min(byH, byW, 3 * u);
+    if (v > fs * 1.03) setFs(v);
+  };
+
+  const pages = [];
+  const svgOpen = () => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}" font-family="${FF}" fill="#111">` +
+    `<rect width="${W}" height="${H}" fill="#fff"/><rect x="${M - 1.6}" y="${M - 1.6}" width="${IW + 3.2}" height="${IH + 3.2}" fill="none" stroke="#111" stroke-width="${n2(lw * 2.4)}"/>` +
+    `<rect x="${M}" y="${M}" width="${IW}" height="${IH}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>`;
+  const box = (x, y, w, h) => `<rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>`;
+
+  // --- blok-blok panel
+  const titleSize = 4.6 * u, lokSize = 2.7 * u;
+  const titleBlock = w => {
+    const tl = wrap(cfg.title, titleSize, true, w - 2 * pad), ll = wrap(cfg.lokasi, lokSize, false, w - 2 * pad);
+    const h = pad * 1.6 + tl.length * titleSize * 1.18 + (ll.length ? lokSize * 0.9 + ll.length * lokSize * 1.3 : 0) + pad;
+    return {h, draw:(x, y) => { let s = box(x, y, w, h), yy = y + pad * 1.4 + titleSize;
+      for (const l of tl){ s += T(x + w / 2, yy, l, {size:titleSize, bold:true, anchor:"middle"}); yy += titleSize * 1.18; }
+      yy += lokSize * 0.6;
+      for (const l of ll){ s += T(x + w / 2, yy, l, {size:lokSize, anchor:"middle"}); yy += lokSize * 1.3; }
+      return s; }};
+  };
+  const nsBlock = (w, map) => {
+    const h = 30 * u;
+    return {h, draw:(x, y) => {
+      let s = box(x, y, w, h);
+      const nw = Math.min(w * 0.3, 26 * u), ax = x + nw / 2 + pad * 0.6, ay = y + pad + 2.8 * u, ah = h - 2 * pad - 5 * u;
+      // arah utara
+      s += T(ax, ay, "U", {size:3.4 * u, bold:true, anchor:"middle"});
+      const top = ay + 1.6 * u, bot = top + ah, hw = ah * 0.28;
+      s += `<path d="M${n2(ax)} ${n2(top)} L${n2(ax + hw)} ${n2(bot)} L${n2(ax)} ${n2(bot - ah * 0.25)} Z" fill="#111"/><path d="M${n2(ax)} ${n2(top)} L${n2(ax - hw)} ${n2(bot)} L${n2(ax)} ${n2(bot - ah * 0.25)} Z" fill="#fff" stroke="#111" stroke-width="${n2(lw)}"/>`;
+      s += `<line x1="${n2(x + nw + pad)}" y1="${n2(y)}" x2="${n2(x + nw + pad)}" y2="${n2(y + h)}" stroke="#111" stroke-width="${n2(lw)}"/>`;
+      // skala
+      const sx = x + nw + pad * 2.2, sw = x + w - pad * 1.6 - sx;
+      s += T(sx + sw / 2, y + pad + 3.4 * u, `SKALA 1 : ${map.scale.toLocaleString("id-ID")}`, {size:3.2 * u, bold:true, anchor:"middle"});
+      const mPerMm = map.scale / 1000;
+      let len = niceStep(sw * 0.8 * mPerMm); for (let g = 0; len / mPerMm > sw * 0.92 && g < 60; g++) len = stepDown(len);
+      const bw = len / mPerMm, bx = sx + (sw - bw) / 2, by = y + h * 0.55, bh = 1.6 * u, seg = 4;
+      for (let i = 0; i < seg; i++) s += `<rect x="${n2(bx + bw * i / seg)}" y="${n2(by)}" width="${n2(bw / seg)}" height="${n2(bh)}" fill="${i % 2 ? "#fff" : "#111"}" stroke="#111" stroke-width="${n2(lw * 0.8)}"/>`;
+      const unit = len >= 1000 ? "km" : "m", dv = len >= 1000 ? 1000 : 1;
+      for (const i of [0, seg / 2, seg]) s += T(bx + bw * i / seg, by + bh + 3 * u, (len * i / seg / dv).toLocaleString("id-ID", {maximumFractionDigits:2}) + (i === seg ? " " + unit : ""), {size:2.2 * u, anchor:"middle"});
+      s += T(sx + sw / 2, y + h - pad * 0.9, P.proj.geo ? "Grid: derajat (geografis)" : "Grid koordinat dalam meter", {size:1.9 * u, anchor:"middle", fill:"#444"});
+      return s; }};
+  };
+  const legendBlock = w => {
+    const ls = 2.3 * u, lh = 4.6 * u, sw = 7 * u, sh = 3.4 * u;
+    const items = [];
+    if (cats){ for (const [k, c] of cats) if (c.label === k) items.push({type:"fill", color:c.color, text:`${k} (${c.n})`}); if ([...cats.values()].some(c => c.label === "Lainnya")) items.push({type:"fill", color:"#D9D9D9", text:"Lainnya"}); }
+    else items.push({type:"fill", color:cfg.fill, text:"Bidang tanah objek pengadaan tanah"});
+    items.push({type:"num", text:"Nomor urut bidang (lihat tabel)"});
+    const lines = items.map(it => ({...it, lines:wrap(it.text, ls, false, w - 2 * pad - sw - 2 * u)}));
+    const head = (cats ? `LEGENDA — ${P.cols.find(c => c.key === cfg.color)?.label || cfg.color}` : "LEGENDA");
+    const h = pad + 3 * u + lines.reduce((a, l) => a + Math.max(lh, l.lines.length * ls * 1.25 + 1.2 * u), 0) + pad * 0.6;
+    return {h, draw:(x, y) => {
+      let s = box(x, y, w, h) + T(x + pad, y + pad + 2.2 * u, clip(head, 2.6 * u, true, w - 2 * pad), {size:2.6 * u, bold:true});
+      let yy = y + pad + 4.4 * u;
+      for (const l of lines){
+        const rh = Math.max(lh, l.lines.length * ls * 1.25 + 1.2 * u);
+        if (l.type === "fill") s += `<rect x="${n2(x + pad)}" y="${n2(yy)}" width="${n2(sw)}" height="${n2(sh)}" fill="${l.color}" stroke="#C62828" stroke-width="${n2(lw)}"/>`;
+        else s += T(x + pad + sw / 2, yy + sh * 0.85, "12", {size:2.8 * u, bold:true, anchor:"middle"});
+        l.lines.forEach((t, i) => s += T(x + pad + sw + 2 * u, yy + sh * 0.78 + i * ls * 1.25, t, {size:ls}));
+        yy += rh;
+      }
+      return s; }};
+  };
+  const ketBlock = (w, map) => {
+    const ks = 2.15 * u, lh = ks * 1.35;
+    const crs = P.crs ? (P.crs.tm3 ? `TM-3 Zona ${P.crs.tm3}` : P.crs.name) + (P.crs.datum ? `, ${/^datum/i.test(P.crs.datum) ? P.crs.datum : "datum " + P.crs.datum}` : "") : "-";
+    const tot = luasTotal();
+    const rowsK = [["Sistem koordinat", crs], ["Jumlah bidang", fmt(P.feats.length) + " bidang"]];
+    if (tot !== null) rowsK.push(["Total luas", `${tot.toLocaleString("id-ID", {maximumFractionDigits:2})} m² (${(tot / 10000).toLocaleString("id-ID", {maximumFractionDigits:4})} Ha)`]);
+    if (cfg.sumber) rowsK.push(["Sumber data", cfg.sumber]);
+    const lab = Math.max(...rowsK.map(r => tw(r[0], ks, false))) + 1.5 * u;
+    const wr = rowsK.map(([a, b]) => [a, wrap(b, ks, false, w - 2 * pad - lab - 2 * u)]);
+    const cat = cfg.catatan ? wrap(cfg.catatan, ks * 0.95, false, w - 2 * pad) : [];
+    const h = pad + 3 * u + wr.reduce((a, r) => a + Math.max(1, r[1].length) * lh, 0) + (cat.length ? cat.length * lh + 1.2 * u : 0) + pad * 0.6;
+    return {h, draw:(x, y) => {
+      let s = box(x, y, w, h) + T(x + pad, y + pad + 2.2 * u, "KETERANGAN", {size:2.6 * u, bold:true});
+      let yy = y + pad + 2.2 * u + lh * 1.25;
+      for (const [a, ls] of wr){ s += T(x + pad, yy, a, {size:ks, fill:"#333"}) + T(x + pad + lab, yy, ":", {size:ks});
+        ls.forEach((t, i) => s += T(x + pad + lab + 2 * u, yy + i * lh, t, {size:ks})); yy += Math.max(1, ls.length) * lh; }
+      if (cat.length){ yy += 1.2 * u; for (const t of cat){ s += T(x + pad, yy, t, {size:ks * 0.95, fill:"#333", extra:' font-style="italic"'}); yy += lh; } }
+      return s; }};
+  };
+  const footBlock = w => {
+    const fs2 = 2.4 * u, lh = fs2 * 1.3;
+    const il = wrap(cfg.instansi, fs2, true, w - 2 * pad), tl = cfg.tanggal ? wrap(cfg.tanggal, fs2 * 0.92, false, w - 2 * pad) : [];
+    const h = pad * 1.2 + (il.length + tl.length) * lh + (tl.length ? 1 * u : 0) + pad * 0.5;
+    return {h, draw:(x, y) => { let s = box(x, y, w, h), yy = y + pad + fs2;
+      for (const t of il){ s += T(x + w / 2, yy, t, {size:fs2, bold:true, anchor:"middle"}); yy += lh; }
+      yy += 1 * u; for (const t of tl){ s += T(x + w / 2, yy, t, {size:fs2 * 0.92, anchor:"middle"}); yy += lh; }
+      return s; }};
+  };
+  // tabel: gambar baris [a,b) di kotak; mengembalikan svg
+  const drawTable = (x, y, w, h, a, b, caption, withTotal) => {
+    const sc = (w - 2 * pad) / natW, cw = nat.map(v => v * Math.min(1.6, Math.max(1, sc))), tx = x + pad + Math.max(0, (w - 2 * pad - cw.reduce((p, q) => p + q, 0)) / 2);
+    let s = box(x, y, w, h) + T(x + pad, y + pad * 0.7 + fs * 1.3, caption, {size:fs * 1.15, bold:true});
+    let yy = y + pad * 0.7 + capH;
+    const tw0 = cw.reduce((p, q) => p + q, 0);
+    s += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tw0)}" height="${n2(headH)}" fill="#E9ECE9" stroke="#111" stroke-width="${n2(lw)}"/>`;
+    let xx = tx;
+    cols.forEach((c, ci) => { s += T(xx + cw[ci] / 2, yy + headH / 2 + fs * 0.36, clip(c.label, fs, true, cw[ci] - fs * 0.6), {size:fs, bold:true, anchor:"middle"}); xx += cw[ci]; });
+    yy += headH;
+    const numCol = ci => cols[ci].key === "__no" ? "middle" : (isLuas(cols[ci].key) ? "end" : "start");
+    for (let r = a; r < b; r++){
+      if ((r - a) % 2) s += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tw0)}" height="${n2(rowH)}" fill="#F5F6F4"/>`;
+      xx = tx;
+      cols.forEach((c, ci) => { const an = numCol(ci), px = an === "middle" ? xx + cw[ci] / 2 : an === "end" ? xx + cw[ci] - fs * 0.5 : xx + fs * 0.5;
+        s += T(px, yy + rowH / 2 + fs * 0.36, clip(rows[r][ci], fs, false, cw[ci] - fs * 0.9), {size:fs, anchor:an === "start" ? null : an}); xx += cw[ci]; });
+      s += `<line x1="${n2(tx)}" y1="${n2(yy + rowH)}" x2="${n2(tx + tw0)}" y2="${n2(yy + rowH)}" stroke="#999" stroke-width="${n2(lw * 0.5)}"/>`;
+      yy += rowH;
+    }
+    if (withTotal){
+      let lx = tx; for (let ci = 0; ci < luasIdx; ci++) lx += cw[ci];
+      s += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tw0)}" height="${n2(rowH * 1.1)}" fill="#E9ECE9"/>`;
+      s += T(lx - fs * 0.5, yy + rowH * 0.55 + fs * 0.36, "JUMLAH", {size:fs, bold:true, anchor:"end"});
+      s += T(lx + cw[luasIdx] - fs * 0.5, yy + rowH * 0.55 + fs * 0.36, fmtVal(P.luasKey, total), {size:fs, bold:true, anchor:"end"});
+      yy += rowH * 1.1;
+    }
+    // garis kolom & tepi
+    const top = y + pad * 0.7 + capH;
+    xx = tx; s += `<rect x="${n2(tx)}" y="${n2(top)}" width="${n2(tw0)}" height="${n2(yy - top)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>`;
+    for (let ci = 0; ci < cols.length - 1; ci++){ xx += cw[ci]; s += `<line x1="${n2(xx)}" y1="${n2(top)}" x2="${n2(xx)}" y2="${n2(withTotal && ci < luasIdx - 1 ? yy - rowH * 1.1 : yy)}" stroke="#111" stroke-width="${n2(lw * 0.6)}"/>`; }
+    return s;
+  };
+  const rowsFit = (h, withTotal) => Math.max(0, Math.floor((h - pad * 0.7 - capH - headH - pad * 0.8 - (withTotal ? rowH * 1.1 : 0)) / rowH));
+
+  // --- peta
+  const drawMap = (x, y, w, h) => {
+    const g = 6.5 * u, ix = x + g, iy = y + g, iw = w - 2 * g, ih = h - 2 * g;
+    const [bx0, by0, bx1, by1] = P.bbox, ew = Math.max(bx1 - bx0, 1), eh = Math.max(by1 - by0, 1);
+    const need = Math.max(ew * 1.12 / iw, eh * 1.12 / ih) * 1000;
+    const scale = cfg.scale === "auto" ? (NICE_SCALES.find(s => s >= need) || Math.ceil(need / 1000) * 1000) : Number(cfg.scale);
+    const k = 1000 / scale, cx = (bx0 + bx1) / 2, cy = (by0 + by1) / 2;
+    const X = v => ix + iw / 2 + (v - cx) * k, Y = v => iy + ih / 2 - (v - cy) * k;
+    const id = "clip" + Math.random().toString(36).slice(2, 8);
+    let s = `<defs><clipPath id="${id}"><rect x="${n2(ix)}" y="${n2(iy)}" width="${n2(iw)}" height="${n2(ih)}"/></clipPath></defs>`;
+    s += box(x, y, w, h) + `<rect x="${n2(ix)}" y="${n2(iy)}" width="${n2(iw)}" height="${n2(ih)}" fill="#fff" stroke="#111" stroke-width="${n2(lw)}"/>`;
+    // grid
+    const wx0 = cx - iw / 2 / k, wx1 = cx + iw / 2 / k, wy0 = cy - ih / 2 / k, wy1 = cy + ih / 2 / k;
+    const step = niceStep(Math.max(wx1 - wx0, wy1 - wy0) / 6);
+    const gs = 1.9 * u;
+    let grid = "", lab = "";
+    const fmtX = v => P.proj.geo ? dms(P.proj.inv(v, 0)[0], "BT", "BB") : Math.round(v).toLocaleString("id-ID") + " mT";
+    const fmtY = v => P.proj.geo ? dms(P.proj.inv(0, v)[1], "LU", "LS") : Math.round(v).toLocaleString("id-ID") + " mU";
+    for (let v = Math.ceil(wx0 / step) * step; v <= wx1; v += step){ const px = X(v);
+      if (cfg.grid) grid += `<line x1="${n2(px)}" y1="${n2(iy)}" x2="${n2(px)}" y2="${n2(iy + ih)}" stroke="#9AA5A0" stroke-width="${n2(lw * 0.45)}" stroke-dasharray="${n2(1.2 * u)} ${n2(1.2 * u)}"/>`;
+      lab += `<line x1="${n2(px)}" y1="${n2(iy - 1.4 * u)}" x2="${n2(px)}" y2="${n2(iy)}" stroke="#111" stroke-width="${n2(lw)}"/><line x1="${n2(px)}" y1="${n2(iy + ih)}" x2="${n2(px)}" y2="${n2(iy + ih + 1.4 * u)}" stroke="#111" stroke-width="${n2(lw)}"/>`;
+      if (px - ix > 8 * u && ix + iw - px > 8 * u) lab += T(px, iy - 2.2 * u, fmtX(v), {size:gs, anchor:"middle"}) + T(px, iy + ih + 1.9 * u + gs, fmtX(v), {size:gs, anchor:"middle"}); }
+    for (let v = Math.ceil(wy0 / step) * step; v <= wy1; v += step){ const py = Y(v);
+      if (cfg.grid) grid += `<line x1="${n2(ix)}" y1="${n2(py)}" x2="${n2(ix + iw)}" y2="${n2(py)}" stroke="#9AA5A0" stroke-width="${n2(lw * 0.45)}" stroke-dasharray="${n2(1.2 * u)} ${n2(1.2 * u)}"/>`;
+      lab += `<line x1="${n2(ix - 1.4 * u)}" y1="${n2(py)}" x2="${n2(ix)}" y2="${n2(py)}" stroke="#111" stroke-width="${n2(lw)}"/><line x1="${n2(ix + iw)}" y1="${n2(py)}" x2="${n2(ix + iw + 1.4 * u)}" y2="${n2(py)}" stroke="#111" stroke-width="${n2(lw)}"/>`;
+      if (py - iy > 8 * u && iy + ih - py > 8 * u) lab += T(ix - 2.2 * u, py, fmtY(v), {size:gs, anchor:"middle", rot:-90}) + T(ix + iw + 2.2 * u + gs * 0.75, py, fmtY(v), {size:gs, anchor:"middle", rot:-90}); }
+    // bidang
+    let polys = "", labels = "";
+    const ls = 2.8 * u * Number(cfg.lsize || 1);
+    feats.forEach((f, i) => {
+      const d = f.mr.map(r => "M" + r.map(([a, b]) => `${n2(X(a))} ${n2(Y(b))}`).join("L") + "Z").join("");
+      polys += `<path d="${d}" fill="${fillOf(f)}" fill-opacity="0.9" fill-rule="evenodd" stroke="#C62828" stroke-width="${n2(Math.max(0.18, 0.28 * u))}" stroke-linejoin="round"/>`;
+      const lx = X(f.lab[0]), ly = Y(f.lab[1]);
+      const halo = ` stroke="#fff" stroke-width="${n2(ls * 0.22)}" paint-order="stroke" stroke-linejoin="round"`;
+      if (cfg.label === "no_nib" && P.nibKey){
+        labels += T(lx, ly - ls * 0.05, String(i + 1), {size:ls, bold:true, anchor:"middle", extra:halo});
+        labels += T(lx, ly + ls * 0.8, fmtVal(P.nibKey, f.attrs[P.nibKey]), {size:ls * 0.62, anchor:"middle", extra:halo});
+      } else labels += T(lx, ly + ls * 0.36, String(i + 1), {size:ls, bold:true, anchor:"middle", extra:halo});
+    });
+    s += `<g clip-path="url(#${id})">${grid}${polys}${labels}</g>${lab}`;
+    return {svg:s, scale};
+  };
+
+  // --- komposisi halaman 1
+  let s = svgOpen();
+  let tableA = 0, tableEnd = rows.length;
+  let firstFit;
+  if (cfg.orient === "landscape"){
+    let sw = Math.min(panelMax, Math.max(panelMin, natW + 2 * pad));
+    { // perkiraan tinggi ruang tabel → perbesar huruf bila longgar, lalu lebarkan panel seperlunya
+      const est = M + IH - footBlock(sw).h - [titleBlock(sw), nsBlock(sw), legendBlock(sw), ketBlock(sw)].reduce((a, b) => a + b.h, M);
+      const byH = (est - pad * 1.5) / ((rows.length + (showTotal ? 1.1 : 0)) * 1.75 + 2.1 + 2.6);
+      const v = Math.min(byH, 3 * u, fs * (panelMax - 2 * pad) / natW);
+      if (v > fs * 1.03){ setFs(v); sw = Math.min(panelMax, Math.max(panelMin, natW + 2 * pad)); }
+    }
+    const mapW = IW - sw;
+    const map = drawMap(M, M, mapW, IH);
+    const px = M + mapW;
+    const blocks = [titleBlock(sw), nsBlock(sw, map), legendBlock(sw), ketBlock(sw, map)];
+    const foot = footBlock(sw);
+    let yy = M; s += map.svg;
+    for (const b of blocks){ s += b.draw(px, yy); yy += b.h; }
+    const th = M + IH - foot.h - yy;
+    growFs(sw, th);
+    firstFit = rowsFit(th, false);
+    if (firstFit >= rows.length + (showTotal ? 1 : 0) || rowsFit(th, showTotal) >= rows.length) firstFit = rows.length;
+    const nFirst = Math.min(rows.length, firstFit);
+    const totHere = showTotal && nFirst === rows.length;
+    if (th > capH + headH + 2 * pad) s += drawTable(px, yy, sw, th, 0, nFirst, nFirst < rows.length ? `DAFTAR BIDANG TANAH (1–${nFirst} dari ${rows.length}, lanjut di lembar berikut)` : "DAFTAR BIDANG TANAH", totHere);
+    else s += box(px, yy, sw, th);
+    s += foot.draw(px, M + IH - foot.h);
+    tableA = th > capH + headH + 2 * pad ? nFirst : 0;
+  } else {
+    const tb = titleBlock(IW); s += tb.draw(M, M);
+    const lw2 = Math.max(IW * 0.38, 80 * u), rw = IW - lw2;
+    const left = [nsBlock(lw2, {scale:0}), legendBlock(lw2), ketBlock(lw2), footBlock(lw2)];
+    const leftH = left.reduce((a, b) => a + b.h, 0);
+    const want = pad * 0.7 + capH + headH + (rows.length + (showTotal ? 1.1 : 0)) * rowH + pad;
+    const bh = Math.min(Math.max(leftH, Math.min(want, IH * 0.42)), IH * 0.5);
+    const mapH = IH - tb.h - bh;
+    const map = drawMap(M, M + tb.h, IW, mapH);
+    s += map.svg;
+    const left2 = [nsBlock(lw2, map), legendBlock(lw2), ketBlock(lw2, map)];
+    let yy = M + tb.h + mapH; for (const b of left2){ s += b.draw(M, yy); yy += b.h; }
+    const foot = footBlock(lw2); const fy = Math.max(yy, M + IH - foot.h);
+    if (fy > yy) s += box(M, yy, lw2, fy - yy);
+    s += foot.draw(M, fy);
+    const ty = M + tb.h + mapH, th = IH - tb.h - mapH;
+    growFs(rw, th);
+    firstFit = rowsFit(th, false);
+    if (rowsFit(th, showTotal) >= rows.length) firstFit = rows.length;
+    const nFirst = Math.min(rows.length, firstFit);
+    s += drawTable(M + lw2, ty, rw, th, 0, nFirst, nFirst < rows.length ? `DAFTAR BIDANG TANAH (1–${nFirst} dari ${rows.length}, lanjut di lembar berikut)` : "DAFTAR BIDANG TANAH", showTotal && nFirst === rows.length);
+    tableA = nFirst;
+  }
+  pages.push(s + "</svg>");
+  // --- lembar lanjutan tabel
+  let guard = 0;
+  while (tableA < rows.length && guard++ < 500){
+    let p = svgOpen();
+    const tb = titleBlock(IW); p += tb.draw(M, M);
+    const th = IH - tb.h;
+    let fit = rowsFit(th, false); if (fit < 1) fit = 1;
+    const end = Math.min(rows.length, tableA + fit);
+    let last = end === rows.length;
+    if (last && showTotal && rowsFit(th, true) < end - tableA){ /* tidak muat baris jumlah: geser satu baris */ }
+    p += drawTable(M, M + tb.h, IW, th, tableA, end, `DAFTAR BIDANG TANAH (lanjutan, ${tableA + 1}–${end} dari ${rows.length})`, last && showTotal);
+    pages.push(p + "</svg>");
+    tableA = end;
+  }
+  P.pages = pages;
+  P.rowsCache = {cols, rows};
+}
+function dms(v, pos, neg){
+  const s = v < 0 ? neg : pos; v = Math.abs(v);
+  const d = Math.floor(v), mF = (v - d) * 60, m = Math.floor(mF), sec = (mF - m) * 60;
+  return `${d}°${String(m).padStart(2, "0")}'${sec.toFixed(1).padStart(4, "0")}" ${s}`;
+}
+
+/* ================= Render UI ================= */
+function renderInputs(){
+  const el = $("#shp-summary");
+  if (!P.layers.length){ el.innerHTML = ""; }
+  else {
+    const crs = P.crs ? P.crs.name : "-";
+    el.innerHTML = `<div class="tbl" style="max-height:220px"><table><thead><tr><th>Layer</th><th class="num">Bidang</th><th>Sistem koordinat</th><th>Encoding</th></tr></thead><tbody>${
+      P.layers.map(l => `<tr><td class="mono">${esc(baseName(l.base))}</td><td class="num">${fmt(l.n)}</td><td>${esc(l.prj.name)}</td><td class="mono">${esc(l.enc)}</td></tr>`).join("")}</tbody></table></div>
+      <p class="small muted">${fmt(P.feats.length)} bidang dari ${fmt(P.layers.length)} layer · ${esc(crs)}</p>`;
+  }
+  $("#warnings").innerHTML = P.warnings.map(w => `<div class="note">${esc(w)}</div>`).join("");
+}
+function fillSelect(sel, opts, val){ sel.innerHTML = opts.map(([v, t]) => `<option value="${esc(v)}">${esc(t)}</option>`).join(""); sel.value = val; if (sel.value !== val && opts.length){ sel.value = opts[0][0]; } }
+function renderForm(){
+  const c = P.cfg;
+  for (const k of ["title", "lokasi", "instansi", "tanggal", "sumber", "catatan"]) { const e = $("#c-" + k); if (document.activeElement !== e) e.value = c[k] || ""; }
+  $("#c-paper").value = c.paper; $("#c-orient").value = c.orient; $("#c-label").value = c.label; $("#c-lsize").value = c.lsize;
+  $("#c-fill").value = c.fill; $("#c-grid").checked = !!c.grid; $("#c-total").checked = !!c.total;
+  fillSelect($("#c-scale"), [["auto", "Otomatis (menyesuaikan kertas)"], ...NICE_SCALES.filter(s => s >= 250 && s <= 250000).map(s => [String(s), "1 : " + s.toLocaleString("id-ID")])], c.scale);
+  const fopts = P.fields.map(f => ["f:" + f.name, "Kolom " + f.name]);
+  fillSelect($("#c-order"), [["spasial", "Letak bidang (utara→selatan, barat→timur)"], ["file", "Urutan dalam file SHP"], ...fopts], c.order);
+  fillSelect($("#c-color"), [["", "Satu warna"], ...P.fields.map(f => [f.name, f.name])], c.color);
+  $("#c-fill").disabled = !!c.color;
+  $("#c-label").querySelector('option[value="no_nib"]').disabled = !P.nibKey;
+}
+function renderCols(){
+  const el = $("#cols-body");
+  if (!P.feats.length){ el.innerHTML = `<div class="empty">Masukkan SHP untuk memilih kolom.</div>`; return; }
+  const sample = P.feats[0].attrs;
+  el.innerHTML = `<div class="cols">${P.cols.map((c, i) => `
+    <div class="colrow${c.on ? "" : " off"}" data-i="${i}">
+      <input type="checkbox" ${c.on ? "checked" : ""} aria-label="Tampilkan ${esc(c.key)}">
+      <span class="mono small">${c.key === "__no" ? "(nomor urut)" : esc(c.key)}</span>
+      <input type="text" value="${esc(c.label)}" aria-label="Judul kolom ${esc(c.key)}">
+      <span class="ex" title="Contoh isi">${esc(c.key === "__no" ? "1, 2, 3, …" : fmtVal(c.key, sample[c.key]) || "—")}</span>
+      <span class="mv"><button data-mv="-1" ${i === 0 ? "disabled" : ""} aria-label="Naikkan">↑</button><button data-mv="1" ${i === P.cols.length - 1 ? "disabled" : ""} aria-label="Turunkan">↓</button></span>
+    </div>`).join("")}</div>`;
+  el.querySelectorAll(".colrow").forEach(row => {
+    const i = +row.dataset.i, c = P.cols[i];
+    row.querySelector("input[type=checkbox]").onchange = e => { c.on = e.target.checked; row.classList.toggle("off", !c.on); changed(); };
+    row.querySelector("input[type=text]").oninput = e => { c.label = e.target.value; changed(); };
+    row.querySelectorAll("button[data-mv]").forEach(b => b.onclick = () => { const j = i + Number(b.dataset.mv); [P.cols[i], P.cols[j]] = [P.cols[j], P.cols[i]]; renderCols(); changed(); });
+  });
+}
+function renderPreview(){
+  const el = $("#prev-body"), has = P.feats.length > 0;
+  for (const id of ["#dl-pdf", "#dl-png", "#dl-svg", "#dl-xlsx", "#btn-print"]) $(id).disabled = !has;
+  if (!has){ el.innerHTML = `<div class="empty">Pratinjau muncul setelah SHP dimasukkan.</div>`; return; }
+  if (!P.cols.some(c => c.on)) P.cols[0].on = true;
+  try { buildPages(); } catch(e){ console.error(e); el.innerHTML = `<div class="note bad">Gagal menyusun peta: ${esc(e.message)}</div>`; return; }
+  const [W, H] = P.pageSize;
+  el.innerHTML = `<div class="pages">${P.pages.map((p, i) => `<span class="pagecap">Lembar ${i + 1} dari ${P.pages.length} · ${esc(P.cfg.paper)} ${W}×${H} mm</span><div class="page">${p}</div>`).join("")}</div>`;
+  $("#page-style").textContent = `@page{size:${W}mm ${H}mm;margin:0}`;
+}
+function renderAll(){ renderInputs(); renderForm(); renderCols(); renderPreview(); }
+let chT;
+function changed(){ clearTimeout(chT); chT = setTimeout(() => { savePrefs(); renderPreview(); }, 180); }
+
+/* ================= Ekspor ================= */
+const fileBase = () => { const t = (P.cfg.title || "Peta").replace(/[^\w\- ]+/g, " ").trim().replace(/\s+/g, "_").slice(0, 60); return t || "Peta_Indikatif"; };
+function svgToCanvas(svg, dpi){
+  const [W, H] = P.pageSize;
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => { const c = document.createElement("canvas"); c.width = Math.round(W / 25.4 * dpi); c.height = Math.round(H / 25.4 * dpi);
+      const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height); res(c); };
+    img.onerror = () => rej(new Error("SVG tidak bisa dirender"));
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
+}
+const pickDpi = () => { const [W, H] = P.pageSize; return Math.max(96, Math.min(200, Math.floor(Math.sqrt(45e6 / (W * H / 645.16))))); };
+const canvasBlob = (c, type, q) => new Promise(r => c.toBlob(r, type, q));
+async function withStatus(btn, fn){
+  btn.disabled = true; const st = $("#dl-status");
+  try { await fn(m => st.innerHTML = `<span class="spin"></span>${esc(m)}`); }
+  catch(e){ console.error(e); toast("Gagal: " + e.message); }
+  st.textContent = ""; btn.disabled = false;
+}
+$("#dl-pdf").onclick = e => withStatus(e.currentTarget, async prog => {
+  if (!window.jspdf) throw new Error("pustaka PDF belum termuat");
+  const [W, H] = P.pageSize, dpi = pickDpi();
+  const pdf = new window.jspdf.jsPDF({orientation: W > H ? "landscape" : "portrait", unit:"mm", format:[W, H], compress:true});
+  for (let i = 0; i < P.pages.length; i++){
+    prog(`Menyusun PDF lembar ${i + 1}/${P.pages.length}…`);
+    const c = await svgToCanvas(P.pages[i], dpi);
+    if (i) pdf.addPage([W, H], W > H ? "landscape" : "portrait");
+    pdf.addImage(c.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, W, H, undefined, "FAST");
+  }
+  await saveFile(fileBase() + ".pdf", pdf.output("blob"));
+});
+$("#dl-png").onclick = e => withStatus(e.currentTarget, async prog => {
+  const dpi = pickDpi();
+  if (P.pages.length === 1){ prog("Menyusun PNG…"); await saveFile(fileBase() + ".png", await canvasBlob(await svgToCanvas(P.pages[0], dpi), "image/png")); return; }
+  const z = new JSZip();
+  for (let i = 0; i < P.pages.length; i++){ prog(`Menyusun PNG lembar ${i + 1}/${P.pages.length}…`); z.file(`${fileBase()}_lembar${i + 1}.png`, await canvasBlob(await svgToCanvas(P.pages[i], dpi), "image/png")); }
+  await saveFile(fileBase() + "_PNG.zip", await z.generateAsync({type:"blob"}));
+});
+$("#dl-svg").onclick = e => withStatus(e.currentTarget, async () => {
+  const head = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  if (P.pages.length === 1){ await saveFile(fileBase() + ".svg", new Blob([head + P.pages[0]], {type:"image/svg+xml"})); return; }
+  const z = new JSZip(); P.pages.forEach((p, i) => z.file(`${fileBase()}_lembar${i + 1}.svg`, head + p));
+  await saveFile(fileBase() + "_SVG.zip", await z.generateAsync({type:"blob"}));
+});
+$("#dl-xlsx").onclick = e => withStatus(e.currentTarget, async () => {
+  const feats = orderedFeats(), cols = P.cols.filter(c => c.on);
+  const rows = feats.map((f, i) => cols.map(c => { if (c.key === "__no") return i + 1; const v = f.attrs[c.key]; return typeof v === "number" && isLuas(c.key) ? v : fmtVal(c.key, v); }));
+  await saveFile(fileBase() + "_daftar_bidang.xlsx", await xlsxBlob([{name:"Daftar Bidang", head:cols.map(c => c.label), rows}]));
+});
+$("#btn-print").onclick = () => {
+  $("#print-area").innerHTML = P.pages.map(p => p.replace(/id="(clip\w+)"/g, 'id="p$1"').replace(/url\(#(clip\w+)\)/g, "url(#p$1)")).join("");
+  setTimeout(() => window.print(), 50);
+};
+
+/* ================= Serah-terima dari halaman Join ================= */
+function idb(){ return new Promise((res, rej) => { const r = indexedDB.open("joinspasial", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function kvGet(k){ const db = await idb(); return new Promise((res, rej) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function checkHandoff(){
+  try {
+    const h = await kvGet("peta");
+    if (!h || !h.bytes) return;
+    const b = $("#btn-handoff"); b.hidden = false;
+    const when = new Date(h.time);
+    b.textContent = `Pakai hasil join terakhir (${when.toLocaleDateString("id-ID")} ${when.toLocaleTimeString("id-ID", {hour:"2-digit", minute:"2-digit"})})`;
+    b.onclick = async () => { P.leaves.clear(); await ingest([{path:h.name || "hasil_join.zip", bytes:new Uint8Array(h.bytes)}]); };
+    if (/[?&]dari=join/.test(location.search) && !P.feats.length) b.click();
+  } catch {}
+}
+
+/* ================= Event ================= */
+const dz = $("#drop-shp");
+dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("over"); });
+dz.addEventListener("dragleave", () => dz.classList.remove("over"));
+dz.addEventListener("drop", async e => { e.preventDefault(); dz.classList.remove("over"); try { await ingest(await entriesFromDrop(e.dataTransfer)); } catch(err){ setStatus(""); toast("Gagal membaca: " + err.message); } });
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => e.preventDefault());
+$("#pick-shp").onclick = () => $("#in-files").click();
+$("#pick-shp-dir").onclick = () => $("#in-dir").click();
+for (const id of ["#in-files", "#in-dir"]){
+  $(id).onchange = async e => { const fs = [...e.target.files].map(f => ({path:f.webkitRelativePath || f.name, file:f})); e.target.value = ""; try { await ingest(fs); } catch(err){ setStatus(""); toast("Gagal membaca: " + err.message); } };
+}
+$("#btn-clear").onclick = () => { P.leaves.clear(); P.layers = []; P.feats = []; P.fields = []; P.warnings = []; P.cols = []; renderAll(); };
+for (const k of ["title", "lokasi", "instansi", "tanggal", "sumber", "catatan"]) $("#c-" + k).oninput = e => { P.cfg[k] = e.target.value; changed(); };
+for (const k of ["paper", "orient", "scale", "order", "label", "lsize", "color", "fill"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; if (k === "color") $("#c-fill").disabled = !!P.cfg.color; changed(); };
+$("#c-fill").oninput = e => { P.cfg.fill = e.target.value; changed(); };
+for (const k of ["grid", "total"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.checked; changed(); };
+$("#btn-reset").onclick = () => { P.cfg = {...DEF, lokasi:"", tanggal:""}; P.colPrefs = null; P.lokasiAuto = ""; P.instansiAuto = ""; if (P.feats.length){ autoLokasi(); autoCols(); } else { P.cfg.tanggal = todayStr(); } savePrefs(); renderAll(); };
+
+loadPrefs();
+if (!P.cfg.tanggal) P.cfg.tanggal = todayStr();
+renderAll();
+checkHandoff();
+</script>
