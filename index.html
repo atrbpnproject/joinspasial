@@ -89,18 +89,41 @@ details[open]>summary{margin-bottom:12px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50;max-width:calc(100% - 32px)}
 .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
-.topnav{display:flex;gap:14px;font-size:13.5px}
-.topnav a{color:var(--accent);text-decoration:none;font-weight:500}
-.topnav a:hover{text-decoration:underline}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
 @media (max-width:560px){h1{font-size:24px} section.card{padding:14px}}
+/* Menu bar aplikasi */
+:root{--abh:100px}
+.appbar{display:block;gap:0;position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:saturate(1.4) blur(8px);-webkit-backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
+.appbar-in{box-sizing:border-box;width:100%;max-width:1640px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:14px;min-width:0}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.brand svg{width:22px;height:22px;color:var(--accent);flex:none}
+.apptabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1 1 auto}
+.apptabs::-webkit-scrollbar{display:none}
+.apptabs a{padding:6px 11px;border-radius:7px;font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
+.apptabs a:hover{color:var(--ink);background:var(--sunken)}
+.apptabs a[aria-current=page]{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.appact{display:flex;gap:6px;flex:none}
+.appact button{padding:6px 11px;font-size:13px}
+.secnav{box-sizing:border-box;width:100%;max-width:1640px;border-top:0;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.secnav::-webkit-scrollbar{display:none}
+.secnav a{padding:8px 10px;font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;display:flex;gap:6px;align-items:baseline}
+.secnav a b{font-family:var(--f-mono);font-weight:500;font-size:11.5px;color:var(--accent)}
+.secnav a:hover{color:var(--ink)}
+.secnav a.on{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+@media (max-width:720px){.appbar-in{flex-wrap:wrap;row-gap:6px}.apptabs{order:3;flex-basis:100%}.appact{margin-left:auto}.brand span{display:none}}
+@media print{.appbar{display:none!important}}
 </style>
 
+<header class="appbar">
+  <div class="appbar-in">
+    <a class="brand" href="index.html" title="Joinspasial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>Joinspasial</span></a>
+    <nav class="apptabs" aria-label="Aplikasi"><a href="index.html" aria-current="page">Join Buku Tanah</a><a href="peta.html">Peta Indikatif</a><a href="lapang.html">Peta Kerja Lapang</a></nav>
+  </div>
+</header>
 <div class="wrap">
   <header>
-    <nav class="topnav"><a href="peta.html">Peta Indikatif Bidang →</a><a href="lapang.html">Peta Kerja Lapang →</a></nav>
     <h1>Join Buku Tanah</h1>
     <p class="lede">Menambahkan atribut dari Excel kualitas data Buku Tanah ke shapefile bidang tanah. Kunci gabungnya NIB + desa + kecamatan, jadi NIB yang sama di desa berbeda tidak tertukar. Semua file diproses di browser ini dan tidak dikirim ke server.</p>
     <div class="key" aria-label="Struktur Nomor Hak">

@@ -148,13 +148,69 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 8px;min-width:0;width:100%}
 .linkrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .linkrow input{flex:1 1 320px}
+/* Menu bar aplikasi */
+:root{--abh:100px}
+.appbar{display:block;gap:0;position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:saturate(1.4) blur(8px);-webkit-backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
+.appbar-in{box-sizing:border-box;width:100%;max-width:1640px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:14px;min-width:0}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.brand svg{width:22px;height:22px;color:var(--accent);flex:none}
+.apptabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1 1 auto}
+.apptabs::-webkit-scrollbar{display:none}
+.apptabs a{padding:6px 11px;border-radius:7px;font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;white-space:nowrap}
+.apptabs a:hover{color:var(--ink);background:var(--sunken)}
+.apptabs a[aria-current=page]{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.appact{display:flex;gap:6px;flex:none}
+.appact button{padding:6px 11px;font-size:13px}
+.secnav{box-sizing:border-box;width:100%;max-width:1640px;border-top:0;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.secnav::-webkit-scrollbar{display:none}
+.secnav a{padding:8px 10px;font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;display:flex;gap:6px;align-items:baseline}
+.secnav a b{font-family:var(--f-mono);font-weight:500;font-size:11.5px;color:var(--accent)}
+.secnav a:hover{color:var(--ink)}
+.secnav a.on{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+@media (max-width:720px){.appbar-in{flex-wrap:wrap;row-gap:6px}.apptabs{order:3;flex-basis:100%}.appact{margin-left:auto}.brand span{display:none}}
+@media print{.appbar{display:none!important}}
+/* Tata letak dua kolom: pengaturan di kiri, pratinjau di kanan (layar lebar) */
+.wrap.wide{max-width:1640px;padding-top:22px}
+section.card{scroll-margin-top:calc(var(--abh) + 12px)}
+.layout{display:flex;flex-direction:column;gap:22px;min-width:0}
+.side{display:flex;flex-direction:column;gap:22px;min-width:0}
+.mainp{min-width:0}
+@media (min-width:1180px){
+  .layout{display:grid;grid-template-columns:minmax(400px,540px) minmax(0,1fr);align-items:start}
+  .mainp{position:sticky;top:calc(var(--abh) + 12px)}
+  #sec-prev{max-height:calc(100vh - var(--abh) - 28px);overflow:auto}
+  #sec-prev .dlbar{position:sticky;top:-20px;background:var(--surface);z-index:2;padding-block:4px}
+}
+.stylist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.styrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
+.styrow:last-child{border-bottom:0}
+.styrow .muted{font-size:12px}
+.edithint{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);background:var(--sunken);border-radius:8px;padding:7px 10px}
+.edithint kbd{white-space:nowrap;flex:none;font-family:var(--f-mono);font-size:11.5px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface);color:var(--ink)}
+.page svg [data-k]{cursor:text}
+.page svg [data-k]:hover{fill:#0E6A5B}
+.page svg [data-c]{cursor:pointer}
+.page svg [data-c]:hover{opacity:.75}
+.inedit{position:fixed;z-index:60;font:inherit;font-size:14px;background:#fff;color:#111;border:2px solid #0E6A5B;border-radius:6px;padding:4px 7px;box-shadow:0 6px 24px rgba(0,0,0,.25);resize:both;min-width:160px;max-width:calc(100vw - 24px)}
+.inedit-tip{position:fixed;z-index:61;font-size:11.5px;background:#16211E;color:#fff;padding:3px 8px;border-radius:5px;pointer-events:none}
 </style>
-<div class="wrap">
+<header class="appbar" id="appbar">
+  <div class="appbar-in">
+    <a class="brand" href="index.html" title="Joinspasial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>Joinspasial</span></a>
+    <nav class="apptabs" aria-label="Aplikasi"><a href="index.html">Join Buku Tanah</a><a href="peta.html">Peta Indikatif</a><a href="lapang.html" aria-current="page">Peta Kerja Lapang</a></nav>
+    <div class="appact"><button class="primary" data-proxy="#dl-pdf" disabled>Unduh PDF</button><button data-proxy="#dl-kml" disabled>KML</button><button data-proxy="#dl-xlsx" disabled>Tabel</button></div>
+  </div>
+  <nav class="secnav" aria-label="Bagian halaman">
+    <a href="#sec-obj"><b>1</b>Objek</a><a href="#sec-lyr"><b>2</b>Bidang &amp; PBT</a><a href="#sec-tt"><b>3</b>Tumpang tindih</a><a href="#sec-map"><b>4</b>Peta</a><a href="#sec-sty"><b>5</b>Gaya &amp; warna</a><a href="#sec-prev"><b>6</b>Pratinjau &amp; unduh</a>
+  </nav>
+</header>
+<div class="wrap wide">
   <header>
-    <nav class="topnav"><a href="index.html">← Join Buku Tanah</a><a href="peta.html">Peta Indikatif Bidang</a></nav>
     <h1>Peta Kerja Lapang</h1>
     <p class="lede">Membuat peta kerja untuk turun lapang dari titik atau poligon Google My Maps, dioverlay dengan bidang tanah terdaftar dan PBT. Bidang yang tumpang tindih dengan PBT ditandai beserta luasnya. Hasilnya bisa satu lembar per titik, per poligon, atau per kasus tumpang tindih, dan bisa dibawa ke HP sebagai KML. Semua file diproses di browser ini dan tidak dikirim ke server.</p>
   </header>
+  <div class="layout">
+  <div class="side">
 
   <section class="card" id="sec-obj">
     <h2><span class="n">1</span>Objek kerja (titik / poligon)</h2>
@@ -268,9 +324,18 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
     <div class="row"><button class="ghost" id="btn-reset">Kembalikan isian bawaan</button></div>
   </section>
 
+  <section class="card" id="sec-sty">
+    <h2><span class="n">5</span>Gaya &amp; warna simbol</h2>
+    <p class="muted small">Warna berlaku untuk peta dan legenda di semua lembar. Bisa juga langsung klik 2x simbol di kotak legenda pada pratinjau. "Otomatis" memakai warna bawaan (warna menyesuaikan bila basemap citra tampil).</p>
+    <div class="stylist" id="sty-list"></div>
+    <div class="row small"><span class="muted" id="txt-count"></span><button class="ghost" id="btn-txtreset">Kembalikan semua teks bawaan</button><button class="ghost" id="btn-colreset">Kembalikan semua warna otomatis</button></div>
+  </section>
+  </div>
+
+  <div class="mainp">
   <section class="card" id="sec-prev">
-    <h2><span class="n">5</span>Pratinjau dan unduh</h2>
-    <div class="row">
+    <h2><span class="n">6</span>Pratinjau dan unduh</h2>
+    <div class="row dlbar">
       <button class="primary" id="dl-pdf" disabled>Unduh PDF</button>
       <button id="dl-png" disabled>Unduh PNG</button>
       <button id="dl-xlsx" disabled>Unduh tabel (.xlsx)</button>
@@ -279,8 +344,11 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
       <span class="status" id="dl-status"></span>
     </div>
     <p class="small muted">KML bisa dibuka di Google Earth, diimpor ke Google My Maps, atau aplikasi peta lapang (Avenza, Locus, SW Maps) untuk melihat posisi Anda terhadap bidang dan tumpang tindih saat di lapangan.</p>
+    <div class="edithint"><kbd>klik 2×</kbd> teks pada peta (judul, keterangan, legenda, nama objek, judul tabel) untuk mengubahnya langsung. Perubahan berlaku ke semua lembar. Klik 2× simbol legenda untuk mengganti warnanya.</div>
     <div id="prev-body"><div class="empty">Pratinjau muncul setelah objek kerja atau SHP bidang dimasukkan.</div></div>
   </section>
+  </div>
+  </div>
 </div>
 <div id="print-area"></div>
 <style id="page-style"></style>
@@ -477,7 +545,7 @@ function clip(s, size, bold, maxW){
 }
 const n2 = v => +v.toFixed(2);
 function T(x, y, s, o = {}){
-  return `<text x="${n2(x)}" y="${n2(y)}" font-size="${n2(o.size || 3)}"${o.bold ? ' font-weight="bold"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""}${o.fill ? ` fill="${o.fill}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${n2(x)} ${n2(y)})"` : ""}${o.extra || ""}>${esc(s)}</text>`;
+  return `<text x="${n2(x)}" y="${n2(y)}" font-size="${n2(o.size || 3)}"${o.bold ? ' font-weight="bold"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""}${o.fill ? ` fill="${o.fill}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${n2(x)} ${n2(y)})"` : ""}${o.extra || ""}${o.k ? ` data-k="${esc(o.k)}"` : ""}>${esc(s)}</text>`;
 }
 
 /* ================= Layout lembar ================= */
@@ -592,7 +660,7 @@ const DEF = {
   catatan: "Peta kerja ini bersifat indikatif untuk keperluan peninjauan lapang, bukan penetapan batas bidang tanah.",
   mode: "obj", kind: "", radius: "50", scale: "auto", index: true, ttOnly: false, nama: true, labNib: false,
   paper: "A4", orient: "landscape", grid: "geo", objColor: "mm",
-  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true, showAll: false, qr: true,
+  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true, showAll: false, qr: true, col: {}, txt: {},
 };
 const mkLyr = () => ({leaves:new Map(), layers:[], feats:[], fields:[], crs:null, warnings:[], ix:null, keys:{}});
 const P = {
@@ -604,7 +672,13 @@ const P = {
 };
 const LYR_NAME = {bid: "Bidang tanah", pbt: "PBT"};
 const LS_KEY = "petaLapang.v1";
-function loadPrefs(){ try { const s = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (s && typeof s === "object") for (const k of Object.keys(P.cfg)) if (k in s) P.cfg[k] = s[k]; } catch {} }
+function loadPrefs(){ try { const s = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (s && typeof s === "object") for (const k of Object.keys(P.cfg)) if (k in s) P.cfg[k] = s[k]; } catch {}
+  P.cfg.col = P.cfg.col && typeof P.cfg.col === "object" ? {...P.cfg.col} : {}; P.cfg.txt = P.cfg.txt && typeof P.cfg.txt === "object" ? {...P.cfg.txt} : {}; }
+/* teks yang diubah pengguna (klik 2x di peta) dan warna simbol */
+const TXDEF = {};
+const tx = (k, def) => { TXDEF[k] = def; const v = P.cfg.txt[k]; return v === undefined || v === null || v === "" ? def : v; };
+const COLDEF = {tt:"#FF1744", same:"#FF9100", obj:"#D500F9", circle:"#FFFFFF"};
+const colOf = (k, auto) => P.cfg.col[k] || auto || COLDEF[k];
 function savePrefs(){ try { localStorage.setItem(LS_KEY, JSON.stringify(P.cfg)); } catch {} }
 const PC = () => window.polygonClipping || null;
 const sleep0 = () => new Promise(r => setTimeout(r, 0));
@@ -1181,7 +1255,7 @@ function sheetData(sp){
   const objExt = o => o.kind === "poly" ? o.bb : bbGrow(o.bb, Math.max(r, 15));
   if (sp.kind === "obj"){
     const o = sp.o, rel = relFor(o);
-    d.focus = [o]; d.items = rel; d.sub = `${o.name}`; d.subSmall = `Objek ${o.no} · ${KIND_NAME[o.kind]} · ${o.folder}`;
+    d.focus = [o]; d.items = rel; d.sub = `${o.name}`; d.subKey = "obj:" + o.id; d.subSmall = `Objek ${o.no} · ${KIND_NAME[o.kind]} · ${o.folder}`;
     let ext = objExt(o); const base = ext;
     for (const it of rel) ext = bbUnion(ext, it.f.bb);
     const bw = Math.max(base[2] - base[0], 30), bh = Math.max(base[3] - base[1], 30);
@@ -1210,7 +1284,8 @@ function sheetData(sp){
     d.ext = ext || [0, 0, 100, 100];
     d.focus = objs;
     d.items = [...seen.values()].sort((p, q) => (p.f.src === q.f.src ? 0 : p.f.src === "bid" ? -1 : 1) || ((q.f.bb[1] + q.f.bb[3]) - (p.f.bb[1] + p.f.bb[3])) || ((p.f.bb[0] + p.f.bb[2]) - (q.f.bb[0] + q.f.bb[2])));
-    d.sub = sp.kind === "index" ? "Lembar indeks objek kerja" : (objs.length ? `Seluruh objek kerja (${objs.length})` : "Bidang tanah dan PBT");
+    d.subKey = sp.kind === "index" ? "txt:sub_index" : null;
+    d.sub = sp.kind === "index" ? tx("sub_index", "Lembar indeks objek kerja") : (objs.length ? `Seluruh objek kerja (${objs.length})` : "Bidang tanah dan PBT");
     const cnt = k => objs.filter(o => o.kind === k).length;
     if (objs.length) d.info.push(["Objek kerja", ["point", "line", "poly"].filter(k => cnt(k)).map(k => `${cnt(k)} ${KIND_NAME[k].toLowerCase()}`).join(", ")]);
     const folders = [...new Set(objs.map(o => o.folder))]; if (folders.length) d.info.push(["Layer My Maps", folders.join(", ")]);
@@ -1253,18 +1328,19 @@ function qrSvg(text, x, y, side){
     d += `M${n2r(x + (c + qz) * cell)} ${n2r(y + (r + qz) * cell)}h${n2r((e - c) * cell)}v${n2r(cell)}h${n2r(-(e - c) * cell)}z`; c = e; } }
   return `<path d="${d}" fill="#000" shape-rendering="crispEdges"/>`;
 }
-const objCol = o => P.cfg.objColor === "one" ? "#D500F9" : (o.color || o.fcolor || "#D500F9");
+const objCol = o => P.cfg.col.obj ? P.cfg.col.obj : P.cfg.objColor === "one" ? COLDEF.obj : (o.color || o.fcolor || COLDEF.obj);
 function renderSheet(sp, pi, pn, W, H){
   const cfg = P.cfg, d = sheetData(sp);
   const u = Math.min(W, H) / 297, M = Math.max(7, 10 * u + 2), IW = W - 2 * M, IH = H - 2 * M;
   const pad = 2.4 * u, lw = Math.max(0.18, 0.3 * u);
   const hasBm = !!(BASEMAPS[cfg.bm] && BASEMAPS[cfg.bm].url) && [...TILE.values()].some(v => typeof v === "string" && v !== "ERR");   // warna terang hanya bila citra benar-benar tampil
-  const C = hasBm ? {bid:"#FFEA00", pbt:"#18FFFF", bidFill:"none", pbtFill:"none"} : {bid:"#C62828", pbt:"#1565C0", bidFill:"#FFF3C4", pbtFill:"#D6ECFF"};
+  const C0 = hasBm ? {bid:"#FFEA00", pbt:"#18FFFF", bidFill:"none", pbtFill:"none"} : {bid:"#C62828", pbt:"#1565C0", bidFill:"#FFF3C4", pbtFill:"#D6ECFF"};
+  const C = {...C0, bid:colOf("bid", C0.bid), pbt:colOf("pbt", C0.pbt), tt:colOf("tt"), same:colOf("same"), circle:colOf("circle")};
   const uid = "p" + pi + Math.random().toString(36).slice(2, 7);
   const box = (x, y, w, h) => `<rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>`;
   let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}" font-family="${FF}" fill="#111">` +
-    `<defs><pattern id="${uid}h" patternUnits="userSpaceOnUse" width="${n2(1.6 * u)}" height="${n2(1.6 * u)}" patternTransform="rotate(45)"><rect width="${n2(1.6 * u)}" height="${n2(1.6 * u)}" fill="#FF1744" fill-opacity=".25"/><line x1="0" y1="0" x2="0" y2="${n2(1.6 * u)}" stroke="#FF1744" stroke-width="${n2(0.55 * u)}"/></pattern>` +
-    `<pattern id="${uid}s" patternUnits="userSpaceOnUse" width="${n2(2 * u)}" height="${n2(2 * u)}" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="${n2(2 * u)}" stroke="#FF9100" stroke-width="${n2(0.4 * u)}"/></pattern></defs>` +
+    `<defs><pattern id="${uid}h" patternUnits="userSpaceOnUse" width="${n2(1.6 * u)}" height="${n2(1.6 * u)}" patternTransform="rotate(45)"><rect width="${n2(1.6 * u)}" height="${n2(1.6 * u)}" fill="${C.tt}" fill-opacity=".25"/><line x1="0" y1="0" x2="0" y2="${n2(1.6 * u)}" stroke="${C.tt}" stroke-width="${n2(0.55 * u)}"/></pattern>` +
+    `<pattern id="${uid}s" patternUnits="userSpaceOnUse" width="${n2(2 * u)}" height="${n2(2 * u)}" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="${n2(2 * u)}" stroke="${C.same}" stroke-width="${n2(0.4 * u)}"/></pattern></defs>` +
     `<rect width="${W}" height="${H}" fill="#fff"/><rect x="${n2(M - 1.4)}" y="${n2(M - 1.4)}" width="${n2(IW + 2.8)}" height="${n2(IH + 2.8)}" fill="none" stroke="#111" stroke-width="${n2(lw * 2.4)}"/>`;
 
   // tabel
@@ -1276,9 +1352,9 @@ function renderSheet(sp, pi, pn, W, H){
     const ts = 3.9 * u, ss = 2.8 * u, xs = 2.1 * u;
     const tl = wrap(cfg.title, ts, true, w - 2 * pad), sl = wrap(d.sub || "", ss, true, w - 2 * pad), xl = d.subSmall ? wrap(d.subSmall, xs, false, w - 2 * pad) : [];
     const lines = []; let yy = pad * 0.9;
-    for (const l of tl){ yy += ts; lines.push([yy, l, {size:ts, bold:true, anchor:"middle"}]); yy += ts * 0.2; }
+    for (const l of tl){ yy += ts; lines.push([yy, l, {size:ts, bold:true, anchor:"middle", k:"cfg:title"}]); yy += ts * 0.2; }
     if (sl.length) yy += 1 * u;
-    for (const l of sl){ yy += ss; lines.push([yy, l, {size:ss, bold:true, anchor:"middle", fill:"#6A1B9A"}]); yy += ss * 0.25; }
+    for (const l of sl){ yy += ss; lines.push([yy, l, {size:ss, bold:true, anchor:"middle", fill:"#6A1B9A", k:d.subKey}]); yy += ss * 0.25; }
     for (const l of xl){ yy += xs * 1.2; lines.push([yy, l, {size:xs, anchor:"middle", fill:"#444"}]); }
     const h = yy + pad * 1.1;
     return {h, draw:(x, y) => { let o = box(x, y, w, h);
@@ -1286,14 +1362,15 @@ function renderSheet(sp, pi, pn, W, H){
       return o; }};
   };
   const infoBlock = w => {
-    const ks = 2.05 * u, lh = ks * 1.35, rows = d.info;
-    const lab = Math.min(w * 0.42, Math.max(...rows.map(r => tw(r[0], ks, false)), 10) + 1.5 * u);
-    const wr = rows.map(([a, b]) => [a, wrap(b, ks, false, w - 2 * pad - lab - 2 * u).slice(0, a === "Deskripsi" ? 4 : 3)]);
+    const ks = 2.05 * u, lh = ks * 1.35, rows = d.info, rowsT = rows.map(([a, b]) => [a ? tx("lab:" + a, a) : a, b]);
+    const lab = Math.min(w * 0.42, Math.max(...rowsT.map(r => tw(r[0], ks, false)), 10) + 1.5 * u);
+    const wr = rowsT.map(([a, b], i) => [a, wrap(b, ks, false, w - 2 * pad - lab - 2 * u).slice(0, rows[i][0] === "Deskripsi" ? 4 : 3), rows[i][0]]);
     const h = pad + 3 * u + wr.reduce((acc, r) => acc + Math.max(1, r[1].length) * lh, 0) + pad * 0.6;
     return {h, draw:(x, y) => {
-      let o = box(x, y, w, h) + T(x + pad, y + pad + 2.1 * u, d.objTable || sp.kind === "all" ? "KETERANGAN" : sp.kind === "tt" ? "KETERANGAN TUMPANG TINDIH" : "KETERANGAN OBJEK", {size:2.4 * u, bold:true});
+      const hk = d.objTable || sp.kind === "all" ? "h_info" : sp.kind === "tt" ? "h_info_tt" : "h_info_obj";
+      let o = box(x, y, w, h) + T(x + pad, y + pad + 2.1 * u, tx(hk, {h_info:"KETERANGAN", h_info_tt:"KETERANGAN TUMPANG TINDIH", h_info_obj:"KETERANGAN OBJEK"}[hk]), {size:2.4 * u, bold:true, k:"txt:" + hk});
       let yy = y + pad + 2.1 * u + lh * 1.25;
-      for (const [a, ls] of wr){ if (a) o += T(x + pad, yy, clip(a, ks, false, lab - u), {size:ks, fill:"#333"}) + T(x + pad + lab, yy, ":", {size:ks});
+      for (const [a, ls, a0] of wr){ if (a) o += T(x + pad, yy, clip(a, ks, false, lab - u), {size:ks, fill:"#333", k:"txt:lab:" + a0}) + T(x + pad + lab, yy, ":", {size:ks});
         ls.forEach((t, i) => o += T(x + pad + lab + 2 * u, yy + i * lh, t, {size:ks, extra: /^(X |\d+°)/.test(t) ? ' font-family="IBM Plex Mono, Consolas, monospace"' : ""})); yy += Math.max(1, ls.length) * lh; }
       return o; }};
   };
@@ -1303,11 +1380,11 @@ function renderSheet(sp, pi, pn, W, H){
     const rows = Math.ceil(legend.length / cols);
     const h = pad + 3.2 * u + rows * lh + pad * 0.5;
     return {h, draw:(x, y) => {
-      let o = box(x, y, w, h) + T(x + pad, y + pad + 2.1 * u, "LEGENDA", {size:2.4 * u, bold:true});
+      let o = box(x, y, w, h) + T(x + pad, y + pad + 2.1 * u, tx("h_leg", "LEGENDA"), {size:2.4 * u, bold:true, k:"txt:h_leg"});
       legend.forEach((it, i) => {
         const cx = x + pad + (i % cols) * cw, cy = y + pad + 4 * u + Math.floor(i / cols) * lh;
-        o += legendSym(it, cx, cy, sw, sh, u, uid, lw);
-        o += T(cx + sw + 1.8 * u, cy + sh * 0.8, clip(it.text, ls, false, cw - sw - 2.6 * u), {size:ls});
+        o += it.c ? `<g data-c="${it.c}">${legendSym(it, cx, cy, sw, sh, u, uid, lw)}<rect x="${n2(cx)}" y="${n2(cy)}" width="${n2(sw)}" height="${n2(sh)}" fill="#000" fill-opacity="0"/></g>` : legendSym(it, cx, cy, sw, sh, u, uid, lw);
+        o += T(cx + sw + 1.8 * u, cy + sh * 0.8, clip(tx("leg:" + it.key, it.text), ls, false, cw - sw - 2.6 * u), {size:ls, k:"txt:leg:" + it.key});
       });
       return o; }};
   };
@@ -1315,12 +1392,12 @@ function renderSheet(sp, pi, pn, W, H){
     if (!P.cfg.qr || !d.qr || typeof window.qrcode !== "function") return null;
     const q = qrSvg(d.qr.url, 0, 0, 1); if (!q) return null;
     const side = Math.min(26 * u, w * 0.34), h = side + 2 * pad;
-    const fs = 2.05 * u, tx = pad * 2 + side, tw0 = w - tx - pad;
-    const lines = [...wrap("Pindai untuk membuka lokasi di Google Maps (navigasi ke titik):", fs, true, tw0).map(t => [t, true]), ...wrap(d.qr.label, fs, false, tw0).map(t => [t, false])];
+    const fs = 2.05 * u, tx0 = pad * 2 + side, tw0 = w - tx0 - pad;
+    const lines = [...wrap(tx("qr_head", "Pindai untuk membuka lokasi di Google Maps (navigasi ke titik):"), fs, true, tw0).map(t => [t, "txt:qr_head"]), ...wrap(d.qr.label, fs, false, tw0).map(t => [t, false])];
     return {h, draw:(x, y) => {
       let o = box(x, y, w, h) + `<rect x="${n2(x + pad)}" y="${n2(y + pad)}" width="${n2(side)}" height="${n2(side)}" fill="#fff"/>` + qrSvg(d.qr.url, x + pad, y + pad, side);
-      let yy = y + pad + fs * 1.1; for (const [t, b] of lines){ o += T(x + tx, yy, t, {size:fs, bold:b}); yy += fs * 1.35; }
-      o += T(x + tx, y + h - pad, clip(d.qr.url.replace(/^https:\/\//, ""), fs * 0.75, false, tw0), {size:fs * 0.75, fill:"#555"});
+      let yy = y + pad + fs * 1.1; for (const [t, b] of lines){ o += T(x + tx0, yy, t, {size:fs, bold:!!b, k:b || null}); yy += fs * 1.35; }
+      o += T(x + tx0, y + h - pad, clip(d.qr.url.replace(/^https:\/\//, ""), fs * 0.75, false, tw0), {size:fs * 0.75, fill:"#555"});
       return o; }};
   };
   const nsBlock = (w, scale) => {
@@ -1345,13 +1422,13 @@ function renderSheet(sp, pi, pn, W, H){
   };
   const footBlock = w => {
     const fs2 = 2.15 * u, lh = fs2 * 1.3;
-    const il = wrap(cfg.instansi, fs2, true, w - 2 * pad), tl = wrap([cfg.tanggal, `Lembar ${pi + 1} dari ${pn}`].filter(Boolean).join(" · "), fs2 * 0.92, false, w - 2 * pad);
+    const il = wrap(cfg.instansi, fs2, true, w - 2 * pad), tl = [...wrap(cfg.tanggal || "", fs2 * 0.92, false, w - 2 * pad).map(t => [t, "cfg:tanggal"]), [`Lembar ${pi + 1} dari ${pn}`, null]];
     const cat = cfg.catatan ? wrap(cfg.catatan, fs2 * 0.85, false, w - 2 * pad).slice(0, 3) : [];
     const h = pad * 1.1 + (il.length + tl.length + cat.length) * lh + 1 * u + pad * 0.4;
     return {h, draw:(x, y) => { let o = box(x, y, w, h), yy = y + pad + fs2 * 0.9;
-      for (const t of cat){ o += T(x + w / 2, yy, t, {size:fs2 * 0.85, anchor:"middle", fill:"#444", extra:' font-style="italic"'}); yy += lh; }
-      for (const t of il){ o += T(x + w / 2, yy, t, {size:fs2, bold:true, anchor:"middle"}); yy += lh; }
-      yy += 0.6 * u; for (const t of tl){ o += T(x + w / 2, yy, t, {size:fs2 * 0.92, anchor:"middle"}); yy += lh; }
+      for (const t of cat){ o += T(x + w / 2, yy, t, {size:fs2 * 0.85, anchor:"middle", fill:"#444", extra:' font-style="italic"', k:"cfg:catatan"}); yy += lh; }
+      for (const t of il){ o += T(x + w / 2, yy, t, {size:fs2, bold:true, anchor:"middle", k:"cfg:instansi"}); yy += lh; }
+      yy += 0.6 * u; for (const [t, k] of tl){ o += T(x + w / 2, yy, t, {size:fs2 * 0.92, anchor:"middle", k}); yy += lh; }
       return o; }};
   };
 
@@ -1386,17 +1463,17 @@ function renderSheet(sp, pi, pn, W, H){
 }
 function legendItems(d, C, hasBm){
   const it = [], kinds = new Set(d.focus.map(o => o.kind));
-  const pc = d.focus.length && P.cfg.objColor === "one" ? "#D500F9" : (d.focus[0] ? objCol(d.focus[0]) : "#D500F9");
-  if (kinds.has("point")) it.push({t:"pt", color:pc, text:"Titik objek kerja"});
-  if (kinds.has("line")) it.push({t:"ln", color:pc, text:"Garis objek kerja"});
-  if (kinds.has("poly")) it.push({t:"pg", color:pc, text:"Poligon objek kerja"});
-  if (d.circle) it.push({t:"circle", color:"#fff", text:`Radius ${fmtA(d.circle.r)} m dari titik`});
-  if (P.lyr.bid.feats.length) it.push({t:"fill", stroke:C.bid, fill:C.bidFill, text:"Bidang tanah terdaftar"});
-  if (P.lyr.pbt.feats.length) it.push({t:"fill", stroke:C.pbt, fill:C.pbtFill, dash:true, text:"PBT (Peta Bidang Tanah)"});
-  if (P.tt.some(t => !t.same)) it.push({t:"hatch", text:"Tumpang tindih bidang–PBT"});
-  if (P.tt.some(t => t.same)) it.push({t:"same", text:"Bidang & PBT berimpit"});
-  if (d.items.length) it.push({t:"num", text: (d.items.some(x => x.f.src === "pbt") ? "Nomor bidang / PBT (P1…)" : "Nomor bidang di tabel") + (d.circle ? ", beririsan radius" : "")});
-  if (hasBm) it.push({t:"bm", text: BASEMAPS[P.cfg.bm].attr || BASEMAPS[P.cfg.bm].label});
+  const pc = d.focus[0] ? objCol(d.focus[0]) : objCol({});
+  if (kinds.has("point")) it.push({t:"pt", key:"pt", c:"obj", color:pc, text:"Titik objek kerja"});
+  if (kinds.has("line")) it.push({t:"ln", key:"ln", c:"obj", color:pc, text:"Garis objek kerja"});
+  if (kinds.has("poly")) it.push({t:"pg", key:"pg", c:"obj", color:pc, text:"Poligon objek kerja"});
+  if (d.circle) it.push({t:"circle", key:"circle", c:"circle", color:C.circle, text:`Radius ${fmtA(d.circle.r)} m dari titik`});
+  if (P.lyr.bid.feats.length) it.push({t:"fill", key:"bid", c:"bid", stroke:C.bid, fill:C.bidFill, text:"Bidang tanah terdaftar"});
+  if (P.lyr.pbt.feats.length) it.push({t:"fill", key:"pbt", c:"pbt", stroke:C.pbt, fill:C.pbtFill, dash:true, text:"PBT (Peta Bidang Tanah)"});
+  if (P.tt.some(t => !t.same)) it.push({t:"hatch", key:"tt", c:"tt", color:C.tt, text:"Tumpang tindih bidang–PBT"});
+  if (P.tt.some(t => t.same)) it.push({t:"same", key:"same", c:"same", color:C.same, text:"Bidang & PBT berimpit"});
+  if (d.items.length) it.push({t:"num", key:"num", text: (d.items.some(x => x.f.src === "pbt") ? "Nomor bidang / PBT (P1…)" : "Nomor bidang di tabel") + (d.circle ? ", beririsan radius" : "")});
+  if (hasBm) it.push({t:"bm", key:"bm", text: BASEMAPS[P.cfg.bm].attr || BASEMAPS[P.cfg.bm].label});
   return it;
 }
 function legendSym(it, x, y, sw, sh, u, uid, lw){
@@ -1405,10 +1482,10 @@ function legendSym(it, x, y, sw, sh, u, uid, lw){
     case "pt": return `<circle cx="${n2(x + sw / 2)}" cy="${n2(y + sh / 2)}" r="${n2(1.2 * u)}" fill="${it.color}" stroke="#fff" stroke-width="${n2(0.45 * u)}"/><circle cx="${n2(x + sw / 2)}" cy="${n2(y + sh / 2)}" r="${n2(1.45 * u)}" fill="none" stroke="#000" stroke-width="${n2(0.12 * u)}"/>`;
     case "ln": return `<line x1="${n2(x)}" y1="${n2(y + sh / 2)}" x2="${n2(x + sw)}" y2="${n2(y + sh / 2)}" stroke="${it.color}" stroke-width="${n2(0.7 * u)}"/>`;
     case "pg": return `<rect ${r} fill="${it.color}" fill-opacity=".15" stroke="${it.color}" stroke-width="${n2(0.6 * u)}"/>`;
-    case "circle": return `<rect ${r} fill="#555"/><path d="M${n2(x + 0.6 * u)} ${n2(y + sh / 2)} A${n2(sw / 2 - 0.6 * u)} ${n2(sh / 2 - 0.3 * u)} 0 1 1 ${n2(x + sw - 0.6 * u)} ${n2(y + sh / 2)}" fill="none" stroke="#fff" stroke-width="${n2(0.35 * u)}" stroke-dasharray="${n2(0.9 * u)} ${n2(0.6 * u)}"/>`;
+    case "circle": return `<rect ${r} fill="#555"/><path d="M${n2(x + 0.6 * u)} ${n2(y + sh / 2)} A${n2(sw / 2 - 0.6 * u)} ${n2(sh / 2 - 0.3 * u)} 0 1 1 ${n2(x + sw - 0.6 * u)} ${n2(y + sh / 2)}" fill="none" stroke="${it.color}" stroke-width="${n2(0.35 * u)}" stroke-dasharray="${n2(0.9 * u)} ${n2(0.6 * u)}"/>`;
     case "fill": return `<rect ${r} fill="${it.fill === "none" ? "#666" : it.fill}" stroke="${it.stroke}" stroke-width="${n2(0.45 * u)}"${it.dash ? ` stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}"` : ""}/>`;
-    case "hatch": return `<rect ${r} fill="url(#${uid}h)" stroke="#FF1744" stroke-width="${n2(0.45 * u)}"/>`;
-    case "same": return `<rect ${r} fill="url(#${uid}s)" stroke="#FF9100" stroke-width="${n2(0.3 * u)}"/>`;
+    case "hatch": return `<rect ${r} fill="url(#${uid}h)" stroke="${it.color}" stroke-width="${n2(0.45 * u)}"/>`;
+    case "same": return `<rect ${r} fill="url(#${uid}s)" stroke="${it.color}" stroke-width="${n2(0.3 * u)}"/>`;
     case "num": return `<rect x="${n2(x + sw / 2 - 2.2 * u)}" y="${n2(y)}" width="${n2(4.4 * u)}" height="${n2(sh)}" rx="${n2(sh * 0.3)}" fill="#fff" stroke="#111" stroke-width="${n2(0.28 * u)}"/>` + T(x + sw / 2, y + sh * 0.78, "12", {size:2.3 * u, bold:true, anchor:"middle"});
     case "bm": return `<rect ${r} fill="#7A8B6F"/>`;
   }
@@ -1427,7 +1504,8 @@ function featTable(d){
     ...(d.posHead ? [{h:d.posHead, k:"pos", a:"end"}] : []),
     {h:"Tumpang tindih", k:"tt"},
   ].filter(c => c.k === "no" || rows.some(r => r[c.k]));
-  return {cap: d.items.length ? `DAFTAR BIDANG (${d.items.length})` : "DAFTAR BIDANG", cols, rows: rows.map(r => ({cells: cols.map(c => r[c.k] || ""), bad:r.bad})),
+  cols.forEach(c => { c.key = "txt:col:" + c.k; c.h = tx("col:" + c.k, c.h); });
+  return {cap: tx("tcap", "DAFTAR BIDANG") + (d.items.length ? ` (${d.items.length})` : ""), capKey:"txt:tcap", cols, rows: rows.map(r => ({cells: cols.map(c => r[c.k] || ""), bad:r.bad})),
     empty: P.lyr.bid.feats.length || P.lyr.pbt.feats.length ? "Tidak ada bidang di sekitar objek ini." : "SHP bidang tanah / PBT belum dimasukkan."};
 }
 function objTable(d){
@@ -1436,7 +1514,8 @@ function objTable(d){
   const use = hasL ? cols : cols.slice(0, 3);
   const rows = d.focus.map(o => { const rel = relFor(o), nb = rel.filter(x => x.f.src === "bid").length, ntt = rel.filter(x => x.f.tt.some(t => !t.same)).length;
     return {cells: use.map(c => ({no:String(o.no), name:o.name, kind:KIND_NAME[o.kind], nb:String(nb), np:String(rel.length - nb), ntt: ntt ? String(ntt) : "-"})[c.k]), bad: ntt > 0}; });
-  return {cap:`DAFTAR OBJEK KERJA (${rows.length})`, cols:use, rows, empty:"Tidak ada objek."};
+  use.forEach(c => { c.key = "txt:col:" + c.k; c.h = tx("col:" + c.k, c.h); });
+  return {cap:`${tx("tcap_obj", "DAFTAR OBJEK KERJA")} (${rows.length})`, capKey:"txt:tcap_obj", cols:use, rows, empty:"Tidak ada objek."};
 }
 function drawTableBox(x, y, w, h, tb, u, pad, lw){
   let fs = 2.05 * u;
@@ -1448,7 +1527,7 @@ function drawTableBox(x, y, w, h, tb, u, pad, lw){
   else cw = cw.map(v => v * avail / tot);
   tot = cw.reduce((a, b) => a + b, 0);
   const rowH = fs * 1.7, headH = fs * 2, capH = fs * 2.5;
-  let o = `<rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>` + T(x + pad, y + pad * 0.6 + fs * 1.2, tb.cap, {size:fs * 1.12, bold:true});
+  let o = `<rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>` + T(x + pad, y + pad * 0.6 + fs * 1.2, tb.cap, {size:fs * 1.12, bold:true, k:tb.capKey});
   let yy = y + pad * 0.6 + capH;
   if (!tb.rows.length){ return o + T(x + pad, yy + fs * 1.2, tb.empty, {size:fs, fill:"#555", extra:' font-style="italic"'}); }
   const fit = Math.max(1, Math.floor((y + h - pad * 0.6 - yy - headH) / rowH));
@@ -1457,7 +1536,7 @@ function drawTableBox(x, y, w, h, tb, u, pad, lw){
   const tx = x + pad;
   o += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tot)}" height="${n2(headH)}" fill="#E9ECE9" stroke="#111" stroke-width="${n2(lw)}"/>`;
   let xx = tx;
-  tb.cols.forEach((c, ci) => { o += T(xx + cw[ci] / 2, yy + headH / 2 + fs * 0.36, clip(c.h, fs, true, cw[ci] - fs * 0.5), {size:fs, bold:true, anchor:"middle"}); xx += cw[ci]; });
+  tb.cols.forEach((c, ci) => { o += T(xx + cw[ci] / 2, yy + headH / 2 + fs * 0.36, clip(c.h, fs, true, cw[ci] - fs * 0.5), {size:fs, bold:true, anchor:"middle", k:c.key}); xx += cw[ci]; });
   yy += headH; const top = yy - headH;
   rows.forEach((r, ri) => {
     if (r.bad) o += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tot)}" height="${n2(rowH)}" fill="#FFE3E3"/>`;
@@ -1497,8 +1576,8 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
   for (const t of P.tt) if (bbHit(t.bb, ext) && (!onlyRel || nums0.has(t.a) || nums0.has(t.b))){
     const dd = pathD(mpRings(t.geom), toMm, true); if (!dd) continue;
     const hl = d.hl === t;
-    polys += t.same ? `<path d="${dd}" fill="url(#${uid}s)" fill-rule="evenodd" stroke="#FF9100" stroke-width="${n2(0.25 * u)}"/>`
-      : `<path d="${dd}" fill="url(#${uid}h)" fill-rule="evenodd" stroke="#FF1744" stroke-width="${n2((hl ? 0.6 : 0.35) * u)}"/>`;
+    polys += t.same ? `<path d="${dd}" fill="url(#${uid}s)" fill-rule="evenodd" stroke="${C.same}" stroke-width="${n2(0.25 * u)}"/>`
+      : `<path d="${dd}" fill="url(#${uid}h)" fill-rule="evenodd" stroke="${C.tt}" stroke-width="${n2((hl ? 0.6 : 0.35) * u)}"/>`;
   }
   // nomor bidang (yang ada di tabel)
   const nums = d.nums || new Map();
@@ -1514,7 +1593,7 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
     labels += T(lx, ly + ls * 0.36, no, {size:ls, bold:true, anchor:"middle", fill: bad ? "#B71C1C" : isP ? "#0D47A1" : "#111"});
     if (P.cfg.labNib && f.nib) labels += T(lx, ly + bh / 2 + ls * 0.75, f.nib, {size:ls * 0.6, anchor:"middle", fill:"#222", extra:halo("#fff", 0.4)});
   }
-  if (d.circle){ const [ccx, ccy] = toMm(...d.circle.c); over += `<circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${n2(0.75 * u)}"/><circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="#fff" stroke-width="${n2(0.4 * u)}" stroke-dasharray="${n2(1.4 * u)} ${n2(0.9 * u)}"/>`; }
+  if (d.circle){ const [ccx, ccy] = toMm(...d.circle.c); over += `<circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${n2(0.75 * u)}"/><circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="${C.circle}" stroke-width="${n2(0.4 * u)}" stroke-dasharray="${n2(1.4 * u)} ${n2(0.9 * u)}"/>`; }
   // objek kerja: semua yang tampak, fokus ditebalkan
   const focus = new Set(d.focus);
   const objs = P.objs.filter(o => !P.objOff.has(o.id) && bbHit(o.bb, bbGrow(ext, 1)));
@@ -1527,7 +1606,7 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
       over += `<circle cx="${n2(px)}" cy="${n2(py)}" r="${n2(r + 0.3 * u)}" fill="#000" fill-opacity=".55"/><circle cx="${n2(px)}" cy="${n2(py)}" r="${n2(r)}" fill="${col}" stroke="#fff" stroke-width="${n2(0.4 * u)}"/>`; }
     const [lx, ly] = toMm(...o.lab), ls = (f && !idxPage ? 2.6 : 2.1) * u;
     const txt = idxPage ? `${o.no}` + (objs.length <= 25 ? ` ${o.name}` : "") : (f || objs.length <= 30 ? o.name : "");
-    if (txt) labels += T(lx + (o.kind === "point" ? 2 * u : 0), ly - (o.kind === "point" ? 1.4 * u : 0), clip(txt, ls, true, 55 * u), {size:ls, bold:true, anchor: o.kind === "point" ? null : "middle", fill:"#4A148C", extra:halo("#fff", 0.6)});
+    if (txt) labels += T(lx + (o.kind === "point" ? 2 * u : 0), ly - (o.kind === "point" ? 1.4 * u : 0), clip(txt, ls, true, 55 * u), {size:ls, bold:true, anchor: o.kind === "point" ? null : "middle", fill:"#4A148C", k: idxPage ? null : "obj:" + o.id, extra:halo("#fff", 0.6)});
   }
   // grid
   let grid = "", glab = "";
@@ -1663,11 +1742,11 @@ const PREV_MAX = 12;
 function renderPreview(){
   const el = $("#prev-body"), has = P.objs.length > 0 || P.lyr.bid.feats.length > 0 || P.lyr.pbt.feats.length > 0;
   if (!has || !P.proj){ for (const id of ["#dl-pdf", "#dl-png", "#dl-xlsx", "#dl-kml", "#btn-print"]) $(id).disabled = true;
-    el.innerHTML = `<div class="empty">Pratinjau muncul setelah objek kerja atau SHP bidang dimasukkan.</div>`; return; }
+    el.innerHTML = `<div class="empty">Pratinjau muncul setelah objek kerja atau SHP bidang dimasukkan.</div>`; syncProxy(); return; }
   try { buildPages(PREV_MAX); } catch(e){ console.error(e); el.innerHTML = `<div class="note bad">Gagal menyusun peta: ${esc(e.message)}</div>`; return; }
   const n = P.specs.length;
   for (const id of ["#dl-pdf", "#dl-png", "#btn-print"]) $(id).disabled = !n;
-  $("#dl-xlsx").disabled = $("#dl-kml").disabled = false;
+  $("#dl-xlsx").disabled = $("#dl-kml").disabled = false; syncProxy();
   if (!n){ el.innerHTML = `<div class="empty">${P.cfg.mode === "tt" ? (P.ttState === "run" ? "Menunggu analisis tumpang tindih selesai…" : "Tidak ada kasus tumpang tindih sebagian untuk dicetak.") : "Tidak ada objek yang dipilih untuk dicetak. Periksa pilihan layer/objek dan jenis objek."}</div>`; return; }
   const [W, H] = P.pageSize;
   el.innerHTML = `<div class="pages">${n > PREV_MAX ? `<div class="note info">Pratinjau menampilkan ${PREV_MAX} lembar pertama dari ${n}. Unduhan PDF/PNG berisi semua lembar.</div>` : ""}${P.pages.map((p, i) => `<span class="pagecap">Lembar ${i + 1} dari ${n} · ${esc(P.cfg.paper)} ${W}×${H} mm</span><div class="page">${p}</div>`).join("")}</div>`;
@@ -1676,7 +1755,7 @@ function renderPreview(){
   if (need.length){ tileJob = loadTiles(need).then(() => { tileJob = null; renderPreview(); }); }
   else if (!tileJob && !/gagal/.test($("#bm-status").textContent)) $("#bm-status").textContent = "";
 }
-function renderAll(){ renderObj(); renderLyr(); renderTT(); renderForm(); renderPreview(); }
+function renderAll(){ renderObj(); renderLyr(); renderTT(); renderForm(); renderStyle(); renderPreview(); }
 let chT;
 function changed(){ clearTimeout(chT); chT = setTimeout(() => { savePrefs(); renderForm(); renderPreview(); }, 180); }
 
@@ -1845,7 +1924,94 @@ $("#c-nearOnly").onchange = async e => { P.cfg.nearOnly = e.target.checked; save
 $("#c-radius").oninput = e => { P.cfg.radius = e.target.value; P.objs.forEach(o => o._rel = null); changed(); };
 for (const k of ["ttMin", "ttSame"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; savePrefs(); computeTT(); };
 $("#c-bmOpacity").oninput = e => { P.cfg.bmOpacity = e.target.value; $("#v-bmOpacity").textContent = e.target.value + "%"; changed(); };
-$("#btn-reset").onclick = () => { P.cfg = {...DEF, tanggal: todayStr()}; savePrefs(); renderForm(); computeTT(); };
+$("#btn-reset").onclick = () => { P.cfg = {...DEF, col: P.cfg.col, txt: P.cfg.txt, tanggal: todayStr()}; savePrefs(); renderForm(); computeTT(); };
+
+/* ================= Gaya & warna, edit teks langsung di peta, menu bar ================= */
+const STY_ROWS = [
+  ["obj", "Objek kerja (titik / garis / poligon)", "Otomatis: warna dari My Maps"],
+  ["circle", "Garis lingkaran radius", "Otomatis: putih"],
+  ["bid", "Garis bidang tanah terdaftar", "Otomatis: merah (kuning di atas citra)"],
+  ["pbt", "Garis PBT", "Otomatis: biru (cyan di atas citra)"],
+  ["tt", "Arsir tumpang tindih bidang–PBT", "Otomatis: merah terang"],
+  ["same", "Arsir bidang & PBT berimpit", "Otomatis: oranye"],
+];
+const autoCol = k => ({obj:COLDEF.obj, circle:"#FFFFFF", bid:"#C62828", pbt:"#1565C0", tt:COLDEF.tt, same:COLDEF.same})[k];
+function setCol(k, v){ if (v) P.cfg.col[k] = v; else delete P.cfg.col[k]; savePrefs(); renderStyle(); renderObj(); renderPreview(); }
+function renderStyle(){
+  const el = $("#sty-list"); if (!el) return;
+  el.innerHTML = STY_ROWS.map(([k, lab, hint]) => { const v = P.cfg.col[k];
+    return `<div class="styrow"><input type="color" data-col="${k}" value="${esc(v || autoCol(k))}" aria-label="Warna ${esc(lab)}"><span>${esc(lab)}<br><span class="muted">${v ? "Diatur: " + esc(v.toUpperCase()) : esc(hint)}</span></span><button class="ghost" data-colreset="${k}" ${v ? "" : "disabled"}>Otomatis</button></div>`; }).join("");
+  el.querySelectorAll("[data-col]").forEach(i => i.onchange = () => setCol(i.dataset.col, i.value));
+  el.querySelectorAll("[data-colreset]").forEach(b => b.onclick = () => setCol(b.dataset.colreset, ""));
+  const n = Object.keys(P.cfg.txt).length;
+  $("#txt-count").textContent = n ? `${n} teks peta diubah manual.` : "Belum ada teks peta yang diubah manual.";
+  $("#btn-txtreset").disabled = !n; $("#btn-colreset").disabled = !Object.keys(P.cfg.col).length;
+}
+$("#btn-txtreset").onclick = () => { P.cfg.txt = {}; savePrefs(); renderStyle(); renderPreview(); toast("Teks peta kembali ke bawaan."); };
+$("#btn-colreset").onclick = () => { P.cfg.col = {}; savePrefs(); renderStyle(); renderObj(); renderPreview(); };
+
+/* nilai saat ini dan cara menyimpan untuk setiap kunci teks pada lembar */
+const MULTI = new Set(["cfg:title", "cfg:instansi", "cfg:catatan"]);
+function txtGet(k){
+  if (k.startsWith("cfg:")) return P.cfg[k.slice(4)] || "";
+  if (k.startsWith("obj:")){ const o = P.objs.find(o => o.id === +k.slice(4)); return o ? o.name : ""; }
+  if (k.startsWith("txt:")) return P.cfg.txt[k.slice(4)] ?? TXDEF[k.slice(4)] ?? "";
+  return "";
+}
+function txtSet(k, v){
+  if (k.startsWith("cfg:")) P.cfg[k.slice(4)] = v;
+  else if (k.startsWith("obj:")){ const o = P.objs.find(o => o.id === +k.slice(4)); if (o && v.trim()) o.name = v.trim(); }
+  else if (k.startsWith("txt:")){ if (v.trim()) P.cfg.txt[k.slice(4)] = v.trim(); else delete P.cfg.txt[k.slice(4)]; }
+  savePrefs(); renderForm(); renderStyle(); if (k.startsWith("obj:")) renderObj(); renderPreview();
+}
+let inEd = null;
+function closeEditor(commit){
+  if (!inEd) return; const {ta, tip, k, v0} = inEd; inEd = null;
+  const v = ta.value; ta.remove(); tip.remove();
+  if (commit && v !== v0){ txtSet(k, v); toast(k.startsWith("txt:") && !v.trim() ? "Teks dikembalikan ke bawaan." : "Teks diperbarui di semua lembar."); }
+}
+function openEditor(el){
+  closeEditor(true);
+  const k = el.dataset.k, multi = MULTI.has(k), r = el.getBoundingClientRect(), v0 = txtGet(k);
+  const ta = document.createElement("textarea"); ta.className = "inedit"; ta.value = v0; ta.rows = multi ? Math.min(6, Math.max(2, v0.split("\n").length + 1)) : 1;
+  const w = Math.max(220, Math.min(560, r.width + 60));
+  ta.style.width = w + "px";
+  ta.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2)) + "px";
+  ta.style.top = Math.max(12, Math.min(innerHeight - 120, r.top - 6)) + "px";
+  const tip = document.createElement("div"); tip.className = "inedit-tip";
+  tip.textContent = (multi ? "Ctrl+Enter simpan" : "Enter simpan") + " · Esc batal" + (k.startsWith("txt:") ? " · kosongkan untuk teks bawaan" : "") + " · berlaku di semua lembar";
+  document.body.append(ta, tip);
+  const tr = ta.getBoundingClientRect(); tip.style.left = Math.max(8, Math.min(innerWidth - tip.offsetWidth - 8, tr.left)) + "px"; tip.style.top = (tr.bottom + 4) + "px";
+  inEd = {ta, tip, k, v0}; ta.focus(); ta.select();
+  ta.onkeydown = e => { if (e.key === "Escape"){ e.preventDefault(); closeEditor(false); }
+    else if (e.key === "Enter" && (!multi || e.ctrlKey || e.metaKey)){ e.preventDefault(); closeEditor(true); } };
+  ta.onblur = () => setTimeout(() => { if (inEd && inEd.ta === ta) closeEditor(true); }, 0);
+}
+let colPick = null;
+function pickColor(k){
+  if (!colPick){ colPick = document.createElement("input"); colPick.type = "color"; colPick.style.cssText = "position:fixed;left:-100px;top:0;opacity:0"; document.body.append(colPick); }
+  colPick.value = P.cfg.col[k] || autoCol(k);
+  colPick.oninput = null; colPick.onchange = () => { setCol(k, colPick.value); toast("Warna legenda diperbarui di semua lembar."); };
+  colPick.click();
+}
+$("#prev-body").addEventListener("dblclick", e => {
+  const c = e.target.closest(".page svg [data-c]"); if (c){ e.preventDefault(); pickColor(c.dataset.c); return; }
+  const t = e.target.closest(".page svg [data-k]"); if (t){ e.preventDefault(); getSelection().removeAllRanges(); openEditor(t); }
+});
+
+/* menu bar: tombol unduh cepat, penanda bagian aktif, tinggi bar untuk posisi lengket */
+function syncProxy(){ document.querySelectorAll("[data-proxy]").forEach(b => b.disabled = $(b.dataset.proxy).disabled); }
+document.querySelectorAll("[data-proxy]").forEach(b => b.onclick = () => $(b.dataset.proxy).click());
+const setAbh = () => document.documentElement.style.setProperty("--abh", $("#appbar").offsetHeight + "px");
+setAbh(); addEventListener("resize", setAbh);
+{ const links = [...document.querySelectorAll(".secnav a")], secs = links.map(a => $(a.getAttribute("href")));
+  const mark = () => { const y = $("#appbar").offsetHeight + 40, wide = innerWidth >= 1180; let cur = secs[0];
+    for (const s of secs) if ((!wide || s.id !== "sec-prev") && s.getBoundingClientRect().top <= y) cur = s;
+    if (scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 4) cur = secs[secs.length - (wide ? 2 : 1)];
+    links.forEach((a, i) => a.classList.toggle("on", secs[i] === cur)); };
+  addEventListener("scroll", mark, {passive:true}); mark();
+  links.forEach((a, i) => a.onclick = e => { e.preventDefault(); secs[i].scrollIntoView({behavior:"smooth", block:"start"}); history.replaceState(null, "", a.getAttribute("href")); }); }
+
 window.addEventListener("afterprint", () => { $("#print-area").innerHTML = ""; });
 
 loadPrefs();
