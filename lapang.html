@@ -178,7 +178,7 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
 
   <section class="card" id="sec-lyr">
     <h2><span class="n">2</span>Bidang tanah dan PBT</h2>
-    <p class="muted small">Masukkan SHP poligon (zip, folder, atau file .shp + .dbf + .shx + .prj). Sistem koordinat TM-3 atau geografis dibaca dari .prj. Keduanya boleh dikosongkan bila hanya perlu peta objek.</p>
+    <p class="muted small">Masukkan SHP poligon (zip, folder, atau file .shp + .dbf + .shx + .prj). Sistem koordinat dibaca dari .prj (TM-3, UTM, geografis, Web Mercator). Bila .prj tidak ada, sistem koordinat ditebak dari angka koordinatnya. Beberapa ZIP sekaligus (misalnya per kecamatan) digabung jadi satu layer. Keduanya boleh dikosongkan bila hanya perlu peta objek.</p>
     <div class="grid2">
       <div class="drop" id="drop-bid">
         <h3>Bidang tanah terdaftar <span class="pill" id="pill-bid">kosong</span></h3>
@@ -207,6 +207,9 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
     <input type="file" id="in-lyr" multiple hidden>
     <input type="file" id="in-lyr-dir" webkitdirectory multiple hidden>
     <div id="lyr-warn"></div>
+    <div class="form" id="crs-row" hidden>
+      <label class="wide">Sistem koordinat untuk SHP tanpa .prj atau dengan .prj yang tidak dikenali (TM-3/UTM tidak bisa dibedakan zonanya dari angka saja)<select id="c-crs"></select></label>
+    </div>
   </section>
 
   <section class="card" id="sec-tt">
@@ -585,7 +588,7 @@ const DEF = {
   catatan: "Peta kerja ini bersifat indikatif untuk keperluan peninjauan lapang, bukan penetapan batas bidang tanah.",
   mode: "obj", kind: "", radius: "50", scale: "auto", index: true, ttOnly: false, nama: true, labNib: false,
   paper: "A4", orient: "landscape", grid: "geo", objColor: "mm",
-  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90",
+  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "",
 };
 const mkLyr = () => ({leaves:new Map(), layers:[], feats:[], fields:[], crs:null, warnings:[], ix:null, keys:{}});
 const P = {
@@ -690,7 +693,7 @@ function parseShpAny(u8){
   return {type, geoms};
 }
 /* kelompokkan file SHP per nama layer, baca geometri + atribut, ubah ke lon/lat */
-function readShpGroups(leaves, warnings, polyOnly){
+function readShpGroups(leaves, warnings, polyOnly, refLon){
   const groups = new Map();
   for (const lf of leaves.values()){
     const e = extOf(lf.path), b = lf.path.slice(0, -(e.length + 1)), k = b.toLowerCase();
@@ -699,7 +702,7 @@ function readShpGroups(leaves, warnings, polyOnly){
   const layers = [], feats = [], fieldSet = new Map();
   for (const g of [...groups.values()].sort((a, b) => a.base.localeCompare(b.base))){
     if (!g.files.shp) continue;
-    const nm = baseName(g.base);
+    const nm = layerLabel(g.base);
     if (!g.files.dbf){ warnings.push(`Layer tanpa .dbf dilewati: ${nm}.shp`); continue; }
     try {
       const shp = parseShpAny(g.files.shp.bytes);
@@ -707,11 +710,18 @@ function readShpGroups(leaves, warnings, polyOnly){
       const cpf = g.files.cpg || g.files.cst; let enc = cpf ? encFromCpg(new TextDecoder().decode(cpf.bytes)) : null;
       if (!enc) enc = sniffUtf8(u8, info);
       const L = {base:g.base, name:nm, dbfLeaf:g.files.dbf, info, enc, dec:new TextDecoder(enc), prj: parsePrj(g.files.prj ? new TextDecoder().decode(g.files.prj.bytes) : "")};
-      let ll = makeLL(L.prj);
-      if (!ll){
-        const s = shp.geoms.find(Boolean), c = s && s.parts[0][0];
-        if (c && Math.abs(c[0]) <= 180 && Math.abs(c[1]) <= 90){ ll = makeLL({geographic:true}); warnings.push(`${nm}: tanpa .prj yang dikenali, dianggap koordinat geografis (lon/lat).`); }
-        else { warnings.push(`${nm}: sistem koordinat tidak dikenali (perlu .prj TM-3/UTM atau geografis), layer dilewati.`); continue; }
+      const hasPrj = !!g.files.prj;
+      L.prj = prjMore(L.prj, hasPrj ? new TextDecoder().decode(g.files.prj.bytes) : "");
+      let ll = makeLLX(L.prj);
+      if (!ll || P.cfg.crs){
+        const bb = sampleBB(shp.geoms);
+        const ref = typeof refLon === "function" ? refLon(g.base) : refLon;
+        const crs = P.cfg.crs ? crsFromKey(P.cfg.crs) : guessCrs(bb, ref);
+        if (!crs){ warnings.push(`${hasPrj ? "Sistem koordinat di .prj tidak dikenali" : "Tidak ada file .prj"} dan angka koordinatnya tidak cocok dengan TM-3, UTM, atau lon/lat. Pilih sistem koordinatnya di bawah.|${nm}`); L.skipped = true; continue; }
+        if (!P.cfg.crs || !ll){
+          L.prj = crs; ll = makeLLX(crs); L.guessed = true;
+          if (!P.cfg.crs) warnings.push(`${hasPrj ? ".prj tidak dikenali" : "Tanpa file .prj"}, sistem koordinat ditebak dari angka koordinat: ${crs.name}. Bila letaknya tidak pas, pilih sistem koordinat di bawah.|${nm}`);
+        }
       }
       const recs = readDbfRecords(L);
       let nNull = 0, nOther = 0, n = 0;
@@ -733,6 +743,80 @@ function readShpGroups(leaves, warnings, polyOnly){
     } catch(e){ warnings.push(`Layer tidak terbaca: ${nm} (${e.message})`); }
   }
   return {layers, feats, fields:[...fieldSet.values()], crs: layers.length ? layers[0].prj : null};
+}
+
+/* ================= Pengenalan sistem koordinat ================= */
+const layerLabel = base => { const parts = base.split("/"), zi = parts.map(x => /\.(zip|kmz)$/i.test(x)).lastIndexOf(true), nm = parts[parts.length - 1];
+  return zi >= 0 && zi < parts.length - 1 ? parts[zi].replace(/\.(zip|kmz)$/i, "") + "/" + nm : parts.length > 1 ? parts.slice(-2).join("/") : nm; };
+const WGS = {a:6378137, invf:298.257223563};
+const TM3_CMS = Array.from({length:16}, (_, i) => 94.5 + 3 * i);
+const tm3Name = cm => { const z = Math.floor((cm + 180) / 6) + 1; return `${z}.${cm < z * 6 - 183 ? 1 : 2}`; };
+function crsFromKey(k){
+  let m;
+  if (k === "geo") return {name:"Geografis (lon/lat WGS 84)", geographic:true};
+  if (k === "webm") return {name:"Web Mercator (EPSG:3857)", geographic:false, webm:true};
+  if ((m = /^tm3:([\d.]+)$/.exec(k))){ const cm = Number(m[1]); return {name:`DGN95 / TM-3 zona ${tm3Name(cm)}`, geographic:false, tm3:tm3Name(cm), datum:"DGN95", tm:{...WGS, k0:0.9999, lon0:cm, lat0:0, fe:200000, fn:1500000, unit:1}}; }
+  if ((m = /^utm:(\d+)([NS])$/.exec(k))){ const z = Number(m[1]); return {name:`WGS 84 / UTM zona ${z}${m[2]}`, geographic:false, utm:z + m[2], tm:{...WGS, k0:0.9996, lon0:z * 6 - 183, lat0:0, fe:500000, fn:m[2] === "S" ? 10000000 : 0, unit:1}}; }
+  return null;
+}
+/* .prj yang belum terbaca oleh parsePrj: WKT2, Web Mercator, atau hanya kode EPSG */
+function prjMore(crs, txt){
+  if (crs.geographic || crs.tm) return crs;
+  const t = String(txt || "").trim();
+  if (!t) return crs;
+  if (/Mercator_Auxiliary_Sphere|Pseudo[ _-]Mercator|Popular Visuali[sz]ation|EPSG[:"\s,]*(3857|900913|102100)\b/i.test(t)) return crsFromKey("webm");
+  const code = /^(?:EPSG:)?(\d{4,5})$/i.exec(t) || /ID\["EPSG",\s*(\d+)\]\]\s*$/i.exec(t) || /AUTHORITY\["EPSG","(\d+)"\]\]\s*$/i.exec(t);
+  if (code){ const c = Number(code[1]);
+    if (c === 4326 || c === 4755) return crsFromKey("geo");
+    if (c >= 23830 && c <= 23845) return crsFromKey("tm3:" + TM3_CMS[c - 23830]);
+    if (c >= 32646 && c <= 32654) return crsFromKey(`utm:${c - 32600}N`);
+    if (c >= 32746 && c <= 32754) return crsFromKey(`utm:${c - 32700}S`);
+    if (c >= 23866 && c <= 23872) return crsFromKey(`utm:${c - 23820}N`);
+    if (c >= 23877 && c <= 23884) return crsFromKey(`utm:${c - 23830}S`);
+  }
+  if (/METHOD\["Transverse Mercator"/i.test(t)){
+    const par = n => { const m = new RegExp('PARAMETER\\["' + n + '"\\s*,\\s*([-\\d.eE+]+)', "i").exec(t); return m ? Number(m[1]) : null; };
+    const lon0 = par("Longitude of natural origin"); if (lon0 === null) return crs;
+    const tm = {...WGS, k0:par("Scale factor at natural origin") ?? 1, lon0, lat0:par("Latitude of natural origin") ?? 0, fe:par("False easting") ?? 0, fn:par("False northing") ?? 0, unit:1};
+    const name = (/^\w+\["([^"]*)"/.exec(t) || [])[1] || "Transverse Mercator";
+    return {...crs, name, tm, tm3: tm.k0 === 0.9999 && tm.fe === 200000 ? tm3Name(lon0) : null};
+  }
+  return crs;
+}
+function makeLLX(crs){
+  if (crs && crs.webm){ const R = 6378137, D = Math.PI / 180;
+    return {fromLL:(lon, lat) => [R * lon * D, R * Math.log(Math.tan(Math.PI / 4 + lat * D / 2))], toLL:(x, y) => [x / R / D, (2 * Math.atan(Math.exp(y / R)) - Math.PI / 2) / D]}; }
+  return makeLL(crs);
+}
+function sampleBB(geoms){
+  const bb = [Infinity, Infinity, -Infinity, -Infinity]; let n = 0;
+  for (const g of geoms){ if (!g) continue; for (const r of g.parts){ bbOf(r.slice(0, 20), bb); } if (++n > 400) break; }
+  return n ? bb : null;
+}
+/* tebak dari rentang angka koordinat (wilayah Indonesia); zona dipilih yang paling dekat dengan bujur acuan */
+function guessCrs(bb, refLon){
+  if (!bb) return null;
+  const cx = (bb[0] + bb[2]) / 2, cy = (bb[1] + bb[3]) / 2, ref = isFinite(refLon) ? refLon : 117;
+  const nearest = keys => { let best = null, bd = Infinity; for (const k of keys){ const c = crsFromKey(k), [lon, lat] = makeLLX(c).toLL(cx, cy); const d = Math.abs(lon - ref) + (lat < -12 || lat > 7 ? 50 : 0); if (d < bd){ bd = d; best = c; } } return bd < 20 ? best : null; };
+  if (Math.abs(cx) <= 180 && Math.abs(cy) <= 90) return crsFromKey("geo");
+  if (cx > 9e6 && cx < 1.8e7 && Math.abs(cy) < 2e6) return crsFromKey("webm");
+  const zones = [46, 47, 48, 49, 50, 51, 52, 53, 54];
+  if (cy > 8e6 && cy < 1e7 && cx > 1e5 && cx < 9e5) return nearest(zones.map(z => `utm:${z}S`));
+  if (cx > 0 && cx < 4.5e5 && cy > 2e5 && cy < 2.3e6) return nearest(TM3_CMS.map(c => "tm3:" + c));
+  if (cy >= 0 && cy < 1e6 && cx > 1.5e5 && cx < 8.5e5) return nearest(zones.map(z => `utm:${z}N`));
+  return null;
+}
+const KAB_LON = {"2309": 116.85};
+/* bujur acuan untuk menebak zona: objek kerja, layer lain yang sudah dikenal, atau kode wilayah di nama file */
+function refLonFor(exclude){
+  return base => {
+    const lons = [];
+    for (const o of P.objs) lons.push(o.kind === "point" ? o.ll[0] : o.kind === "line" ? o.ll[0][0][0] : o.ll[0][0][0][0]);
+    for (const k of ["bid", "pbt"]) if (k !== exclude) for (const f of P.lyr[k].feats.slice(0, 200)) if (!f.layer.guessed) lons.push(f.ll[0][0][0][0]);
+    if (lons.length){ lons.sort((a, b) => a - b); return lons[lons.length >> 1]; }
+    const m = /(?:^|[^\d])(\d{4})\d{0,2}(?:[_\s-]|$)/.exec(String(base || "")); if (m && KAB_LON[m[1]]) return KAB_LON[m[1]];
+    return 117;
+  };
 }
 
 /* ================= KML / KMZ / GeoJSON ================= */
@@ -870,7 +954,7 @@ function rebuildObj(){
     } catch(e){ P.objWarn.push(`${baseName(s.path)} tidak terbaca (${e.message}).`); }
   }
   if (P.objLeaves.size){
-    const r = readShpGroups(P.objLeaves, P.objWarn, false);
+    const r = readShpGroups(P.objLeaves, P.objWarn, false, refLonFor(null));
     for (const f of r.feats){
       const k = Object.keys(f.attrs), nk = k.find(x => /^(name|nama|nm_?\w*|label|keterangan|ket)$/i.test(x));
       list.push({name: nk ? String(f.attrs[nk] ?? "") : "", desc:"", folder:f.layer.name, attrs:f.attrs, kind:f.kind, ll:f.ll, color:null});
@@ -879,12 +963,13 @@ function rebuildObj(){
   const folders = [...new Set(list.map(o => o.folder))];
   list.forEach((o, i) => { o.id = i + 1; o.no = i + 1; if (!o.name) o.name = `${KIND_NAME[o.kind]} ${i + 1}`; o.fcolor = OBJ_PALETTE[folders.indexOf(o.folder) % OBJ_PALETTE.length]; });
   P.objs = list; P.objOff = new Set();
+  for (const k of ["bid", "pbt"]) if (P.lyr[k].layers.some(l => l.guessed)) rebuildLyr(k, true);
   afterData();
 }
-function rebuildLyr(key){
+function rebuildLyr(key, quiet){
   const L = P.lyr[key];
   L.warnings = L.warnings.filter(w => /^ZIP/.test(w));
-  const r = readShpGroups(L.leaves, L.warnings, true);
+  const r = readShpGroups(L.leaves, L.warnings, true, refLonFor(key));
   L.layers = r.layers; L.fields = r.fields; L.crs = r.crs;
   const prjs = [...new Set(r.layers.map(l => l.prj.name))];
   if (prjs.length > 1) L.warnings.push(`Layer ${LYR_NAME[key]} memakai sistem koordinat berbeda (${prjs.join(", ")}). Semua sudah dikonversi, tapi periksa hasilnya.`);
@@ -907,7 +992,7 @@ function rebuildLyr(key){
     o.ident = key === "pbt" ? (o.pbt || o.nib || `PBT #${i + 1}`) : (o.nib || o.hak || `Bidang #${i + 1}`);
     return o;
   });
-  afterData();
+  if (!quiet){ for (const k of ["bid", "pbt"]) if (k !== key && P.lyr[k].layers.some(l => l.guessed)) rebuildLyr(k, true); afterData(); }
 }
 const numOrNull = v => typeof v === "number" ? v : (v !== null && v !== undefined && v !== "" && isFinite(Number(String(v).replace(",", "."))) ? Number(String(v).replace(",", ".")) : null);
 
@@ -1438,7 +1523,7 @@ function basemapSvg(view, toMm){
 /* ================= Render UI ================= */
 function renderObj(){
   const el = $("#obj-summary");
-  const warn = P.objWarn.map(w => `<div class="note">${esc(w)}</div>`).join("");
+  const warn = groupWarn(P.objWarn);
   if (!P.objs.length){ el.innerHTML = warn; return; }
   const folders = [...new Set(P.objs.map(o => o.folder))];
   const cnt = (fo, k) => P.objs.filter(o => o.folder === fo && o.kind === k).length;
@@ -1466,7 +1551,15 @@ function renderLyr(){
     el.innerHTML = `<p class="small muted">${L.layers.map(l => `${esc(l.name)} (${fmt(l.n)})`).join(", ")} · ${esc(L.crs ? L.crs.name : "-")}</p>` +
       (kk.length ? `<p class="small muted">Kolom terbaca: ${kk.map(([a, b]) => `${a} = <span class="mono">${esc(b)}</span>`).join(", ")}</p>` : "");
   }
-  $("#lyr-warn").innerHTML = [...P.lyr.bid.warnings, ...P.lyr.pbt.warnings].map(w => `<div class="note">${esc(w)}</div>`).join("");
+  $("#lyr-warn").innerHTML = groupWarn([...P.lyr.bid.warnings.map(w => "Bidang tanah: " + w), ...P.lyr.pbt.warnings.map(w => "PBT: " + w)]);
+  const anyCrs = ["bid", "pbt"].some(k => P.lyr[k].layers.some(l => l.guessed) || P.lyr[k].warnings.some(w => /sistem koordinat/i.test(w))) || P.cfg.crs;
+  $("#crs-row").hidden = !anyCrs;
+}
+/* pesan "isi|nama layer" yang sama digabung: satu baris dengan daftar layernya */
+function groupWarn(ws){
+  const g = new Map();
+  for (const w of ws){ const i = w.lastIndexOf("|"), k = i > 0 ? w.slice(0, i) : w, n = i > 0 ? w.slice(i + 1) : null; if (!g.has(k)) g.set(k, []); if (n) g.get(k).push(n); }
+  return [...g].map(([k, ns]) => `<div class="note">${esc(k)}${ns.length ? `<br><span class="small">${ns.length > 1 ? ns.length + " layer: " : "Layer: "}${esc(ns.slice(0, 12).join(", "))}${ns.length > 12 ? ", …" : ""}</span>` : ""}</div>`).join("");
 }
 function renderTT(){
   const el = $("#tt-body"), A = P.lyr.bid.feats, B = P.lyr.pbt.feats;
@@ -1679,6 +1772,8 @@ $("#clear-obj").onclick = () => { P.objSrc = []; P.objLeaves.clear(); P.objWarn 
 for (const k of ["title", "instansi", "tanggal", "catatan"]) $("#c-" + k).oninput = e => { P.cfg[k] = e.target.value; changed(); };
 for (const k of ["mode", "kind", "scale", "paper", "orient", "grid", "objColor", "bmDetail", "bm"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; if (k === "objColor") renderObj(); changed(); };
 for (const k of ["index", "ttOnly", "nama", "labNib"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.checked; changed(); };
+fillSelect($("#c-crs"), [["", "Otomatis (baca .prj, bila tidak ada ditebak dari angka koordinat)"], ["geo", "Geografis (lon/lat)"], ...TM3_CMS.map(c => ["tm3:" + c, `TM-3 zona ${tm3Name(c)} (DGN95)`]), ...[46, 47, 48, 49, 50, 51, 52, 53, 54].map(z => [`utm:${z}S`, `UTM zona ${z}S`]), ...[46, 47, 48, 49, 50, 51, 52, 53, 54].map(z => [`utm:${z}N`, `UTM zona ${z}N`]), ["webm", "Web Mercator (EPSG:3857)"]], "");
+$("#c-crs").onchange = e => { P.cfg.crs = e.target.value; savePrefs(); rebuildLyr("bid", true); rebuildLyr("pbt", true); if (P.objLeaves.size) rebuildObj(); else afterData(); };
 $("#c-radius").oninput = e => { P.cfg.radius = e.target.value; P.objs.forEach(o => o._rel = null); changed(); };
 for (const k of ["ttMin", "ttSame"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; savePrefs(); computeTT(); };
 $("#c-bmOpacity").oninput = e => { P.cfg.bmOpacity = e.target.value; $("#v-bmOpacity").textContent = e.target.value + "%"; changed(); };
@@ -1686,6 +1781,7 @@ $("#btn-reset").onclick = () => { P.cfg = {...DEF, tanggal: todayStr()}; savePre
 window.addEventListener("afterprint", () => { $("#print-area").innerHTML = ""; });
 
 loadPrefs();
+$("#c-crs").value = P.cfg.crs || "";
 if (!P.cfg.tanggal) P.cfg.tanggal = todayStr();
 renderAll();
 checkHandoff();
