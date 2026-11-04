@@ -206,6 +206,7 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
     </div>
     <input type="file" id="in-lyr" multiple hidden>
     <input type="file" id="in-lyr-dir" webkitdirectory multiple hidden>
+    <label class="chk small"><input type="checkbox" id="c-nearOnly"> Muat hanya bidang di sekitar objek kerja (radius + 1 km). Mempercepat data sekabupaten.</label>
     <div id="lyr-warn"></div>
     <div class="form" id="crs-row" hidden>
       <label class="wide">Sistem koordinat untuk SHP tanpa .prj atau dengan .prj yang tidak dikenali (TM-3/UTM tidak bisa dibedakan zonanya dari angka saja)<select id="c-crs"></select></label>
@@ -588,7 +589,7 @@ const DEF = {
   catatan: "Peta kerja ini bersifat indikatif untuk keperluan peninjauan lapang, bukan penetapan batas bidang tanah.",
   mode: "obj", kind: "", radius: "50", scale: "auto", index: true, ttOnly: false, nama: true, labNib: false,
   paper: "A4", orient: "landscape", grid: "geo", objColor: "mm",
-  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "",
+  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true,
 };
 const mkLyr = () => ({leaves:new Map(), layers:[], feats:[], fields:[], crs:null, warnings:[], ix:null, keys:{}});
 const P = {
@@ -693,15 +694,17 @@ function parseShpAny(u8){
   return {type, geoms};
 }
 /* kelompokkan file SHP per nama layer, baca geometri + atribut, ubah ke lon/lat */
-function readShpGroups(leaves, warnings, polyOnly, refLon){
+async function readShpGroups(leaves, warnings, polyOnly, refLon, opt = {}){
   const groups = new Map();
   for (const lf of leaves.values()){
     const e = extOf(lf.path), b = lf.path.slice(0, -(e.length + 1)), k = b.toLowerCase();
     (groups.get(k) || groups.set(k, {base:b, files:{}}).get(k)).files[e] = lf;
   }
   const layers = [], feats = [], fieldSet = new Map();
-  for (const g of [...groups.values()].sort((a, b) => a.base.localeCompare(b.base))){
-    if (!g.files.shp) continue;
+  const glist = [...groups.values()].filter(g => g.files.shp).sort((a, b) => a.base.localeCompare(b.base));
+  let gi = 0, tick = performance.now(), nFar = 0;
+  for (const g of glist){
+    gi++;
     const nm = layerLabel(g.base);
     if (!g.files.dbf){ warnings.push(`Layer tanpa .dbf dilewati: ${nm}.shp`); continue; }
     try {
@@ -724,25 +727,34 @@ function readShpGroups(leaves, warnings, polyOnly, refLon){
         }
       }
       const recs = readDbfRecords(L);
+      L.llc = ll; L.prjKey = L.prj.tm ? "tm:" + JSON.stringify(L.prj.tm) : null;
+      const area = opt.area, conv = pts => pts.map(([x, y]) => ll.toLL(x, y));
       let nNull = 0, nOther = 0, n = 0;
-      shp.geoms.forEach((geo, i) => {
-        if (!geo || !recs[i]){ nNull++; return; }
-        if (polyOnly && geo.kind !== "poly"){ nOther++; return; }
-        const conv = pts => pts.map(([x, y]) => ll.toLL(x, y));
-        let llg;
-        if (geo.kind === "point") llg = conv(geo.parts[0]).slice(0, 1)[0];
-        else if (geo.kind === "line") llg = geo.parts.map(conv);
-        else llg = ringsToMulti(geo.parts.filter(r => r.length > 2).map(conv));
-        if (geo.kind === "poly" && !llg.length){ nNull++; return; }
-        feats.push({kind:geo.kind, ll:llg, attrs:recs[i], layer:L}); n++;
-      });
+      for (let i = 0; i < shp.geoms.length; i++){
+        const geo = shp.geoms[i];
+        if (performance.now() - tick > 50){ if (opt.progress) opt.progress(`Membaca layer ${gi}/${glist.length} (${nm}): ${fmt(i)} dari ${fmt(shp.geoms.length)} fitur…`); await sleep0(); tick = performance.now(); }
+        if (!geo || !recs[i]){ nNull++; continue; }
+        if (polyOnly && geo.kind !== "poly"){ nOther++; continue; }
+        if (area){ const b = bbOf(geo.parts[0]), a0 = ll.toLL(b[0], b[1]), a1 = ll.toLL(b[2], b[3]), lb = [Math.min(a0[0], a1[0]), Math.min(a0[1], a1[1]), Math.max(a0[0], a1[0]), Math.max(a0[1], a1[1])];
+          if (!area.some(ab => bbHit(ab, lb))){ nFar++; continue; } }
+        if (geo.kind === "poly"){
+          const raw = ringsToMulti(geo.parts.filter(r => r.length > 2)); if (!raw.length){ nNull++; continue; }
+          feats.push(lazyLL({kind:"poly", raw, attrs:recs[i], layer:L}));
+        } else feats.push({kind:geo.kind, ll: geo.kind === "point" ? conv(geo.parts[0])[0] : geo.parts.map(conv), attrs:recs[i], layer:L});
+        n++;
+      }
       if (nNull) warnings.push(`${fmt(nNull)} record tanpa geometri dilewati di ${nm}.shp`);
       if (nOther) warnings.push(`${nm}.shp bukan layer poligon, ${fmt(nOther)} fitur dilewati.`);
       for (const f of info.fields) if (!fieldSet.has(f.name)) fieldSet.set(f.name, f);
       L.n = n; layers.push(L);
     } catch(e){ warnings.push(`Layer tidak terbaca: ${nm} (${e.message})`); }
   }
-  return {layers, feats, fields:[...fieldSet.values()], crs: layers.length ? layers[0].prj : null};
+  return {layers, feats, fields:[...fieldSet.values()], crs: layers.length ? layers[0].prj : null, nFar};
+}
+/* lon/lat dihitung saat diperlukan saja (ekspor KML, beda proyeksi) agar data besar cepat dimuat */
+function lazyLL(f){
+  Object.defineProperty(f, "ll", {configurable:true, enumerable:true, get(){ const c = this.layer.llc; const v = this.raw.map(pl => pl.map(r => r.map(([x, y]) => c.toLL(x, y)))); Object.defineProperty(this, "ll", {value:v, configurable:true, enumerable:true}); return v; }});
+  return f;
 }
 
 /* ================= Pengenalan sistem koordinat ================= */
@@ -929,7 +941,7 @@ async function ingestObj(items){
   $("#obj-status").innerHTML = `<span class="spin"></span>Membaca ${items.length} file…`;
   try { for (const it of items) await addObjBytes(it.path.replace(/^\/+/, ""), await readItem(it)); }
   finally { $("#obj-status").textContent = ""; }
-  rebuildObj();
+  await rebuildObj();
 }
 async function ingestLyr(key, items){
   if (!items.length) return;
@@ -937,10 +949,10 @@ async function ingestLyr(key, items){
   $("#st-" + key).innerHTML = `<span class="spin"></span>Membaca ${items.length} file…`;
   try { for (const it of items) await addLyrBytes(L, it.path.replace(/^\/+/, ""), await readItem(it)); }
   finally { $("#st-" + key).textContent = ""; }
-  rebuildLyr(key);
+  await rebuildLyr(key);
 }
 const OBJ_PALETTE = ["#D500F9", "#FF6D00", "#00B8D4", "#FFD600", "#76FF03", "#FF4081", "#2979FF", "#F50057"];
-function rebuildObj(){
+async function rebuildObj(){
   P.objWarn = P.objWarn.filter(w => /^Arsip/.test(w));
   const list = [];
   for (const s of P.objSrc){
@@ -954,7 +966,8 @@ function rebuildObj(){
     } catch(e){ P.objWarn.push(`${baseName(s.path)} tidak terbaca (${e.message}).`); }
   }
   if (P.objLeaves.size){
-    const r = readShpGroups(P.objLeaves, P.objWarn, false, refLonFor(null));
+    const r = await readShpGroups(P.objLeaves, P.objWarn, false, refLonFor(null), {progress: m => $("#obj-status").innerHTML = `<span class="spin"></span>${esc(m)}`});
+    $("#obj-status").textContent = "";
     for (const f of r.feats){
       const k = Object.keys(f.attrs), nk = k.find(x => /^(name|nama|nm_?\w*|label|keterangan|ket)$/i.test(x));
       list.push({name: nk ? String(f.attrs[nk] ?? "") : "", desc:"", folder:f.layer.name, attrs:f.attrs, kind:f.kind, ll:f.ll, color:null});
@@ -963,13 +976,16 @@ function rebuildObj(){
   const folders = [...new Set(list.map(o => o.folder))];
   list.forEach((o, i) => { o.id = i + 1; o.no = i + 1; if (!o.name) o.name = `${KIND_NAME[o.kind]} ${i + 1}`; o.fcolor = OBJ_PALETTE[folders.indexOf(o.folder) % OBJ_PALETTE.length]; });
   P.objs = list; P.objOff = new Set();
-  for (const k of ["bid", "pbt"]) if (P.lyr[k].layers.some(l => l.guessed)) rebuildLyr(k, true);
-  afterData();
+  for (const k of ["bid", "pbt"]) if (P.lyr[k].leaves.size && (P.lyr[k].layers.some(l => l.guessed) || P.cfg.nearOnly)) await rebuildLyr(k, true);
+  await afterData();
 }
-function rebuildLyr(key, quiet){
-  const L = P.lyr[key];
+async function rebuildLyr(key, quiet){
+  const L = P.lyr[key], st = $("#st-" + key);
   L.warnings = L.warnings.filter(w => /^ZIP/.test(w));
-  const r = readShpGroups(L.leaves, L.warnings, true, refLonFor(key));
+  const area = P.cfg.nearOnly ? nearArea() : null;
+  const r = await readShpGroups(L.leaves, L.warnings, true, refLonFor(key), {area, progress: m => st.innerHTML = `<span class="spin"></span>${esc(m)}`});
+  st.textContent = "";
+  L.nFar = r.nFar;
   L.layers = r.layers; L.fields = r.fields; L.crs = r.crs;
   const prjs = [...new Set(r.layers.map(l => l.prj.name))];
   if (prjs.length > 1) L.warnings.push(`Layer ${LYR_NAME[key]} memakai sistem koordinat berbeda (${prjs.join(", ")}). Semua sudah dikonversi, tapi periksa hasilnya.`);
@@ -992,7 +1008,13 @@ function rebuildLyr(key, quiet){
     o.ident = key === "pbt" ? (o.pbt || o.nib || `PBT #${i + 1}`) : (o.nib || o.hak || `Bidang #${i + 1}`);
     return o;
   });
-  if (!quiet){ for (const k of ["bid", "pbt"]) if (k !== key && P.lyr[k].layers.some(l => l.guessed)) rebuildLyr(k, true); afterData(); }
+  if (!quiet){ for (const k of ["bid", "pbt"]) if (k !== key && P.lyr[k].layers.some(l => l.guessed)) await rebuildLyr(k, true); await afterData(); }
+}
+/* area lon/lat di sekitar objek kerja untuk menyaring bidang (radius + 1 km) */
+function nearArea(){
+  if (!P.objs.length) return null;
+  const pad = (Math.max(Number(P.cfg.radius) || 0, 0) + 1000) / 111000;
+  return P.objs.map(o => { const pts = o.kind === "point" ? [o.ll] : o.kind === "line" ? o.ll.flat() : o.ll.flat(2); const b = bbOf(pts); return [b[0] - pad / Math.cos(b[1] * Math.PI / 180), b[1] - pad, b[2] + pad / Math.cos(b[1] * Math.PI / 180), b[3] + pad]; });
 }
 const numOrNull = v => typeof v === "number" ? v : (v !== null && v !== undefined && v !== "" && isFinite(Number(String(v).replace(",", "."))) ? Number(String(v).replace(",", ".")) : null);
 
@@ -1009,13 +1031,15 @@ function chooseProj(){
   return {key:"loc:" + lon0, fromLL:tm.fromLL, toLL:tm.toLL, isTM:false, name:"Transverse Mercator lokal (WGS 84)"};
 }
 function projectFeat(f){
-  const F = P.proj.fromLL, cv = r => r.map(([a, b]) => F(a, b));
-  f.m = f.ll.map(poly => poly.map(cv));
+  if (f.raw && f.layer.prjKey && f.layer.prjKey === P.proj.key) f.m = f.raw;
+  else { const F = P.proj.fromLL, cv = r => r.map(([a, b]) => F(a, b)); f.m = f.ll.map(poly => poly.map(cv)); }
   f.mr = mpRings(f.m);
-  f.bb = bbOf(f.mr.flat());
+  const bb = [Infinity, Infinity, -Infinity, -Infinity]; for (const r of f.mr) bbOf(r, bb); f.bb = bb;
   f.area = mpArea(f.m);
-  f.lab = polylabel(f.mr, Math.max(0.05, Math.sqrt(f.area) / 200));
+  f._lab = null;
 }
+/* titik label dihitung hanya untuk bidang yang benar-benar diberi nomor */
+const labOf = f => f._lab || (f._lab = polylabel(f.mr, Math.max(0.05, Math.sqrt(f.area) / 200)));
 function projectObj(o){
   const F = P.proj.fromLL;
   if (o.kind === "point"){ o.m = F(o.ll[0], o.ll[1]); o.bb = [o.m[0], o.m[1], o.m[0], o.m[1]]; o.lab = o.m; }
@@ -1023,11 +1047,19 @@ function projectObj(o){
   else { o.m = o.ll.map(poly => poly.map(r => r.map(([a, b]) => F(a, b)))); o.mr = mpRings(o.m); o.bb = bbOf(o.mr.flat()); o.area = mpArea(o.m); o.lab = polylabel(o.mr, Math.max(0.05, Math.sqrt(o.area) / 200)); }
   o._rel = null;
 }
-function afterData(){
+async function afterData(){
   const np = chooseProj();
   P.proj = np;
   if (np){
-    for (const k of ["bid", "pbt"]){ const L = P.lyr[k]; L.feats.forEach(projectFeat); L.ix = L.feats.length ? buildIndex(L.feats, 250) : null; }
+    for (const k of ["bid", "pbt"]){
+      const L = P.lyr[k], st = $("#st-" + k); let t = performance.now();
+      for (let i = 0; i < L.feats.length; i++){
+        if (performance.now() - t > 50){ st.innerHTML = `<span class="spin"></span>Menyiapkan geometri ${fmt(i)} dari ${fmt(L.feats.length)}…`; await sleep0(); t = performance.now(); }
+        projectFeat(L.feats[i]);
+      }
+      st.textContent = "";
+      L.ix = L.feats.length ? buildIndex(L.feats, 250) : null;
+    }
     P.objs.forEach(projectObj);
   }
   renderAll();
@@ -1081,7 +1113,7 @@ function relFor(o){
       else {
         let ar = 0;
         if (PC()){ try { ar = mpArea(PC().intersection(o.m, f.m)); } catch { ar = 0; } }
-        else if (signedDist(f.lab[0], f.lab[1], o.mr) > 0) ar = f.area;
+        else if (signedDist(labOf(f)[0], labOf(f)[1], o.mr) > 0) ar = f.area;
         if (ar > 0.5) out.push({f, ar, pct: ar / (f.area || ar)});
       }
     }
@@ -1173,7 +1205,7 @@ function sheetData(sp){
     }
     d.ext = ext || [0, 0, 100, 100];
     d.focus = objs;
-    d.items = [...seen.values()].sort((p, q) => (p.f.src === q.f.src ? 0 : p.f.src === "bid" ? -1 : 1) || (q.f.lab[1] - p.f.lab[1]) || (p.f.lab[0] - q.f.lab[0]));
+    d.items = [...seen.values()].sort((p, q) => (p.f.src === q.f.src ? 0 : p.f.src === "bid" ? -1 : 1) || ((q.f.bb[1] + q.f.bb[3]) - (p.f.bb[1] + p.f.bb[3])) || ((p.f.bb[0] + p.f.bb[2]) - (q.f.bb[0] + q.f.bb[2])));
     d.sub = sp.kind === "index" ? "Lembar indeks objek kerja" : (objs.length ? `Seluruh objek kerja (${objs.length})` : "Bidang tanah dan PBT");
     const cnt = k => objs.filter(o => o.kind === k).length;
     if (objs.length) d.info.push(["Objek kerja", ["point", "line", "poly"].filter(k => cnt(k)).map(k => `${cnt(k)} ${KIND_NAME[k].toLowerCase()}`).join(", ")]);
@@ -1431,8 +1463,9 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
   const halo = (c = "#fff", wdt = 0.55) => ` stroke="${c}" stroke-width="${n2(wdt * u)}" paint-order="stroke" stroke-linejoin="round"`;
   // PBT lalu bidang
   const sw = Math.max(0.2, 0.32 * u);
-  for (const f of P.lyr.pbt.feats) if (vis(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.pbtFill}" fill-opacity="${C.pbtFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.pbt}" stroke-width="${n2(sw)}" stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}" stroke-linejoin="round"/>`;
-  for (const f of P.lyr.bid.feats) if (vis(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.bidFill}" fill-opacity="${C.bidFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.bid}" stroke-width="${n2(sw)}" stroke-linejoin="round"/>`;
+  const nums0 = d.nums || new Map(), tiny = f => (f.bb[2] - f.bb[0]) * k < 0.45 && (f.bb[3] - f.bb[1]) * k < 0.45 && !nums0.has(f) && !f.tt.length;
+  for (const f of P.lyr.pbt.feats) if (vis(f) && !tiny(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.pbtFill}" fill-opacity="${C.pbtFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.pbt}" stroke-width="${n2(sw)}" stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}" stroke-linejoin="round"/>`;
+  for (const f of P.lyr.bid.feats) if (vis(f) && !tiny(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.bidFill}" fill-opacity="${C.bidFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.bid}" stroke-width="${n2(sw)}" stroke-linejoin="round"/>`;
   for (const t of P.tt) if (bbHit(t.bb, ext)){
     const dd = pathD(mpRings(t.geom), toMm, true); if (!dd) continue;
     const hl = d.hl === t;
@@ -1443,7 +1476,7 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
   const nums = d.nums || new Map();
   for (const [f, no] of nums){
     if (!vis(f)) continue;
-    const [lx, ly] = toMm(f.lab[0], f.lab[1]); if (lx < ix || lx > ix + iw || ly < iy || ly > iy + ih) continue;
+    const lb = labOf(f), [lx, ly] = toMm(lb[0], lb[1]); if (lx < ix || lx > ix + iw || ly < iy || ly > iy + ih) continue;
     const ls = 2.5 * u, isP = f.src === "pbt";
     labels += T(lx, ly + ls * 0.35, no, {size:ls, bold:true, anchor:"middle", fill: isP ? "#0D47A1" : "#111", extra:halo()});
     if (P.cfg.labNib && f.nib) labels += T(lx, ly + ls * 1.25, f.nib, {size:ls * 0.6, anchor:"middle", fill:"#222", extra:halo("#fff", 0.4)});
@@ -1549,6 +1582,7 @@ function renderLyr(){
     if (!L.layers.length){ el.innerHTML = ""; continue; }
     const K = L.keys, kk = [["NIB", K.nib], ["Hak", K.hak], ["Nama", K.nama], ["Luas", K.luas], ...(k === "pbt" ? [["No. PBT", K.pbt]] : [])].filter(x => x[1]);
     el.innerHTML = `<p class="small muted">${L.layers.map(l => `${esc(l.name)} (${fmt(l.n)})`).join(", ")} · ${esc(L.crs ? L.crs.name : "-")}</p>` +
+      (L.nFar ? `<p class="small muted">${fmt(L.nFar)} bidang di luar 1 km dari objek kerja tidak dimuat.</p>` : "") +
       (kk.length ? `<p class="small muted">Kolom terbaca: ${kk.map(([a, b]) => `${a} = <span class="mono">${esc(b)}</span>`).join(", ")}</p>` : "");
   }
   $("#lyr-warn").innerHTML = groupWarn([...P.lyr.bid.warnings.map(w => "Bidang tanah: " + w), ...P.lyr.pbt.warnings.map(w => "PBT: " + w)]);
@@ -1773,7 +1807,8 @@ for (const k of ["title", "instansi", "tanggal", "catatan"]) $("#c-" + k).oninpu
 for (const k of ["mode", "kind", "scale", "paper", "orient", "grid", "objColor", "bmDetail", "bm"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; if (k === "objColor") renderObj(); changed(); };
 for (const k of ["index", "ttOnly", "nama", "labNib"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.checked; changed(); };
 fillSelect($("#c-crs"), [["", "Otomatis (baca .prj, bila tidak ada ditebak dari angka koordinat)"], ["geo", "Geografis (lon/lat)"], ...TM3_CMS.map(c => ["tm3:" + c, `TM-3 zona ${tm3Name(c)} (DGN95)`]), ...[46, 47, 48, 49, 50, 51, 52, 53, 54].map(z => [`utm:${z}S`, `UTM zona ${z}S`]), ...[46, 47, 48, 49, 50, 51, 52, 53, 54].map(z => [`utm:${z}N`, `UTM zona ${z}N`]), ["webm", "Web Mercator (EPSG:3857)"]], "");
-$("#c-crs").onchange = e => { P.cfg.crs = e.target.value; savePrefs(); rebuildLyr("bid", true); rebuildLyr("pbt", true); if (P.objLeaves.size) rebuildObj(); else afterData(); };
+$("#c-crs").onchange = async e => { P.cfg.crs = e.target.value; savePrefs(); await rebuildLyr("bid", true); await rebuildLyr("pbt", true); if (P.objLeaves.size) await rebuildObj(); else await afterData(); };
+$("#c-nearOnly").onchange = async e => { P.cfg.nearOnly = e.target.checked; savePrefs(); for (const k of ["bid", "pbt"]) if (P.lyr[k].leaves.size) await rebuildLyr(k, true); await afterData(); };
 $("#c-radius").oninput = e => { P.cfg.radius = e.target.value; P.objs.forEach(o => o._rel = null); changed(); };
 for (const k of ["ttMin", "ttSame"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; savePrefs(); computeTT(); };
 $("#c-bmOpacity").oninput = e => { P.cfg.bmOpacity = e.target.value; $("#v-bmOpacity").textContent = e.target.value + "%"; changed(); };
@@ -1782,6 +1817,7 @@ window.addEventListener("afterprint", () => { $("#print-area").innerHTML = ""; }
 
 loadPrefs();
 $("#c-crs").value = P.cfg.crs || "";
+$("#c-nearOnly").checked = P.cfg.nearOnly !== false;
 if (!P.cfg.tanggal) P.cfg.tanggal = todayStr();
 renderAll();
 checkHandoff();
