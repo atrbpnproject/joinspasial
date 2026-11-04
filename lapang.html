@@ -244,6 +244,8 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
       <label class="chk"><input type="checkbox" id="c-ttOnly"> Hanya objek yang mengenai bidang tumpang tindih</label>
       <label class="chk"><input type="checkbox" id="c-nama"> Nama pemegang hak di tabel</label>
       <label class="chk"><input type="checkbox" id="c-labNib"> NIB di bawah nomor bidang pada peta</label>
+      <label class="chk"><input type="checkbox" id="c-showAll"> Tampilkan juga bidang di luar radius (lebih berat)</label>
+      <label class="chk"><input type="checkbox" id="c-qr"> QR code link Google Maps lokasi titik</label>
     </div>
     <div class="form">
       <label class="wide">Judul peta<textarea id="c-title" rows="2"></textarea></label>
@@ -286,6 +288,7 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/polygon-clipping@0.15.7/dist/polygon-clipping.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script>
 "use strict";
 /* ================= Utilitas ================= */
@@ -589,7 +592,7 @@ const DEF = {
   catatan: "Peta kerja ini bersifat indikatif untuk keperluan peninjauan lapang, bukan penetapan batas bidang tanah.",
   mode: "obj", kind: "", radius: "50", scale: "auto", index: true, ttOnly: false, nama: true, labNib: false,
   paper: "A4", orient: "landscape", grid: "geo", objColor: "mm",
-  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true,
+  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true, showAll: false, qr: true,
 };
 const mkLyr = () => ({leaves:new Map(), layers:[], feats:[], fields:[], crs:null, warnings:[], ix:null, keys:{}});
 const P = {
@@ -1185,6 +1188,7 @@ function sheetData(sp){
     if (ext[2] - ext[0] > bw * 3 || ext[3] - ext[1] > bh * 3) ext = bbGrow(base, Math.max(bw, bh) * 0.25);
     d.ext = ext;
     if (o.kind === "point" && r > 0) d.circle = {c:o.m, r};
+    { const [qx, qy] = o.kind === "point" ? o.m : o.lab, [lon, lat] = P.proj.toLL(qx, qy); d.qr = {url:gmaps(lon, lat), label:`${o.name} · ${llText(lon, lat)}${o.kind === "point" ? "" : " (tengah objek)"}`}; }
     d.info.push(["Nama objek", o.name], ["Layer My Maps", o.folder]);
     d.info.push(...objCoordRows(o));
     if (o.kind === "poly") d.info.push(["Luas objek", `${fmtA(o.area)} m² (${(o.area / 1e4).toLocaleString("id-ID", {maximumFractionDigits:4})} ha)`]);
@@ -1233,11 +1237,21 @@ function sheetData(sp){
       ["Luas tumpang tindih", `${fmtA(t.area)} m² (${fmtPct(t.pa)} dari bidang, ${fmtPct(t.pb)} dari PBT)`],
       ["Lintang, bujur (tengah)", llText(lon, lat)], ["", dmsText(lon, lat)]);
     if (t.nibSame) d.info.push(["Catatan", "NIB bidang dan PBT sama"]);
+    d.qr = {url:gmaps(lon, lat), label:`Tumpang tindih ${t.no} · ${llText(lon, lat)}`};
     const hit = P.objs.filter(o => bbHit(o.kind === "poly" ? o.bb : bbGrow(o.bb, r), t.bb)); if (hit.length) d.info.push(["Objek kerja terdekat", hit.slice(0, 4).map(o => o.name).join(", ")]);
     d.focus = hit;
     d.posHead = "";
   }
   return d;
+}
+/* QR code sebagai jalur SVG (pustaka qrcode-generator) */
+function qrSvg(text, x, y, side){
+  let q; try { q = window.qrcode(0, "M"); q.addData(text); q.make(); } catch { return ""; }
+  const n = q.getModuleCount(), qz = 2, cell = side / (n + 2 * qz);
+  let d = "";
+  for (let r = 0; r < n; r++){ let c = 0; while (c < n){ if (!q.isDark(r, c)){ c++; continue; } let e = c; while (e < n && q.isDark(r, e)) e++;
+    d += `M${n2r(x + (c + qz) * cell)} ${n2r(y + (r + qz) * cell)}h${n2r((e - c) * cell)}v${n2r(cell)}h${n2r(-(e - c) * cell)}z`; c = e; } }
+  return `<path d="${d}" fill="#000" shape-rendering="crispEdges"/>`;
 }
 const objCol = o => P.cfg.objColor === "one" ? "#D500F9" : (o.color || o.fcolor || "#D500F9");
 function renderSheet(sp, pi, pn, W, H){
@@ -1297,6 +1311,18 @@ function renderSheet(sp, pi, pn, W, H){
       });
       return o; }};
   };
+  const qrBlock = w => {
+    if (!P.cfg.qr || !d.qr || typeof window.qrcode !== "function") return null;
+    const q = qrSvg(d.qr.url, 0, 0, 1); if (!q) return null;
+    const side = Math.min(26 * u, w * 0.34), h = side + 2 * pad;
+    const fs = 2.05 * u, tx = pad * 2 + side, tw0 = w - tx - pad;
+    const lines = [...wrap("Pindai untuk membuka lokasi di Google Maps (navigasi ke titik):", fs, true, tw0).map(t => [t, true]), ...wrap(d.qr.label, fs, false, tw0).map(t => [t, false])];
+    return {h, draw:(x, y) => {
+      let o = box(x, y, w, h) + `<rect x="${n2(x + pad)}" y="${n2(y + pad)}" width="${n2(side)}" height="${n2(side)}" fill="#fff"/>` + qrSvg(d.qr.url, x + pad, y + pad, side);
+      let yy = y + pad + fs * 1.1; for (const [t, b] of lines){ o += T(x + tx, yy, t, {size:fs, bold:b}); yy += fs * 1.35; }
+      o += T(x + tx, y + h - pad, clip(d.qr.url.replace(/^https:\/\//, ""), fs * 0.75, false, tw0), {size:fs * 0.75, fill:"#555"});
+      return o; }};
+  };
   const nsBlock = (w, scale) => {
     const h = 22 * u;
     return {h, draw:(x, y) => {
@@ -1335,7 +1361,7 @@ function renderSheet(sp, pi, pn, W, H){
     const map = drawMap(M, M, mw, IH, d, C, u, lw, uid);
     s += map.svg;
     const px = M + mw;
-    const blocks = [titleBlock(pw), infoBlock(pw), legendBlock(pw), nsBlock(pw, map.scale)], foot = footBlock(pw);
+    const blocks = [titleBlock(pw), infoBlock(pw), qrBlock(pw), legendBlock(pw), nsBlock(pw, map.scale)].filter(Boolean), foot = footBlock(pw);
     let yy = M; for (const b of blocks){ s += b.draw(px, yy); yy += b.h; }
     const th = M + IH - foot.h - yy;
     s += th > 12 * u ? drawTableBox(px, yy, pw, th, T0, u, pad, lw) : box(px, yy, pw, Math.max(0, th));
@@ -1343,14 +1369,14 @@ function renderSheet(sp, pi, pn, W, H){
   } else {
     const tb = titleBlock(IW); s += tb.draw(M, M);
     const lw2 = IW * 0.46, rw = IW - lw2;
-    const left = [infoBlock(lw2), legendBlock(lw2), nsBlock(lw2, 1000), footBlock(lw2)];
+    const left = [infoBlock(lw2), qrBlock(lw2), legendBlock(lw2), nsBlock(lw2, 1000), footBlock(lw2)].filter(Boolean);
     const leftH = left.reduce((a, b) => a + b.h, 0);
     const bh = Math.min(Math.max(leftH, IH * 0.3), IH * 0.52);
     const mapH = IH - tb.h - bh;
     const map = drawMap(M, M + tb.h, IW, mapH, d, C, u, lw, uid);
     s += map.svg;
     let yy = M + tb.h + mapH;
-    for (const b of [infoBlock(lw2), legendBlock(lw2), nsBlock(lw2, map.scale)]){ s += b.draw(M, yy); yy += b.h; }
+    for (const b of [infoBlock(lw2), qrBlock(lw2), legendBlock(lw2), nsBlock(lw2, map.scale)].filter(Boolean)){ s += b.draw(M, yy); yy += b.h; }
     const foot = footBlock(lw2), fy = Math.max(yy, M + IH - foot.h);
     if (fy > yy + 0.1) s += box(M, yy, lw2, fy - yy);
     s += foot.draw(M, fy);
@@ -1369,7 +1395,7 @@ function legendItems(d, C, hasBm){
   if (P.lyr.pbt.feats.length) it.push({t:"fill", stroke:C.pbt, fill:C.pbtFill, dash:true, text:"PBT (Peta Bidang Tanah)"});
   if (P.tt.some(t => !t.same)) it.push({t:"hatch", text:"Tumpang tindih bidang–PBT"});
   if (P.tt.some(t => t.same)) it.push({t:"same", text:"Bidang & PBT berimpit"});
-  if (d.items.length) it.push({t:"num", text: d.items.some(x => x.f.src === "pbt") ? "Nomor bidang / PBT (P1…)" : "Nomor bidang di tabel"});
+  if (d.items.length) it.push({t:"num", text: (d.items.some(x => x.f.src === "pbt") ? "Nomor bidang / PBT (P1…)" : "Nomor bidang di tabel") + (d.circle ? ", beririsan radius" : "")});
   if (hasBm) it.push({t:"bm", text: BASEMAPS[P.cfg.bm].attr || BASEMAPS[P.cfg.bm].label});
   return it;
 }
@@ -1383,7 +1409,7 @@ function legendSym(it, x, y, sw, sh, u, uid, lw){
     case "fill": return `<rect ${r} fill="${it.fill === "none" ? "#666" : it.fill}" stroke="${it.stroke}" stroke-width="${n2(0.45 * u)}"${it.dash ? ` stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}"` : ""}/>`;
     case "hatch": return `<rect ${r} fill="url(#${uid}h)" stroke="#FF1744" stroke-width="${n2(0.45 * u)}"/>`;
     case "same": return `<rect ${r} fill="url(#${uid}s)" stroke="#FF9100" stroke-width="${n2(0.3 * u)}"/>`;
-    case "num": return T(x + sw / 2, y + sh * 0.85, "12", {size:2.6 * u, bold:true, anchor:"middle"});
+    case "num": return `<rect x="${n2(x + sw / 2 - 2.2 * u)}" y="${n2(y)}" width="${n2(4.4 * u)}" height="${n2(sh)}" rx="${n2(sh * 0.3)}" fill="#fff" stroke="#111" stroke-width="${n2(0.28 * u)}"/>` + T(x + sw / 2, y + sh * 0.78, "12", {size:2.3 * u, bold:true, anchor:"middle"});
     case "bm": return `<rect ${r} fill="#7A8B6F"/>`;
   }
   return "";
@@ -1464,9 +1490,11 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
   // PBT lalu bidang
   const sw = Math.max(0.2, 0.32 * u);
   const nums0 = d.nums || new Map(), tiny = f => (f.bb[2] - f.bb[0]) * k < 0.45 && (f.bb[3] - f.bb[1]) * k < 0.45 && !nums0.has(f) && !f.tt.length;
-  for (const f of P.lyr.pbt.feats) if (vis(f) && !tiny(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.pbtFill}" fill-opacity="${C.pbtFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.pbt}" stroke-width="${n2(sw)}" stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}" stroke-linejoin="round"/>`;
-  for (const f of P.lyr.bid.feats) if (vis(f) && !tiny(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.bidFill}" fill-opacity="${C.bidFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.bid}" stroke-width="${n2(sw)}" stroke-linejoin="round"/>`;
-  for (const t of P.tt) if (bbHit(t.bb, ext)){
+  // bawaan: hanya bidang yang ada di daftar (beririsan radius/poligon); opsi showAll menggambar semua yang tampak
+  const onlyRel = !cfg.showAll && !d.objTable, draw = f => vis(f) && (onlyRel ? nums0.has(f) : !tiny(f));
+  for (const f of P.lyr.pbt.feats) if (draw(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.pbtFill}" fill-opacity="${C.pbtFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.pbt}" stroke-width="${n2(sw)}" stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}" stroke-linejoin="round"/>`;
+  for (const f of P.lyr.bid.feats) if (draw(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.bidFill}" fill-opacity="${C.bidFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.bid}" stroke-width="${n2(sw)}" stroke-linejoin="round"/>`;
+  for (const t of P.tt) if (bbHit(t.bb, ext) && (!onlyRel || nums0.has(t.a) || nums0.has(t.b))){
     const dd = pathD(mpRings(t.geom), toMm, true); if (!dd) continue;
     const hl = d.hl === t;
     polys += t.same ? `<path d="${dd}" fill="url(#${uid}s)" fill-rule="evenodd" stroke="#FF9100" stroke-width="${n2(0.25 * u)}"/>`
@@ -1476,10 +1504,15 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
   const nums = d.nums || new Map();
   for (const [f, no] of nums){
     if (!vis(f)) continue;
-    const lb = labOf(f), [lx, ly] = toMm(lb[0], lb[1]); if (lx < ix || lx > ix + iw || ly < iy || ly > iy + ih) continue;
-    const ls = 2.5 * u, isP = f.src === "pbt";
-    labels += T(lx, ly + ls * 0.35, no, {size:ls, bold:true, anchor:"middle", fill: isP ? "#0D47A1" : "#111", extra:halo()});
-    if (P.cfg.labNib && f.nib) labels += T(lx, ly + ls * 1.25, f.nib, {size:ls * 0.6, anchor:"middle", fill:"#222", extra:halo("#fff", 0.4)});
+    const lb = labOf(f), ls = 2.5 * u, isP = f.src === "pbt";
+    let [lx, ly] = toMm(lb[0], lb[1]);
+    const bw = Math.max(ls * 1.25, tw(no, ls, true) + ls * 0.6), bh = ls * 1.3;
+    // bidang besar yang titik labelnya di luar bingkai: nomor ditaruh di tepi bingkai
+    lx = Math.min(ix + iw - bw / 2 - 0.5 * u, Math.max(ix + bw / 2 + 0.5 * u, lx)); ly = Math.min(iy + ih - bh / 2 - 0.5 * u, Math.max(iy + bh / 2 + 0.5 * u, ly));
+    const bad = f.tt.some(t => !t.same), stroke = bad ? "#D50000" : isP ? "#0D47A1" : "#111";
+    labels += `<rect x="${n2(lx - bw / 2)}" y="${n2(ly - bh / 2)}" width="${n2(bw)}" height="${n2(bh)}" rx="${n2(bh * 0.3)}" fill="#fff" fill-opacity=".93" stroke="${stroke}" stroke-width="${n2((bad ? 0.4 : 0.28) * u)}"/>`;
+    labels += T(lx, ly + ls * 0.36, no, {size:ls, bold:true, anchor:"middle", fill: bad ? "#B71C1C" : isP ? "#0D47A1" : "#111"});
+    if (P.cfg.labNib && f.nib) labels += T(lx, ly + bh / 2 + ls * 0.75, f.nib, {size:ls * 0.6, anchor:"middle", fill:"#222", extra:halo("#fff", 0.4)});
   }
   if (d.circle){ const [ccx, ccy] = toMm(...d.circle.c); over += `<circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${n2(0.75 * u)}"/><circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="#fff" stroke-width="${n2(0.4 * u)}" stroke-dasharray="${n2(1.4 * u)} ${n2(0.9 * u)}"/>`; }
   // objek kerja: semua yang tampak, fokus ditebalkan
@@ -1620,7 +1653,7 @@ function renderForm(){
   for (const k of ["title", "instansi", "tanggal", "catatan"]){ const e = $("#c-" + k); if (document.activeElement !== e) e.value = c[k] || ""; }
   for (const k of ["mode", "kind", "paper", "orient", "grid", "objColor", "bmDetail"]) $("#c-" + k).value = c[k];
   for (const k of ["radius", "ttMin", "ttSame"]){ const e = $("#c-" + k); if (document.activeElement !== e) e.value = c[k]; }
-  for (const k of ["index", "ttOnly", "nama", "labNib"]) $("#c-" + k).checked = !!c[k];
+  for (const k of ["index", "ttOnly", "nama", "labNib", "showAll", "qr"]) $("#c-" + k).checked = !!c[k];
   fillSelect($("#c-scale"), [["auto", "Otomatis (menyesuaikan objek)"], ...NICE_SCALES.filter(s => s >= 250 && s <= 50000).map(s => [String(s), "1 : " + s.toLocaleString("id-ID")])], c.scale);
   fillSelect($("#c-bm"), Object.entries(BASEMAPS).map(([k, b]) => [k, b.label]), c.bm);
   $("#c-bmOpacity").value = c.bmOpacity; $("#v-bmOpacity").textContent = c.bmOpacity + "%";
@@ -1805,7 +1838,7 @@ document.querySelectorAll("[data-clear]").forEach(b => b.onclick = () => { P.lyr
 $("#clear-obj").onclick = () => { P.objSrc = []; P.objLeaves.clear(); P.objWarn = []; P.objs = []; P.objOff = new Set(); $("#mm-note").innerHTML = ""; afterData(); };
 for (const k of ["title", "instansi", "tanggal", "catatan"]) $("#c-" + k).oninput = e => { P.cfg[k] = e.target.value; changed(); };
 for (const k of ["mode", "kind", "scale", "paper", "orient", "grid", "objColor", "bmDetail", "bm"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; if (k === "objColor") renderObj(); changed(); };
-for (const k of ["index", "ttOnly", "nama", "labNib"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.checked; changed(); };
+for (const k of ["index", "ttOnly", "nama", "labNib", "showAll", "qr"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.checked; changed(); };
 fillSelect($("#c-crs"), [["", "Otomatis (baca .prj, bila tidak ada ditebak dari angka koordinat)"], ["geo", "Geografis (lon/lat)"], ...TM3_CMS.map(c => ["tm3:" + c, `TM-3 zona ${tm3Name(c)} (DGN95)`]), ...[46, 47, 48, 49, 50, 51, 52, 53, 54].map(z => [`utm:${z}S`, `UTM zona ${z}S`]), ...[46, 47, 48, 49, 50, 51, 52, 53, 54].map(z => [`utm:${z}N`, `UTM zona ${z}N`]), ["webm", "Web Mercator (EPSG:3857)"]], "");
 $("#c-crs").onchange = async e => { P.cfg.crs = e.target.value; savePrefs(); await rebuildLyr("bid", true); await rebuildLyr("pbt", true); if (P.objLeaves.size) await rebuildObj(); else await afterData(); };
 $("#c-nearOnly").onchange = async e => { P.cfg.nearOnly = e.target.checked; savePrefs(); for (const k of ["bid", "pbt"]) if (P.lyr[k].leaves.size) await rebuildLyr(k, true); await afterData(); };
