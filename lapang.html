@@ -1,0 +1,1692 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Peta Kerja Lapang</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: satu kolom kerja berurutan (data → pencocokan → atribut → hasil → unduh), lebar terbatas, tabel menggulir di wadahnya sendiri */
+:root{
+  --paper:#F4F6F3; --surface:#FFFFFF; --sunken:#EBEFEB; --ink:#16211E; --muted:#596661; --line:#D7DED9;
+  --accent:#0E6A5B; --accent-soft:#DCEFEA; --on-accent:#FFFFFF;
+  --ochre:#9A6412; --ochre-soft:#F6EBD6; --bad:#B42318; --bad-soft:#FBE5E2; --good:#1D7440; --good-soft:#DFF2E5;
+  --f-display:"Archivo","Segoe UI",system-ui,sans-serif; --f-body:"Public Sans","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0E1412; --surface:#151D1A; --sunken:#1B2521; --ink:#E4EBE8; --muted:#94A39D; --line:#28342F;
+  --accent:#43B9A2; --accent-soft:#16332D; --on-accent:#08201B;
+  --ochre:#E2A947; --ochre-soft:#3A2C12; --bad:#F2806F; --bad-soft:#3D1A16; --good:#62CC8E; --good-soft:#15301F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0E1412; --surface:#151D1A; --sunken:#1B2521; --ink:#E4EBE8; --muted:#94A39D; --line:#28342F;
+  --accent:#43B9A2; --accent-soft:#16332D; --on-accent:#08201B;
+  --ochre:#E2A947; --ochre-soft:#3A2C12; --bad:#F2806F; --bad-soft:#3D1A16; --good:#62CC8E; --good-soft:#15301F; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:30px;font-weight:700}
+h2{font-size:19px;font-weight:600;display:flex;align-items:baseline;gap:10px}
+h2 .n{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:500}
+h3{font-size:14px;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:.92em}
+.small{font-size:13px}
+header{display:flex;flex-direction:column;gap:10px}
+header .lede{max-width:70ch;color:var(--muted)}
+.key{display:flex;flex-wrap:wrap;gap:0;font-family:var(--f-mono);margin-top:6px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);width:fit-content;max-width:100%;overflow:hidden}
+.key span{display:flex;flex-direction:column;padding:7px 12px;border-right:1px solid var(--line)}
+.key span:last-child{border-right:0}
+.key b{font-weight:500;font-size:15px}
+.key i{font-style:normal;font-family:var(--f-body);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.key .hl b{color:var(--accent)}
+section.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--sunken);transition:border-color .15s,background .15s;min-width:0}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop .hint{font-size:13px;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,.btn{font:inherit;font-weight:500;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 13px;cursor:pointer;line-height:1.3}
+button:hover{border-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.primary:hover{filter:brightness(1.07)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted);padding-inline:8px}
+button.ghost:hover{color:var(--ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+select,input[type=text]{font:inherit;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 8px;min-width:0}
+input[type=text].mono{font-family:var(--f-mono)}
+input.err{border-color:var(--bad);background:var(--bad-soft)}
+label.chk{display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);max-height:420px;overflow-y:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+th{position:sticky;top:0;background:var(--sunken);font-weight:600;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;z-index:1}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px;letter-spacing:.02em;background:var(--sunken);color:var(--muted)}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--ochre-soft);color:var(--ochre)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.acc{background:var(--accent-soft);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--f-display);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+.stat.good b{color:var(--good)} .stat.bad b{color:var(--bad)} .stat.warn b{color:var(--ochre)}
+.bar{height:8px;border-radius:99px;background:var(--sunken);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.note{border-left:3px solid var(--ochre);background:var(--ochre-soft);padding:9px 12px;border-radius:0 var(--r) var(--r) 0;font-size:13.5px}
+.note.info{border-left-color:var(--accent);background:var(--accent-soft)}
+.note.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
+details{border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+details>summary{cursor:pointer;font-weight:600;font-size:14px}
+details[open]>summary{margin-bottom:12px}
+.fieldmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.fieldmap label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:500}
+#match-body,#attr-body,#result-body,#dl-body{display:flex;flex-direction:column;gap:16px;min-width:0}
+.status{font-size:13px;color:var(--muted);min-height:1.4em}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:50;max-width:calc(100% - 32px)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+@media (max-width:560px){h1{font-size:24px} section.card{padding:14px}}
+</style>
+<style>
+/* Tambahan halaman peta: panel pengaturan di atas, pratinjau lembar peta di bawah */
+.topnav{display:flex;gap:14px;font-size:13.5px}
+.topnav a{color:var(--accent);text-decoration:none;font-weight:500}
+.topnav a:hover{text-decoration:underline}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 16px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:500;min-width:0}
+.form label.wide{grid-column:1/-1}
+textarea{font:inherit;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 8px;resize:vertical;min-height:2.4em}
+textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=color]{width:46px;height:30px;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:2px}
+.cols{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.colrow{display:grid;grid-template-columns:auto minmax(90px,160px) minmax(0,1fr) minmax(0,200px) auto;gap:10px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);background:var(--surface)}
+.colrow:last-child{border-bottom:0}
+.colrow.off{background:var(--sunken)}
+.colrow.off .mono{color:var(--muted)}
+.colrow .ex{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.colrow .mv{display:flex;gap:2px}
+.colrow .mv button{padding:3px 8px;font-size:12px}
+.pages{display:flex;flex-direction:column;gap:18px;align-items:center}
+.page{width:100%;max-width:1060px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18),0 6px 20px rgba(0,0,0,.08);border-radius:2px;line-height:0}
+.page svg{width:100%;height:auto;display:block}
+.symlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:6px 14px}
+.symrow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;font-size:13px;min-width:0}
+.symrow input[type=text]{width:100%}
+.symrow .n{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.ovcard{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--surface)}
+.ovcard header{display:flex;flex-direction:row;justify-content:space-between;align-items:center;gap:10px}
+.ovcard h3{font-size:14px}
+#ov-body,#br-list{display:flex;flex-direction:column;gap:10px}
+.brgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:6px 14px;font-size:13.5px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.pagecap{font-size:12px;color:var(--muted);align-self:flex-start}
+#print-area{display:none}
+@media (max-width:560px){.colrow{grid-template-columns:auto 1fr auto}.colrow .ex{display:none}.colrow input[type=text]{grid-column:2/3}}
+@media print{
+  body{background:#fff}
+  .wrap,.toast{display:none!important}
+  #print-area{display:block}
+  #print-area svg{display:block;break-after:page;page-break-after:always}
+  #print-area svg:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+<style>
+/* Tambahan halaman peta kerja lapang */
+.drop h3{display:flex;gap:8px;align-items:baseline}
+.objlist{display:flex;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto;font-size:13px}
+.objlist label{display:grid;grid-template-columns:auto auto 1fr auto;gap:8px;align-items:center;padding:3px 4px;border-radius:5px}
+.objlist label:hover{background:var(--sunken)}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid rgba(0,0,0,.25)}
+.sw.pt{border-radius:50%}
+input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 8px;min-width:0;width:100%}
+.linkrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.linkrow input{flex:1 1 320px}
+</style>
+<div class="wrap">
+  <header>
+    <nav class="topnav"><a href="index.html">← Join Buku Tanah</a><a href="peta.html">Peta Indikatif Bidang</a></nav>
+    <h1>Peta Kerja Lapang</h1>
+    <p class="lede">Membuat peta kerja untuk turun lapang dari titik atau poligon Google My Maps, dioverlay dengan bidang tanah terdaftar dan PBT. Bidang yang tumpang tindih dengan PBT ditandai beserta luasnya. Hasilnya bisa satu lembar per titik, per poligon, atau per kasus tumpang tindih, dan bisa dibawa ke HP sebagai KML. Semua file diproses di browser ini dan tidak dikirim ke server.</p>
+  </header>
+
+  <section class="card" id="sec-obj">
+    <h2><span class="n">1</span>Objek kerja (titik / poligon)</h2>
+    <p class="muted small">Dari Google My Maps: buka peta, klik ⋮ di panel kiri, pilih <b>Ekspor ke KML/KMZ</b> (jangan centang "Tetap perbarui"), lalu masukkan filenya di sini. Bisa juga KML/KMZ dari Google Earth, GeoJSON, atau SHP titik/garis/poligon.</p>
+    <div class="linkrow">
+      <input type="text" id="mm-link" placeholder="Atau tempel link Google My Maps di sini (…/maps/d/…?mid=…)" aria-label="Link Google My Maps">
+      <button id="mm-go">Ambil dari link</button>
+    </div>
+    <div id="mm-note"></div>
+    <div class="drop" id="drop-obj">
+      <p class="hint">Seret file .kml, .kmz, .geojson, atau SHP (.zip / .shp + .dbf + .prj) ke sini.</p>
+      <div class="row">
+        <button id="pick-obj">Pilih file</button>
+        <button class="ghost" id="clear-obj">Kosongkan</button>
+        <span class="status" id="obj-status"></span>
+      </div>
+    </div>
+    <input type="file" id="in-obj" multiple hidden accept=".kml,.kmz,.geojson,.json,.zip,.shp,.shx,.dbf,.prj,.cpg">
+    <div id="obj-summary"></div>
+  </section>
+
+  <section class="card" id="sec-lyr">
+    <h2><span class="n">2</span>Bidang tanah dan PBT</h2>
+    <p class="muted small">Masukkan SHP poligon (zip, folder, atau file .shp + .dbf + .shx + .prj). Sistem koordinat TM-3 atau geografis dibaca dari .prj. Keduanya boleh dikosongkan bila hanya perlu peta objek.</p>
+    <div class="grid2">
+      <div class="drop" id="drop-bid">
+        <h3>Bidang tanah terdaftar <span class="pill" id="pill-bid">kosong</span></h3>
+        <p class="hint">Misalnya hasil Join Buku Tanah.</p>
+        <div class="row">
+          <button data-pick="bid">Pilih file</button>
+          <button data-pickdir="bid">Pilih folder</button>
+          <button id="btn-handoff" class="primary" hidden>Pakai hasil join terakhir</button>
+          <button class="ghost" data-clear="bid">Kosongkan</button>
+        </div>
+        <span class="status" id="st-bid"></span>
+        <div id="sum-bid"></div>
+      </div>
+      <div class="drop" id="drop-pbt">
+        <h3>PBT (Peta Bidang Tanah) <span class="pill" id="pill-pbt">kosong</span></h3>
+        <p class="hint">Layer PBT yang akan dicek tumpang tindihnya dengan bidang terdaftar.</p>
+        <div class="row">
+          <button data-pick="pbt">Pilih file</button>
+          <button data-pickdir="pbt">Pilih folder</button>
+          <button class="ghost" data-clear="pbt">Kosongkan</button>
+        </div>
+        <span class="status" id="st-pbt"></span>
+        <div id="sum-pbt"></div>
+      </div>
+    </div>
+    <input type="file" id="in-lyr" multiple hidden>
+    <input type="file" id="in-lyr-dir" webkitdirectory multiple hidden>
+    <div id="lyr-warn"></div>
+  </section>
+
+  <section class="card" id="sec-tt">
+    <h2><span class="n">3</span>Tumpang tindih bidang tanah dengan PBT</h2>
+    <div class="form">
+      <label>Abaikan tumpang tindih di bawah (m²)<input type="number" id="c-ttMin" min="0" step="0.5"></label>
+      <label>Disebut berimpit (bidang yang sama) bila saling menutupi ≥ (%)<input type="number" id="c-ttSame" min="50" max="100" step="1"></label>
+    </div>
+    <div id="tt-body"><div class="empty">Masukkan SHP bidang tanah dan SHP PBT untuk memeriksa tumpang tindih.</div></div>
+  </section>
+
+  <section class="card" id="sec-map">
+    <h2><span class="n">4</span>Peta kerja</h2>
+    <div class="form">
+      <label>Susunan lembar<select id="c-mode">
+        <option value="obj">Satu lembar per objek (per titik / per poligon)</option>
+        <option value="all">Semua objek dalam satu lembar</option>
+        <option value="tt">Satu lembar per kasus tumpang tindih</option>
+      </select></label>
+      <label>Jenis objek yang dicetak<select id="c-kind">
+        <option value="">Semua (titik, garis, poligon)</option>
+        <option value="point">Titik saja</option>
+        <option value="poly">Poligon saja</option>
+        <option value="line">Garis saja</option>
+      </select></label>
+      <label>Radius sekitar titik/garis (m)<input type="number" id="c-radius" min="5" step="5"></label>
+      <label>Skala peta<select id="c-scale"></select></label>
+    </div>
+    <div class="row small">
+      <label class="chk"><input type="checkbox" id="c-index"> Lembar indeks (semua objek) di depan</label>
+      <label class="chk"><input type="checkbox" id="c-ttOnly"> Hanya objek yang mengenai bidang tumpang tindih</label>
+      <label class="chk"><input type="checkbox" id="c-nama"> Nama pemegang hak di tabel</label>
+      <label class="chk"><input type="checkbox" id="c-labNib"> NIB di bawah nomor bidang pada peta</label>
+    </div>
+    <div class="form">
+      <label class="wide">Judul peta<textarea id="c-title" rows="2"></textarea></label>
+      <label>Instansi / penyusun<textarea id="c-instansi" rows="3"></textarea></label>
+      <label>Tempat, tanggal<input type="text" id="c-tanggal"></label>
+      <label>Catatan<textarea id="c-catatan" rows="2"></textarea></label>
+    </div>
+    <div class="form">
+      <label>Ukuran kertas<select id="c-paper"><option>A4</option><option>A3</option><option>A2</option></select></label>
+      <label>Orientasi<select id="c-orient"><option value="landscape">Mendatar (landscape)</option><option value="portrait">Tegak (portrait)</option></select></label>
+      <label>Grid koordinat<select id="c-grid"><option value="geo">Lintang/bujur (derajat)</option><option value="tm">Meter (TM-3, bila SHP TM-3)</option><option value="">Tanpa garis grid</option></select></label>
+      <label>Warna objek<select id="c-objColor"><option value="mm">Sesuai warna di My Maps</option><option value="one">Satu warna (magenta)</option></select></label>
+    </div>
+    <div class="form">
+      <label>Basemap<select id="c-bm"></select></label>
+      <label>Opasitas basemap <span class="mono" id="v-bmOpacity"></span><input type="range" id="c-bmOpacity" min="10" max="100" step="5"></label>
+      <label>Ketajaman citra<select id="c-bmDetail"><option value="-1">Ringan</option><option value="0">Normal</option><option value="1">Tajam (lebih lama dimuat)</option></select></label>
+    </div>
+    <p class="status" id="bm-status"></p>
+    <div class="row"><button class="ghost" id="btn-reset">Kembalikan isian bawaan</button></div>
+  </section>
+
+  <section class="card" id="sec-prev">
+    <h2><span class="n">5</span>Pratinjau dan unduh</h2>
+    <div class="row">
+      <button class="primary" id="dl-pdf" disabled>Unduh PDF</button>
+      <button id="dl-png" disabled>Unduh PNG</button>
+      <button id="dl-xlsx" disabled>Unduh tabel (.xlsx)</button>
+      <button id="dl-kml" disabled>Unduh KML untuk HP</button>
+      <button class="ghost" id="btn-print" disabled>Cetak</button>
+      <span class="status" id="dl-status"></span>
+    </div>
+    <p class="small muted">KML bisa dibuka di Google Earth, diimpor ke Google My Maps, atau aplikasi peta lapang (Avenza, Locus, SW Maps) untuk melihat posisi Anda terhadap bidang dan tumpang tindih saat di lapangan.</p>
+    <div id="prev-body"><div class="empty">Pratinjau muncul setelah objek kerja atau SHP bidang dimasukkan.</div></div>
+  </section>
+</div>
+<div id="print-area"></div>
+<style id="page-style"></style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/polygon-clipping@0.15.7/dist/polygon-clipping.umd.min.js"></script>
+<script>
+"use strict";
+/* ================= Utilitas ================= */
+/* ================= Utilitas ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Number(n).toLocaleString("id-ID");
+const extOf = p => { const m = /\.([^./]+)$/.exec(p); return m ? m[1].toLowerCase() : ""; };
+const baseName = p => p.split("/").pop();
+const stripExt = n => n.replace(/\.[^.]+$/, "");
+const digits = s => String(s ?? "").replace(/\D+/g, "");
+let toastT;
+function toast(msg){ let t = $(".toast"); if (!t){ t = document.createElement("div"); t.className = "toast"; t.setAttribute("role","status"); document.body.appendChild(t); }
+  t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3500); }
+
+async function entriesFromDrop(dt){
+  const out = [], ents = [];
+  for (const it of dt.items){ const e = it.webkitGetAsEntry && it.webkitGetAsEntry(); if (e) ents.push(e); }
+  if (!ents.length){ for (const f of dt.files) out.push({path:f.name, file:f}); return out; }
+  async function walk(e){
+    if (e.isFile){ const f = await new Promise((res, rej) => e.file(res, rej)); out.push({path:e.fullPath.replace(/^\//,""), file:f}); }
+    else if (e.isDirectory){ const r = e.createReader(); let batch;
+      do { batch = await new Promise((res, rej) => r.readEntries(res, rej)); for (const c of batch) await walk(c); } while (batch.length); }
+  }
+  for (const e of ents) await walk(e);
+  return out;
+}
+
+/* ================= DBF ================= */
+function parseDbf(u8){
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  const version = u8[0], nrecH = dv.getUint32(4, true), hlen = dv.getUint16(8, true), rlen = dv.getUint16(10, true), ldid = u8[29];
+  const fields = []; let p = 32, off = 1;
+  while (p + 32 <= hlen && u8[p] !== 0x0D){
+    let name = ""; for (let k = 0; k < 11 && u8[p+k]; k++) name += String.fromCharCode(u8[p+k]);
+    const f = {name:name.trim(), type:String.fromCharCode(u8[p+11]), len:u8[p+16], dec:u8[p+17], offset:off};
+    fields.push(f); off += f.len; p += 32;
+  }
+  const nrecFile = rlen ? Math.floor((u8.length - hlen) / rlen) : 0;
+  return {version, nrec: Math.min(nrecH, nrecFile), hlen, rlen, ldid, fields, descEnd: p};
+}
+function encFromCpg(txt){
+  const t = String(txt || "").trim().toLowerCase().replace(/^ansi\s*/,"");
+  if (!t) return null;
+  if (/utf-?8|65001/.test(t)) return "utf-8";
+  if (/^(cp|windows-?)?125[0-8]$/.test(t)) return "windows-" + t.match(/125\d/)[0];
+  if (/8859-?1|88591|latin1/.test(t)) return "iso-8859-1";
+  try { new TextDecoder(t); return t; } catch { return null; }
+}
+function sniffUtf8(u8, info){
+  const body = u8.subarray(info.hlen, Math.min(u8.length, info.hlen + 400000));
+  let hi = false; for (let i = 0; i < body.length; i++) if (body[i] > 127){ hi = true; break; }
+  if (!hi) return "utf-8";
+  try { new TextDecoder("utf-8", {fatal:true}).decode(body); return "utf-8"; } catch { return "windows-1252"; }
+}
+
+/* ================= XLSX & simpan file ================= */
+function xlsxBlob(sheets){
+  const z = new JSZip();
+  const xe = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
+  const colL = i => { let s = ""; i++; while (i){ const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; };
+  z.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}</Types>`);
+  z.file("_rels/.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+  z.file("xl/workbook.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s, i) => `<sheet name="${xe(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("")}</sheets></workbook>`);
+  z.file("xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((_, i) => `<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")}<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`);
+  z.file("xl/styles.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDCEFEA"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`);
+  sheets.forEach((s, i) => {
+    const rows = [s.head, ...s.rows];
+    const widths = s.head.map((h, c) => Math.min(60, Math.max(8, ...rows.slice(0, 500).map(r => String(r[c] ?? "").length + 2))));
+    const body = rows.map((r, ri) => `<row r="${ri+1}">${r.map((v, ci) => {
+      if (v === null || v === undefined || v === "") return "";
+      const ref = colL(ci) + (ri + 1), st = ri === 0 ? ' s="1"' : "";
+      return typeof v === "number" && isFinite(v) ? `<c r="${ref}"${st}><v>${v}</v></c>` : `<c r="${ref}" t="inlineStr"${st}><is><t xml:space="preserve">${xe(v)}</t></is></c>`;
+    }).join("")}</row>`).join("");
+    z.file(`xl/worksheets/sheet${i+1}.xml`, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w, c) => `<col min="${c+1}" max="${c+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${body}</sheetData>${s.rows.length ? `<autoFilter ref="A1:${colL(s.head.length-1)}${s.rows.length+1}"/>` : ""}</worksheet>`);
+  });
+  return z.generateAsync({type:"blob", compression:"DEFLATE", mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+
+const dlCap = (window.claude && typeof window.claude.use === "function") ? window.claude.use("downloads").catch(() => null) : Promise.resolve(null);
+async function saveFile(filename, blob){
+  const cap = await Promise.race([dlCap, new Promise(r => setTimeout(() => r(undefined), 1500))]);
+  if (cap){
+    try { await cap.save({filename, data:blob}); toast(`Tersimpan: ${filename}`); }
+    catch(e){ toast(e && e.code === "declined" ? "Unduhan dibatalkan." : `Gagal menyimpan (${e && e.code || "galat"}).`); }
+    return;
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+
+/* ================= Referensi wilayah ================= */
+const KAB_SEED = { "2309":"Sumbawa Barat" };
+const PROV_SEED = { "23":"Nusa Tenggara Barat" };
+const BULAN = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const todayStr = () => { const d = new Date(); return `${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`; };
+
+function parsePrj(txt){
+  const t = String(txt || "").trim();
+  if (!t) return {name:"Tidak diketahui (tanpa .prj)", geographic:false};
+  const m = /^(PROJCS|GEOGCS|PROJCRS|GEOGCRS|GEODCRS)\["([^"]*)"/i.exec(t);
+  const geographic = /^GEO/i.test(t);
+  let name = m ? m[2] : "Tidak diketahui";
+  const tm = /TM-?3\D*(\d+\.\d)/i.exec(name);
+  const datum = /DATUM\["([^"]*)"/i.exec(t);
+  return {name, geographic, tm3: tm ? tm[1] : null, datum: datum ? datum[1].replace(/_/g," ") : null, tm: geographic ? null : tmParams(t)};
+}
+function readDbfRecords(L){
+  const {info, dec} = L, u8 = L.dbfLeaf.bytes, out = [];
+  for (let i = 0; i < info.nrec; i++){
+    const base = info.hlen + i * info.rlen, rec = {};
+    if (u8[base] === 0x2A){ out.push(null); continue; }
+    for (const f of info.fields){
+      const raw = u8.subarray(base + f.offset, base + f.offset + f.len);
+      let v;
+      if (f.type === "N" || f.type === "F"){ const s = new TextDecoder("ascii").decode(raw).trim(); v = s === "" || /^\*+$/.test(s) ? null : Number(s); if (v !== null && !isFinite(v)) v = null; }
+      else if (f.type === "D"){ const s = new TextDecoder("ascii").decode(raw).trim(); v = /^\d{8}$/.test(s) ? `${s.slice(6,8)}-${s.slice(4,6)}-${s.slice(0,4)}` : ""; }
+      else if (f.type === "L"){ const c = String.fromCharCode(raw[0] || 32).toUpperCase(); v = "YT".includes(c) ? "Ya" : "NF".includes(c) ? "Tidak" : ""; }
+      else v = cleanStr(dec.decode(raw));
+      rec[f.name] = v;
+    }
+    out.push(rec);
+  }
+  return out;
+}
+const cleanStr = s => String(s ?? "").replace(/\0/g, "").replace(/\s*;\s*$/, "").replace(/\s*[\r\n]+\s*/g, " ").replace(/\s*;\s*/g, "; ").replace(/\s*;\s*$/, "").trim();
+
+function ptSegDist2(px, py, a, b){
+  let x = a[0], y = a[1], dx = b[0] - x, dy = b[1] - y;
+  if (dx || dy){ const t = ((px - x) * dx + (py - y) * dy) / (dx * dx + dy * dy); if (t > 1){ x = b[0]; y = b[1]; } else if (t > 0){ x += dx * t; y += dy * t; } }
+  dx = px - x; dy = py - y; return dx * dx + dy * dy;
+}
+function signedDist(x, y, rings){
+  let inside = false, md = Infinity;
+  for (const r of rings) for (let i = 0, j = r.length - 1; i < r.length; j = i++){
+    const a = r[i], b = r[j];
+    if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) inside = !inside;
+    md = Math.min(md, ptSegDist2(x, y, a, b));
+  }
+  return (inside ? 1 : -1) * Math.sqrt(md);
+}
+function polylabel(rings, precision){
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const r of rings) for (const [x, y] of r){ if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  const w = x1 - x0, h = y1 - y0, cs = Math.min(w, h);
+  if (!cs) return [x0, y0];
+  const cell = (x, y, hh) => { const d = signedDist(x, y, rings); return {x, y, h:hh, d, max:d + hh * Math.SQRT2}; };
+  const q = [];
+  for (let x = x0; x < x1; x += cs) for (let y = y0; y < y1; y += cs) q.push(cell(x + cs / 2, y + cs / 2, cs / 2));
+  // titik berat cincin terluar sebagai tebakan awal
+  let cx = 0, cy = 0, A = 0; const r0 = rings[0];
+  for (let i = 0, j = r0.length - 1; i < r0.length; j = i++){ const f = r0[i][0] * r0[j][1] - r0[j][0] * r0[i][1]; cx += (r0[i][0] + r0[j][0]) * f; cy += (r0[i][1] + r0[j][1]) * f; A += f * 3; }
+  let best = A ? cell(cx / A, cy / A, 0) : cell(x0 + w / 2, y0 + h / 2, 0);
+  const bb = cell(x0 + w / 2, y0 + h / 2, 0); if (bb.d > best.d) best = bb;
+  let guard = 0;
+  while (q.length && guard++ < 20000){
+    let bi = 0; for (let i = 1; i < q.length; i++) if (q[i].max > q[bi].max) bi = i;
+    const c = q[bi]; q[bi] = q[q.length - 1]; q.pop();
+    if (c.d > best.d) best = c;
+    if (c.max - best.d <= precision) continue;
+    const hh = c.h / 2;
+    q.push(cell(c.x - hh, c.y - hh, hh), cell(c.x + hh, c.y - hh, hh), cell(c.x - hh, c.y + hh, hh), cell(c.x + hh, c.y + hh, hh));
+  }
+  return [best.x, best.y];
+}
+
+
+/* ================= Ukur teks ================= */
+const FF = "Arial, Helvetica, sans-serif";
+const mctx = document.createElement("canvas").getContext("2d");
+function tw(s, size, bold){ mctx.font = `${bold ? "bold " : ""}100px Arial, Helvetica, sans-serif`; return mctx.measureText(String(s)).width * size / 100; }
+function wrap(text, size, bold, maxW){
+  const out = [];
+  for (const para of String(text || "").split(/\n/)){
+    const words = para.split(/\s+/).filter(Boolean); let line = "";
+    for (const w of words){ const t = line ? line + " " + w : w; if (!line || tw(t, size, bold) <= maxW) line = t; else { out.push(line); line = w; } }
+    if (line) out.push(line);
+  }
+  return out;
+}
+function clip(s, size, bold, maxW){
+  s = String(s); if (tw(s, size, bold) <= maxW) return s;
+  let lo = 0, hi = s.length;
+  while (lo < hi){ const mid = (lo + hi + 1) >> 1; if (tw(s.slice(0, mid) + "…", size, bold) <= maxW) lo = mid; else hi = mid - 1; }
+  return s.slice(0, lo) + "…";
+}
+const n2 = v => +v.toFixed(2);
+function T(x, y, s, o = {}){
+  return `<text x="${n2(x)}" y="${n2(y)}" font-size="${n2(o.size || 3)}"${o.bold ? ' font-weight="bold"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""}${o.fill ? ` fill="${o.fill}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${n2(x)} ${n2(y)})"` : ""}${o.extra || ""}>${esc(s)}</text>`;
+}
+
+/* ================= Layout lembar ================= */
+const PAPER = {A0:[1189, 841], A1:[841, 594], A2:[594, 420], A3:[420, 297], A4:[297, 210]};
+const NICE_SCALES = [100, 200, 250, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7500, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000, 150000, 200000, 250000, 500000, 1000000];
+const PALETTE = ["#F6D36B", "#9FD3A8", "#8EC5E8", "#F4A99A", "#C9B3E6", "#F2C38B", "#B9D97C", "#E8A6C8", "#9ED9D2", "#D8C3A5", "#AFC0E8", "#E3E08A"];
+const stepDown = v => { const p = Math.pow(10, Math.floor(Math.log10(v) + 1e-9)), m = Math.round(v / p * 100) / 100; return (m > 5 ? 5 : m > 2.5 ? 2.5 : m > 2 ? 2 : m > 1 ? 1 : 0.5) * p; };
+const niceStep = v => { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m < 1.5 ? 1 : m < 2.25 ? 2 : m < 3.5 ? 2.5 : m < 7.5 ? 5 : 10) * p; };
+
+/* ================= Proyeksi (Transverse Mercator ↔ geografis) ================= */
+function tmParams(t){
+  if (!/PROJECTION\["(Transverse_Mercator|Gauss_Kruger)"\]/i.test(t)) return null;
+  const par = n => { const m = new RegExp('PARAMETER\\["' + n + '"\\s*,\\s*([-\\d.eE+]+)', "i").exec(t); return m ? Number(m[1]) : null; };
+  const sph = /SPHEROID\["[^"]*"\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i.exec(t);
+  const unit = /UNIT\["[^"]*"\s*,\s*([\d.]+)\]\s*(,\s*AXIS[^\]]*\])*\s*\]?\s*$/i.exec(t);
+  return {a: sph ? Number(sph[1]) : 6378137, invf: sph ? Number(sph[2]) : 298.257223563,
+    k0: par("scale_factor") ?? 1, lon0: par("central_meridian") ?? 0, lat0: par("latitude_of_origin") ?? 0,
+    fe: par("false_easting") ?? 0, fn: par("false_northing") ?? 0, unit: unit ? Number(unit[1]) || 1 : 1};
+}
+function makeTM(p){
+  const D = Math.PI / 180, a = p.a, f = 1 / p.invf, e2 = f * (2 - f), e4 = e2 * e2, e6 = e4 * e2, ep2 = e2 / (1 - e2), k0 = p.k0;
+  const Mf = phi => a * ((1 - e2 / 4 - 3 * e4 / 64 - 5 * e6 / 256) * phi - (3 * e2 / 8 + 3 * e4 / 32 + 45 * e6 / 1024) * Math.sin(2 * phi)
+    + (15 * e4 / 256 + 45 * e6 / 1024) * Math.sin(4 * phi) - (35 * e6 / 3072) * Math.sin(6 * phi));
+  const M0 = Mf(p.lat0 * D), l0 = p.lon0 * D, u = p.unit;
+  const fromLL = (lon, lat) => {
+    const phi = lat * D, s = Math.sin(phi), c = Math.cos(phi), tn = Math.tan(phi);
+    const N = a / Math.sqrt(1 - e2 * s * s), T = tn * tn, C = ep2 * c * c, A = (lon * D - l0) * c;
+    const x = k0 * N * (A + (1 - T + C) * A ** 3 / 6 + (5 - 18 * T + T * T + 72 * C - 58 * ep2) * A ** 5 / 120);
+    const y = k0 * (Mf(phi) - M0 + N * tn * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A ** 4 / 24 + (61 - 58 * T + T * T + 600 * C - 330 * ep2) * A ** 6 / 720));
+    return [p.fe + x / u, p.fn + y / u];
+  };
+  const e1 = (1 - Math.sqrt(1 - e2)) / (1 + Math.sqrt(1 - e2));
+  const toLL = (X, Y) => {
+    const M = M0 + (Y - p.fn) * u / k0, mu = M / (a * (1 - e2 / 4 - 3 * e4 / 64 - 5 * e6 / 256));
+    const p1 = mu + (3 * e1 / 2 - 27 * e1 ** 3 / 32) * Math.sin(2 * mu) + (21 * e1 * e1 / 16 - 55 * e1 ** 4 / 32) * Math.sin(4 * mu)
+      + (151 * e1 ** 3 / 96) * Math.sin(6 * mu) + (1097 * e1 ** 4 / 512) * Math.sin(8 * mu);
+    const s = Math.sin(p1), c = Math.cos(p1), tn = Math.tan(p1);
+    const C1 = ep2 * c * c, T1 = tn * tn, N1 = a / Math.sqrt(1 - e2 * s * s), R1 = a * (1 - e2) / Math.pow(1 - e2 * s * s, 1.5), Dd = (X - p.fe) * u / (N1 * k0);
+    const phi = p1 - (N1 * tn / R1) * (Dd * Dd / 2 - (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * ep2) * Dd ** 4 / 24 + (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * ep2 - 3 * C1 * C1) * Dd ** 6 / 720);
+    const lam = l0 + (Dd - (1 + 2 * T1 + C1) * Dd ** 3 / 6 + (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * ep2 + 24 * T1 * T1) * Dd ** 5 / 120) / c;
+    return [lam / D, phi / D];
+  };
+  return {fromLL, toLL};
+}
+/* koordinat sumber (SHP) ↔ lon/lat; null bila sistem koordinat tidak dikenali */
+function makeLL(crs){
+  if (!crs) return null;
+  if (crs.geographic) return {fromLL:(lon, lat) => [lon, lat], toLL:(x, y) => [x, y]};
+  if (crs.tm) return makeTM(crs.tm);
+  return null;
+}
+
+/* ================= Basemap (tile XYZ) ================= */
+const BASEMAPS = {
+  "": {label:"Tanpa basemap"},
+  esri: {label:"Citra satelit Esri World Imagery", url:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", max:19, attr:"Citra: Esri, Maxar, Earthstar Geographics"},
+  gsat: {label:"Google Satelit", url:"https://mt{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", max:20, attr:"Citra: Google"},
+  ghyb: {label:"Google Satelit + nama jalan", url:"https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", max:20, attr:"Citra: Google"},
+  osm: {label:"OpenStreetMap", url:"https://tile.openstreetmap.org/{z}/{x}/{y}.png", max:19, attr:"© kontributor OpenStreetMap"},
+};
+const TILE = new Map();   // url -> dataURL | "ERR" | Promise
+let tileJob = null;
+const lon2t = (lon, z) => (lon + 180) / 360 * 2 ** z;
+const lat2t = (lat, z) => { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * 2 ** z; };
+const t2lon = (x, z) => x / 2 ** z * 360 - 180;
+const t2lat = (y, z) => { const n = Math.PI - 2 * Math.PI * y / 2 ** z; return 180 / Math.PI * Math.atan(Math.sinh(n)); };
+function tileUrl(bm, z, x, y){ return bm.url.replace("{z}", z).replace("{x}", x).replace("{y}", y).replace("{s}", (x + y) % 4); }
+function blobToDataUrl(b){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(b); }); }
+async function loadTiles(urls){
+  const todo = urls.filter(u => !TILE.has(u));
+  if (!todo.length) return;
+  let done = 0, fail = 0;
+  const st = $("#bm-status");
+  const show = () => { if (st) st.innerHTML = done < todo.length ? `<span class="spin"></span>Memuat citra ${done}/${todo.length}…` : (fail ? `${fail} dari ${todo.length} petak citra gagal dimuat (server menolak atau tidak ada koneksi).` : ""); };
+  show();
+  let i = 0;
+  const worker = async () => { while (i < todo.length){ const u = todo[i++];
+    try { const r = await fetch(u, {mode:"cors"}); if (!r.ok) throw new Error(r.status); TILE.set(u, await blobToDataUrl(await r.blob())); }
+    catch { TILE.set(u, "ERR"); fail++; }
+    done++; show(); } };
+  await Promise.all(Array.from({length:8}, worker));
+  show();
+}
+
+const n2r = v => +v.toFixed(4);
+const dashArr = (on, w) => on ? ` stroke-dasharray="${n2(w * 6 + 0.6)} ${n2(w * 4 + 0.5)}"` : "";
+/* jalur SVG dengan penipisan titik < 0,12 mm agar ringan */
+function pathD(rings, toMm, close){
+  let d = "";
+  for (const r of rings){
+    let lx = null, ly = null, seg = "";
+    for (let i = 0; i < r.length; i++){
+      const [x, y] = toMm(r[i][0], r[i][1]);
+      if (lx !== null && i < r.length - 1 && Math.abs(x - lx) < 0.12 && Math.abs(y - ly) < 0.12) continue;
+      seg += (seg ? "L" : "M") + n2(x) + " " + n2(y); lx = x; ly = y;
+    }
+    if (seg) d += seg + (close ? "Z" : "");
+  }
+  return d;
+}
+
+function dms(v, pos, neg){
+  const s = v < 0 ? neg : pos; v = Math.abs(v);
+  const d = Math.floor(v), mF = (v - d) * 60, m = Math.floor(mF), sec = (mF - m) * 60;
+  return `${d}°${String(m).padStart(2, "0")}'${sec.toFixed(1).padStart(4, "0")}" ${s}`;
+}
+
+/* ================= State ================= */
+const DEF = {
+  title: "PETA KERJA LAPANG",
+  instansi: "KEMENTERIAN AGRARIA DAN TATA RUANG/\nBADAN PERTANAHAN NASIONAL",
+  catatan: "Peta kerja ini bersifat indikatif untuk keperluan peninjauan lapang, bukan penetapan batas bidang tanah.",
+  mode: "obj", kind: "", radius: "50", scale: "auto", index: true, ttOnly: false, nama: true, labNib: false,
+  paper: "A4", orient: "landscape", grid: "geo", objColor: "mm",
+  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90",
+};
+const mkLyr = () => ({leaves:new Map(), layers:[], feats:[], fields:[], crs:null, warnings:[], ix:null, keys:{}});
+const P = {
+  objLeaves: new Map(), objSrc: [], objs: [], objWarn: [], objOff: new Set(),
+  lyr: {bid: mkLyr(), pbt: mkLyr()},
+  proj: null, tt: [], ttState: "",
+  cfg: {...DEF, tanggal: ""},
+  pages: [], specs: [], pageSize: [297, 210], tileUrls: [],
+};
+const LYR_NAME = {bid: "Bidang tanah", pbt: "PBT"};
+const LS_KEY = "petaLapang.v1";
+function loadPrefs(){ try { const s = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (s && typeof s === "object") for (const k of Object.keys(P.cfg)) if (k in s) P.cfg[k] = s[k]; } catch {} }
+function savePrefs(){ try { localStorage.setItem(LS_KEY, JSON.stringify(P.cfg)); } catch {} }
+const PC = () => window.polygonClipping || null;
+const sleep0 = () => new Promise(r => setTimeout(r, 0));
+const fmtA = v => (v ?? 0).toLocaleString("id-ID", {maximumFractionDigits: v < 10 ? 1 : 0});
+const fmtPct = v => (v * 100).toLocaleString("id-ID", {maximumFractionDigits: v < 0.1 ? 1 : 0}) + "%";
+const KIND_NAME = {point: "Titik", line: "Garis", poly: "Poligon"};
+const SHP_EXT = new Set(["shp", "shx", "dbf", "prj", "cpg", "cst"]);
+const SKIP = p => /(^|\/)(__MACOSX|\.DS_Store|Thumbs\.db)(\/|$)/i.test(p) || /(^|\/)\._/.test(p);
+const decodeText = u8 => { try { return new TextDecoder("utf-8", {fatal:true}).decode(u8); } catch { return new TextDecoder("windows-1252").decode(u8); } };
+
+/* ================= Geometri dasar ================= */
+const ringSA = r => { let a = 0; for (let i = 0, j = r.length - 1; i < r.length; j = i++) a += r[j][0] * r[i][1] - r[i][0] * r[j][1]; return a / 2; };
+function inRing(x, y, r){ let c = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++){ const a = r[i], b = r[j]; if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) c = !c; } return c; }
+/* cincin SHP → multipoligon [[luar, lubang…], …] tanpa bergantung arah putaran */
+function ringsToMulti(rings){
+  const rs = rings.filter(r => r.length > 2).map(r => ({r, a:Math.abs(ringSA(r))})).sort((p, q) => q.a - p.a);
+  const polys = [];
+  for (const it of rs){
+    let host = null, depth = 0;
+    for (const p of polys){ if (inRing(it.r[0][0], it.r[0][1], p.outer)){ depth = 1; host = p; for (const h of p.holes) if (inRing(it.r[0][0], it.r[0][1], h)){ depth = 2; break; } } }
+    if (depth === 1 && host) host.holes.push(it.r);
+    else polys.push({outer:it.r, holes:[]});
+  }
+  return polys.map(p => [p.outer, ...p.holes]);
+}
+const mpArea = mp => { let a = 0; for (const poly of mp || []) poly.forEach((r, i) => a += (i ? -1 : 1) * Math.abs(ringSA(r))); return Math.max(0, a); };
+const mpRings = mp => mp.flat();
+function bbOf(pts, bb = [Infinity, Infinity, -Infinity, -Infinity]){ for (const [x, y] of pts){ if (x < bb[0]) bb[0] = x; if (y < bb[1]) bb[1] = y; if (x > bb[2]) bb[2] = x; if (y > bb[3]) bb[3] = y; } return bb; }
+const bbHit = (a, b) => !(a[2] < b[0] || a[0] > b[2] || a[3] < b[1] || a[1] > b[3]);
+const bbGrow = (b, m) => [b[0] - m, b[1] - m, b[2] + m, b[3] + m];
+const bbUnion = (a, b) => a ? [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])] : b.slice();
+function segX(a, b, c, d){
+  const o = (p, q, r) => Math.sign((q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]));
+  return o(a, b, c) !== o(a, b, d) && o(c, d, a) !== o(c, d, b);
+}
+/* jarak garis (beberapa polyline) ke poligon; 0 bila bersinggungan */
+function lineDist(lines, rings){
+  let md = Infinity;
+  for (const l of lines){
+    for (const [x, y] of l) if (signedDist(x, y, rings) >= 0) return 0;
+    for (let i = 1; i < l.length; i++) for (const r of rings) for (let k = 0, j = r.length - 1; k < r.length; j = k++){
+      if (segX(l[i - 1], l[i], r[j], r[k])) return 0;
+      md = Math.min(md, ptSegDist2(r[k][0], r[k][1], l[i - 1], l[i]), ptSegDist2(l[i][0], l[i][1], r[j], r[k]), ptSegDist2(l[i - 1][0], l[i - 1][1], r[j], r[k]));
+    }
+  }
+  return Math.sqrt(md);
+}
+const lineLen = lines => lines.reduce((s, l) => { for (let i = 1; i < l.length; i++) s += Math.hypot(l[i][0] - l[i - 1][0], l[i][1] - l[i - 1][1]); return s; }, 0);
+function buildIndex(feats, cs){
+  const g = new Map();
+  feats.forEach((f, i) => { for (let x = Math.floor(f.bb[0] / cs); x <= Math.floor(f.bb[2] / cs); x++) for (let y = Math.floor(f.bb[1] / cs); y <= Math.floor(f.bb[3] / cs); y++){ const k = x + ":" + y; (g.get(k) || g.set(k, []).get(k)).push(i); } });
+  return {g, cs, feats};
+}
+function queryIdx(ix, bb){
+  if (!ix) return [];
+  const seen = new Set(), out = [];
+  for (let x = Math.floor(bb[0] / ix.cs); x <= Math.floor(bb[2] / ix.cs); x++) for (let y = Math.floor(bb[1] / ix.cs); y <= Math.floor(bb[3] / ix.cs); y++){
+    for (const i of ix.g.get(x + ":" + y) || []) if (!seen.has(i)){ seen.add(i); if (bbHit(ix.feats[i].bb, bb)) out.push(ix.feats[i]); }
+  }
+  return out;
+}
+
+/* ================= SHP (titik, garis, poligon) ================= */
+function parseShpAny(u8){
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  if (dv.getInt32(0, false) !== 9994) throw new Error("bukan file .shp");
+  const type = dv.getInt32(32, true), geoms = [];
+  let p = 100;
+  while (p + 12 <= u8.length){
+    const clen = dv.getInt32(p + 4, false) * 2, st = p + 8;
+    if (st + clen > u8.length) break;
+    const t = dv.getInt32(st, true);
+    let g = null;
+    if (t === 1 || t === 11 || t === 21) g = {kind:"point", parts:[[[dv.getFloat64(st + 4, true), dv.getFloat64(st + 12, true)]]]};
+    else if (t === 8 || t === 18 || t === 28){ const n = dv.getInt32(st + 36, true), pts = []; for (let j = 0; j < n; j++) pts.push([dv.getFloat64(st + 40 + 16 * j, true), dv.getFloat64(st + 48 + 16 * j, true)]); if (n) g = {kind:"point", parts:[pts]}; }
+    else if ([3, 13, 23, 5, 15, 25].includes(t)){
+      const np = dv.getInt32(st + 36, true), npt = dv.getInt32(st + 40, true), pb = st + 44 + 4 * np;
+      const parts = []; for (let i = 0; i < np; i++) parts.push(dv.getInt32(st + 44 + 4 * i, true));
+      const rings = [];
+      for (let k = 0; k < np; k++){
+        const a = parts[k], b = k + 1 < np ? parts[k + 1] : npt, r = [];
+        for (let j = a; j < b; j++) r.push([dv.getFloat64(pb + 16 * j, true), dv.getFloat64(pb + 16 * j + 8, true)]);
+        if (r.length > 1) rings.push(r);
+      }
+      if (rings.length) g = {kind: t % 10 === 3 ? "line" : "poly", parts:rings};
+    }
+    geoms.push(g);
+    p = st + clen;
+  }
+  return {type, geoms};
+}
+/* kelompokkan file SHP per nama layer, baca geometri + atribut, ubah ke lon/lat */
+function readShpGroups(leaves, warnings, polyOnly){
+  const groups = new Map();
+  for (const lf of leaves.values()){
+    const e = extOf(lf.path), b = lf.path.slice(0, -(e.length + 1)), k = b.toLowerCase();
+    (groups.get(k) || groups.set(k, {base:b, files:{}}).get(k)).files[e] = lf;
+  }
+  const layers = [], feats = [], fieldSet = new Map();
+  for (const g of [...groups.values()].sort((a, b) => a.base.localeCompare(b.base))){
+    if (!g.files.shp) continue;
+    const nm = baseName(g.base);
+    if (!g.files.dbf){ warnings.push(`Layer tanpa .dbf dilewati: ${nm}.shp`); continue; }
+    try {
+      const shp = parseShpAny(g.files.shp.bytes);
+      const u8 = g.files.dbf.bytes, info = parseDbf(u8);
+      const cpf = g.files.cpg || g.files.cst; let enc = cpf ? encFromCpg(new TextDecoder().decode(cpf.bytes)) : null;
+      if (!enc) enc = sniffUtf8(u8, info);
+      const L = {base:g.base, name:nm, dbfLeaf:g.files.dbf, info, enc, dec:new TextDecoder(enc), prj: parsePrj(g.files.prj ? new TextDecoder().decode(g.files.prj.bytes) : "")};
+      let ll = makeLL(L.prj);
+      if (!ll){
+        const s = shp.geoms.find(Boolean), c = s && s.parts[0][0];
+        if (c && Math.abs(c[0]) <= 180 && Math.abs(c[1]) <= 90){ ll = makeLL({geographic:true}); warnings.push(`${nm}: tanpa .prj yang dikenali, dianggap koordinat geografis (lon/lat).`); }
+        else { warnings.push(`${nm}: sistem koordinat tidak dikenali (perlu .prj TM-3/UTM atau geografis), layer dilewati.`); continue; }
+      }
+      const recs = readDbfRecords(L);
+      let nNull = 0, nOther = 0, n = 0;
+      shp.geoms.forEach((geo, i) => {
+        if (!geo || !recs[i]){ nNull++; return; }
+        if (polyOnly && geo.kind !== "poly"){ nOther++; return; }
+        const conv = pts => pts.map(([x, y]) => ll.toLL(x, y));
+        let llg;
+        if (geo.kind === "point") llg = conv(geo.parts[0]).slice(0, 1)[0];
+        else if (geo.kind === "line") llg = geo.parts.map(conv);
+        else llg = ringsToMulti(geo.parts.filter(r => r.length > 2).map(conv));
+        if (geo.kind === "poly" && !llg.length){ nNull++; return; }
+        feats.push({kind:geo.kind, ll:llg, attrs:recs[i], layer:L}); n++;
+      });
+      if (nNull) warnings.push(`${fmt(nNull)} record tanpa geometri dilewati di ${nm}.shp`);
+      if (nOther) warnings.push(`${nm}.shp bukan layer poligon, ${fmt(nOther)} fitur dilewati.`);
+      for (const f of info.fields) if (!fieldSet.has(f.name)) fieldSet.set(f.name, f);
+      L.n = n; layers.push(L);
+    } catch(e){ warnings.push(`Layer tidak terbaca: ${nm} (${e.message})`); }
+  }
+  return {layers, feats, fields:[...fieldSet.values()], crs: layers.length ? layers[0].prj : null};
+}
+
+/* ================= KML / KMZ / GeoJSON ================= */
+const kids = (el, n) => el ? [...el.children].filter(c => c.localName === n) : [];
+const kid = (el, n) => kids(el, n)[0] || null;
+const descs = (el, n) => el ? [...el.getElementsByTagName("*")].filter(c => c.localName === n) : [];
+const txt = el => el ? el.textContent.trim() : "";
+function kmlCoords(s){ return String(s || "").trim().split(/\s+/).map(t => t.split(",").map(Number)).filter(a => a.length >= 2 && isFinite(a[0]) && isFinite(a[1])).map(a => [a[0], a[1]]); }
+function htmlToText(h){
+  if (!/[<&]/.test(h)) return h.trim();
+  try { return new DOMParser().parseFromString(String(h).replace(/<br\s*\/?>/gi, "\n").replace(/<\/(p|div|li|tr)>/gi, "\n"), "text/html").body.textContent.replace(/\n{3,}/g, "\n\n").trim(); } catch { return String(h); }
+}
+function kmlColor(v){ v = String(v || "").trim(); return /^[0-9a-f]{8}$/i.test(v) ? "#" + v.slice(6, 8) + v.slice(4, 6) + v.slice(2, 4) : null; }
+function parseKml(text, srcName){
+  const doc = new DOMParser().parseFromString(text, "application/xml");
+  if (doc.getElementsByTagName("parsererror").length) throw new Error("isi KML tidak valid");
+  const styles = new Map();
+  for (const st of descs(doc, "Style")){
+    const id = st.getAttribute("id"); if (!id) continue;
+    let c = null; for (const n of ["PolyStyle", "LineStyle", "IconStyle"]){ const s = descs(st, n)[0]; if (s && kid(s, "color")){ c = kmlColor(txt(kid(s, "color"))); if (c) break; } }
+    if (c) styles.set(id, c);
+  }
+  for (const sm of descs(doc, "StyleMap")){
+    const id = sm.getAttribute("id"); if (!id) continue;
+    const pr = kids(sm, "Pair").find(p => txt(kid(p, "key")) === "normal");
+    const u = pr && txt(kid(pr, "styleUrl")).replace(/^.*#/, "");
+    if (u && styles.has(u)) styles.set(id, styles.get(u));
+  }
+  const out = [];
+  for (const pm of descs(doc, "Placemark")){
+    const name = txt(kid(pm, "name"));
+    const desc = htmlToText(txt(kid(pm, "description")));
+    let p = pm.parentElement; while (p && p.localName !== "Folder" && p.localName !== "Document") p = p.parentElement;
+    const folder = (p && txt(kid(p, "name"))) || srcName;
+    const attrs = {};
+    for (const d of descs(pm, "Data")){ const k = d.getAttribute("name"); if (k && !/^gx_/.test(k)) attrs[k] = txt(kid(d, "value")); }
+    for (const d of descs(pm, "SimpleData")){ const k = d.getAttribute("name"); if (k) attrs[k] = txt(d); }
+    const polys = [], lines = [], pts = [];
+    for (const g of descs(pm, "Polygon")){
+      const outer = kmlCoords(txt(descs(kid(g, "outerBoundaryIs"), "coordinates")[0]));
+      const holes = kids(g, "innerBoundaryIs").map(ib => kmlCoords(txt(descs(ib, "coordinates")[0]))).filter(h => h.length > 2);
+      if (outer.length > 2) polys.push([outer, ...holes]);
+    }
+    for (const g of descs(pm, "LineString")){ const c = kmlCoords(txt(kid(g, "coordinates"))); if (c.length > 1) lines.push(c); }
+    for (const g of descs(pm, "Point")){ const c = kmlCoords(txt(kid(g, "coordinates"))); if (c.length) pts.push(c[0]); }
+    let kind, ll;
+    if (polys.length){ kind = "poly"; ll = polys; } else if (lines.length){ kind = "line"; ll = lines; } else if (pts.length){ kind = "point"; ll = pts[0]; } else continue;
+    const su = txt(kid(pm, "styleUrl")).replace(/^.*#/, "");
+    const mm = /^(?:icon-\d+|poly|line)-([0-9A-Fa-f]{6})/.exec(su);
+    let color = mm ? "#" + mm[1] : styles.get(su) || null;
+    const inl = kid(pm, "Style"); if (!color && inl){ for (const n of ["PolyStyle", "LineStyle", "IconStyle"]){ const s = descs(inl, n)[0]; if (s && kid(s, "color")){ color = kmlColor(txt(kid(s, "color"))); if (color) break; } } }
+    out.push({name, desc, folder, attrs, kind, ll, color});
+  }
+  return {objs:out, netlinks:descs(doc, "NetworkLink").map(n => txt(descs(n, "href")[0])).filter(Boolean)};
+}
+function parseGeoJson(text, srcName){
+  const j = JSON.parse(text), out = [];
+  const feats = j.type === "FeatureCollection" ? j.features : j.type === "Feature" ? [j] : [{type:"Feature", geometry:j, properties:{}}];
+  for (const f of feats || []){
+    const g = f && f.geometry; if (!g) continue;
+    const pr = f.properties || {}, attrs = {};
+    for (const [k, v] of Object.entries(pr)) if (v === null || typeof v !== "object") attrs[k] = v;
+    const name = String(pr.name ?? pr.Name ?? pr.NAMA ?? pr.nama ?? pr.title ?? "");
+    const desc = String(pr.description ?? pr.keterangan ?? pr.Keterangan ?? "");
+    const flat = (g.type === "GeometryCollection" ? g.geometries : [g]) || [];
+    const polys = [], lines = [], pts = [];
+    for (const h of flat){
+      const c = h.coordinates;
+      if (h.type === "Polygon") polys.push(c.map(r => r.map(p => [p[0], p[1]])));
+      else if (h.type === "MultiPolygon") c.forEach(pl => polys.push(pl.map(r => r.map(p => [p[0], p[1]]))));
+      else if (h.type === "LineString") lines.push(c.map(p => [p[0], p[1]]));
+      else if (h.type === "MultiLineString") c.forEach(l => lines.push(l.map(p => [p[0], p[1]])));
+      else if (h.type === "Point") pts.push([c[0], c[1]]);
+      else if (h.type === "MultiPoint") c.forEach(p => pts.push([p[0], p[1]]));
+    }
+    let kind, ll;
+    if (polys.length){ kind = "poly"; ll = polys; } else if (lines.length){ kind = "line"; ll = lines; } else if (pts.length){ kind = "point"; ll = pts[0]; } else continue;
+    out.push({name, desc: htmlToText(desc), folder: srcName, attrs, kind, ll, color: pr.stroke || pr.fill || pr["marker-color"] || null});
+  }
+  return out;
+}
+
+/* ================= Masukan file ================= */
+async function addObjBytes(path, bytes){
+  if (SKIP(path)) return;
+  const e = extOf(path);
+  if (e === "kml") P.objSrc.push({path, type:"kml", text:decodeText(bytes)});
+  else if (e === "geojson" || e === "json") P.objSrc.push({path, type:"geojson", text:decodeText(bytes)});
+  else if (e === "kmz" || e === "zip"){
+    let z; try { z = await JSZip.loadAsync(bytes); } catch { P.objWarn.push(`Arsip tidak bisa dibuka: ${baseName(path)}`); return; }
+    for (const f of Object.values(z.files).filter(f => !f.dir)){
+      const fe = extOf(f.name); if (!["kml", "kmz", "zip", "geojson", "json", ...SHP_EXT].includes(fe)) continue;
+      await addObjBytes(path + "/" + f.name.replace(/\\/g, "/").replace(/^\/+/, ""), await f.async("uint8array"));
+    }
+  } else if (SHP_EXT.has(e)) P.objLeaves.set(path, {path, bytes});
+}
+async function addLyrBytes(L, path, bytes){
+  if (SKIP(path)) return;
+  if (extOf(path) === "zip"){
+    let z; try { z = await JSZip.loadAsync(bytes); } catch { L.warnings.push(`ZIP tidak bisa dibuka: ${baseName(path)}`); return; }
+    for (const f of Object.values(z.files).filter(f => !f.dir)){
+      const e = extOf(f.name); if (e !== "zip" && !SHP_EXT.has(e)) continue;
+      await addLyrBytes(L, path + "/" + f.name.replace(/\\/g, "/").replace(/^\/+/, ""), await f.async("uint8array"));
+    }
+  } else if (SHP_EXT.has(extOf(path))) L.leaves.set(path, {path, bytes});
+}
+const readItem = async it => it.bytes || new Uint8Array(await it.file.arrayBuffer());
+async function ingestObj(items){
+  if (!items.length) return;
+  $("#obj-status").innerHTML = `<span class="spin"></span>Membaca ${items.length} file…`;
+  try { for (const it of items) await addObjBytes(it.path.replace(/^\/+/, ""), await readItem(it)); }
+  finally { $("#obj-status").textContent = ""; }
+  rebuildObj();
+}
+async function ingestLyr(key, items){
+  if (!items.length) return;
+  const L = P.lyr[key];
+  $("#st-" + key).innerHTML = `<span class="spin"></span>Membaca ${items.length} file…`;
+  try { for (const it of items) await addLyrBytes(L, it.path.replace(/^\/+/, ""), await readItem(it)); }
+  finally { $("#st-" + key).textContent = ""; }
+  rebuildLyr(key);
+}
+const OBJ_PALETTE = ["#D500F9", "#FF6D00", "#00B8D4", "#FFD600", "#76FF03", "#FF4081", "#2979FF", "#F50057"];
+function rebuildObj(){
+  P.objWarn = P.objWarn.filter(w => /^Arsip/.test(w));
+  const list = [];
+  for (const s of P.objSrc){
+    const nm = stripExt(baseName(s.path));
+    try {
+      if (s.type === "kml"){
+        const r = parseKml(s.text, nm); list.push(...r.objs);
+        if (!r.objs.length && r.netlinks.length) P.objWarn.push(`${baseName(s.path)} hanya berisi tautan (NetworkLink), bukan data. Ekspor ulang dari My Maps tanpa centang "Tetap perbarui", atau pakai tombol "Ambil dari link".`);
+        else if (!r.objs.length) P.objWarn.push(`${baseName(s.path)} tidak berisi titik, garis, atau poligon.`);
+      } else list.push(...parseGeoJson(s.text, nm));
+    } catch(e){ P.objWarn.push(`${baseName(s.path)} tidak terbaca (${e.message}).`); }
+  }
+  if (P.objLeaves.size){
+    const r = readShpGroups(P.objLeaves, P.objWarn, false);
+    for (const f of r.feats){
+      const k = Object.keys(f.attrs), nk = k.find(x => /^(name|nama|nm_?\w*|label|keterangan|ket)$/i.test(x));
+      list.push({name: nk ? String(f.attrs[nk] ?? "") : "", desc:"", folder:f.layer.name, attrs:f.attrs, kind:f.kind, ll:f.ll, color:null});
+    }
+  }
+  const folders = [...new Set(list.map(o => o.folder))];
+  list.forEach((o, i) => { o.id = i + 1; o.no = i + 1; if (!o.name) o.name = `${KIND_NAME[o.kind]} ${i + 1}`; o.fcolor = OBJ_PALETTE[folders.indexOf(o.folder) % OBJ_PALETTE.length]; });
+  P.objs = list; P.objOff = new Set();
+  afterData();
+}
+function rebuildLyr(key){
+  const L = P.lyr[key];
+  L.warnings = L.warnings.filter(w => /^ZIP/.test(w));
+  const r = readShpGroups(L.leaves, L.warnings, true);
+  L.layers = r.layers; L.fields = r.fields; L.crs = r.crs;
+  const prjs = [...new Set(r.layers.map(l => l.prj.name))];
+  if (prjs.length > 1) L.warnings.push(`Layer ${LYR_NAME[key]} memakai sistem koordinat berbeda (${prjs.join(", ")}). Semua sudah dikonversi, tapi periksa hasilnya.`);
+  const names = r.fields.map(f => f.name);
+  const ff = (...res) => { for (const re of res){ const n = names.find(n => re.test(n)); if (n) return n; } return null; };
+  L.keys = {
+    nib: ff(/^nib$/i, /nib/i),
+    hak: ff(/^tipe_?hak_?2$/i, /^nomor_?hak$/i, /^no_?hak/i, /^nohak/i, /^hak$/i),
+    tipe: ff(/^tipe_?hak$/i, /^jenis_?hak$/i),
+    nama: ff(/^pemil_?akh/i, /^pemilik/i, /^nama_?pem/i, /^nama$/i, /pemil/i, /^nama/i),
+    luas: ff(/^luas$/i, /^luastertul/i, /^luas_?tert/i, /^luas_?sert/i, /^luas/i),
+    pbt: ff(/^no_?pbt$/i, /^nomor_?pbt$/i, /pbt/i, /^no_?peta/i, /^nomor_?peta/i, /^nopeta/i, /^no_?berkas/i, /berkas/i),
+    desa: ff(/^kelurahan$/i, /^desa$/i, /^nm_?desa$/i, /^namadesa$/i, /^kel/i),
+  };
+  const K = L.keys, sv = (f, k) => k && f.attrs[k] !== null && f.attrs[k] !== undefined ? String(f.attrs[k]).trim() : "";
+  L.feats = r.feats.map((f, i) => {
+    const hak = [sv(f, K.tipe), sv(f, K.hak)].filter(Boolean).join(" ").trim();
+    const o = {src:key, i, ll:f.ll, attrs:f.attrs, layer:f.layer, nib:sv(f, K.nib), hak: K.tipe && K.hak && sv(f, K.hak).toLowerCase().includes(sv(f, K.tipe).toLowerCase()) ? sv(f, K.hak) : hak,
+      nama:sv(f, K.nama), pbt:sv(f, K.pbt), luasAttr: numOrNull(f.attrs[K.luas]), tt:[]};
+    o.ident = key === "pbt" ? (o.pbt || o.nib || `PBT #${i + 1}`) : (o.nib || o.hak || `Bidang #${i + 1}`);
+    return o;
+  });
+  afterData();
+}
+const numOrNull = v => typeof v === "number" ? v : (v !== null && v !== undefined && v !== "" && isFinite(Number(String(v).replace(",", "."))) ? Number(String(v).replace(",", ".")) : null);
+
+/* ================= Proyeksi kerja ================= */
+function chooseProj(){
+  const c = [P.lyr.bid.crs, P.lyr.pbt.crs].find(c => c && c.tm);
+  if (c){ const tm = makeTM(c.tm); return {key:"tm:" + JSON.stringify(c.tm), fromLL:tm.fromLL, toLL:tm.toLL, isTM:true, name: c.tm3 ? `TM-3 zona ${c.tm3}` : c.name}; }
+  let s = 0, n = 0;
+  const add = p => { s += p[0]; n++; };
+  for (const o of P.objs){ if (o.kind === "point") add(o.ll); else if (o.kind === "line") add(o.ll[0][0]); else add(o.ll[0][0][0]); }
+  for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats.slice(0, 500)) add(f.ll[0][0][0]);
+  if (!n) return null;
+  const lon0 = Math.round(s / n * 100) / 100, tm = makeTM({a:6378137, invf:298.257223563, k0:1, lon0, lat0:0, fe:0, fn:0, unit:1});
+  return {key:"loc:" + lon0, fromLL:tm.fromLL, toLL:tm.toLL, isTM:false, name:"Transverse Mercator lokal (WGS 84)"};
+}
+function projectFeat(f){
+  const F = P.proj.fromLL, cv = r => r.map(([a, b]) => F(a, b));
+  f.m = f.ll.map(poly => poly.map(cv));
+  f.mr = mpRings(f.m);
+  f.bb = bbOf(f.mr.flat());
+  f.area = mpArea(f.m);
+  f.lab = polylabel(f.mr, Math.max(0.05, Math.sqrt(f.area) / 200));
+}
+function projectObj(o){
+  const F = P.proj.fromLL;
+  if (o.kind === "point"){ o.m = F(o.ll[0], o.ll[1]); o.bb = [o.m[0], o.m[1], o.m[0], o.m[1]]; o.lab = o.m; }
+  else if (o.kind === "line"){ o.m = o.ll.map(l => l.map(([a, b]) => F(a, b))); o.bb = bbOf(o.m.flat()); o.len = lineLen(o.m); const l0 = o.m[0]; o.lab = l0[Math.floor(l0.length / 2)]; }
+  else { o.m = o.ll.map(poly => poly.map(r => r.map(([a, b]) => F(a, b)))); o.mr = mpRings(o.m); o.bb = bbOf(o.mr.flat()); o.area = mpArea(o.m); o.lab = polylabel(o.mr, Math.max(0.05, Math.sqrt(o.area) / 200)); }
+  o._rel = null;
+}
+function afterData(){
+  const np = chooseProj();
+  P.proj = np;
+  if (np){
+    for (const k of ["bid", "pbt"]){ const L = P.lyr[k]; L.feats.forEach(projectFeat); L.ix = L.feats.length ? buildIndex(L.feats, 250) : null; }
+    P.objs.forEach(projectObj);
+  }
+  renderAll();
+  computeTT();
+}
+
+/* ================= Analisis tumpang tindih ================= */
+let ttRun = 0;
+async function computeTT(){
+  const run = ++ttRun;
+  const A = P.lyr.bid.feats, B = P.lyr.pbt.feats;
+  P.tt = []; for (const f of A) f.tt = []; for (const f of B) f.tt = [];
+  P.objs.forEach(o => o._rel = null);
+  if (!A.length || !B.length || !P.proj){ P.ttState = ""; renderTT(); changed(); return; }
+  if (!PC()){ P.ttState = "nolib"; renderTT(); changed(); return; }
+  P.ttState = "run";
+  const minA = Math.max(1e-4, Number(P.cfg.ttMin) || 0), same = Math.min(1, (Number(P.cfg.ttSame) || 90) / 100);
+  const ix = P.lyr.pbt.ix, out = [];
+  let t0 = performance.now();
+  for (let i = 0; i < A.length; i++){
+    if (performance.now() - t0 > 60){ $("#tt-body").innerHTML = `<p class="status"><span class="spin"></span>Memeriksa tumpang tindih… ${fmt(i)} dari ${fmt(A.length)} bidang</p>`; await sleep0(); if (run !== ttRun) return; t0 = performance.now(); }
+    const a = A[i];
+    for (const b of queryIdx(ix, a.bb)){
+      let inter; try { inter = PC().intersection(a.m, b.m); } catch { continue; }
+      const ar = mpArea(inter); if (ar < minA) continue;
+      const t = {a, b, area:ar, pa:ar / (a.area || ar), pb:ar / (b.area || ar), geom:inter};
+      const rr = mpRings(inter); t.bb = bbOf(rr.flat()); t.lab = polylabel(rr, Math.max(0.05, Math.sqrt(ar) / 200));
+      t.same = t.pa >= same && t.pb >= same;
+      t.nibSame = !!(a.nib && b.nib && digits(a.nib) && digits(a.nib) === digits(b.nib));
+      out.push(t); a.tt.push(t); b.tt.push(t);
+    }
+  }
+  out.sort((p, q) => (p.same - q.same) || q.area - p.area);
+  out.forEach((t, i) => t.no = i + 1);
+  P.tt = out; P.ttState = "done";
+  P.objs.forEach(o => o._rel = null);
+  renderTT(); changed();
+}
+const ttCat = t => t.same ? "Berimpit" : "Tumpang tindih sebagian";
+
+/* ================= Relasi objek ↔ bidang ================= */
+function relFor(o){
+  const r = Math.max(0, Number(P.cfg.radius) || 0), key = r + "|" + P.ttState + P.tt.length;
+  if (o._rel && o._relKey === key) return o._rel;
+  const out = [];
+  if (P.proj) for (const src of ["bid", "pbt"]){
+    const L = P.lyr[src]; if (!L.feats.length) continue;
+    for (const f of queryIdx(L.ix, bbGrow(o.bb, o.kind === "poly" ? 0 : r))){
+      if (o.kind === "point"){ const sd = signedDist(o.m[0], o.m[1], f.mr), d = sd >= 0 ? 0 : -sd; if (d <= r) out.push({f, d}); }
+      else if (o.kind === "line"){ const d = lineDist(o.m, f.mr); if (d <= r) out.push({f, d}); }
+      else {
+        let ar = 0;
+        if (PC()){ try { ar = mpArea(PC().intersection(o.m, f.m)); } catch { ar = 0; } }
+        else if (signedDist(f.lab[0], f.lab[1], o.mr) > 0) ar = f.area;
+        if (ar > 0.5) out.push({f, ar, pct: ar / (f.area || ar)});
+      }
+    }
+  }
+  out.sort((p, q) => (p.f.src === q.f.src ? 0 : p.f.src === "bid" ? -1 : 1) || (o.kind === "poly" ? q.ar - p.ar : p.d - q.d));
+  o._rel = out; o._relKey = key;
+  return out;
+}
+function filteredObjs(){
+  const c = P.cfg;
+  return P.objs.filter(o => !P.objOff.has(o.id) && (!c.kind || o.kind === c.kind) && (!c.ttOnly || relFor(o).some(x => x.f.tt.some(t => !t.same))));
+}
+function specList(){
+  const objs = filteredObjs(), c = P.cfg, out = [];
+  const hasLyr = P.lyr.bid.feats.length || P.lyr.pbt.feats.length;
+  if (!P.proj) return out;
+  if (c.mode === "tt"){ for (const t of P.tt) if (!t.same) out.push({kind:"tt", t}); }
+  else if (c.mode === "all" || !objs.length){ if (objs.length || hasLyr) out.push({kind:"all", objs}); }
+  else { if (c.index && objs.length > 1) out.push({kind:"index", objs}); for (const o of objs) out.push({kind:"obj", o}); }
+  return out;
+}
+
+/* ================= Teks bantu ================= */
+const llText = (lon, lat) => `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+const dmsText = (lon, lat) => `${dms(lat, "LU", "LS")}  ${dms(lon, "BT", "BB")}`;
+function objCoordRows(o){
+  const [x, y] = o.kind === "point" ? o.m : o.lab, [lon, lat] = P.proj.toLL(x, y), rows = [];
+  const pre = o.kind === "point" ? "" : " (tengah)";
+  rows.push(["Lintang, bujur" + pre, llText(lon, lat)], ["", dmsText(lon, lat)]);
+  if (P.proj.isTM) rows.push([`${P.proj.name}`, `X ${x.toLocaleString("id-ID", {maximumFractionDigits:2})}  Y ${y.toLocaleString("id-ID", {maximumFractionDigits:2})}`]);
+  return rows;
+}
+function featRowsFor(items, ctx){
+  // items: [{f, d?, ar?, pct?}], ctx: {kind}
+  const nums = new Map(); let nb = 0, np = 0;
+  for (const it of items) nums.set(it.f, it.f.src === "bid" ? String(++nb) : "P" + (++np));
+  return {nums, rows: items.map(it => {
+    const f = it.f;
+    const tts = f.tt.filter(t => !t.same || P.cfg.mode !== "tt").map(t => { const o = t.a === f ? t.b : t.a; return `${nums.get(o) || o.ident} ${fmtA(t.area)} m²${t.same ? " (berimpit)" : ""}`; });
+    let pos = "";
+    if (it.d !== undefined) pos = it.d === 0 ? "kena" : `${fmtA(it.d)} m`;
+    else if (it.ar !== undefined) pos = `${fmtA(it.ar)} m² (${fmtPct(it.pct)})`;
+    return {no:nums.get(f), src: f.src === "bid" ? "Bidang" : "PBT", id: f.src === "pbt" ? f.ident : (f.nib || "-"), hak: f.src === "bid" ? (f.hak || "") : (f.nib && f.nib !== f.ident ? "NIB " + f.nib : ""), nama:f.nama,
+      luas: fmtA(f.luasAttr ?? f.area), pos, tt: tts.join("; "), bad: f.tt.some(t => !t.same)};
+  })};
+}
+
+/* ================= Lembar peta ================= */
+function buildPages(limit){
+  const cfg = P.cfg;
+  const [pw, ph] = PAPER[cfg.paper] || PAPER.A4;
+  const [W, H] = cfg.orient === "portrait" ? [Math.min(pw, ph), Math.max(pw, ph)] : [Math.max(pw, ph), Math.min(pw, ph)];
+  P.pageSize = [W, H];
+  P.specs = specList();
+  P.tileUrls = [];
+  const n = limit ? Math.min(limit, P.specs.length) : P.specs.length;
+  P.pages = [];
+  for (let i = 0; i < n; i++) P.pages.push(renderSheet(P.specs[i], i, P.specs.length, W, H));
+}
+function sheetData(sp){
+  const cfg = P.cfg, r = Math.max(0, Number(cfg.radius) || 0), d = {focus:[], items:[], info:[], objs:P.objs, circle:null};
+  const objExt = o => o.kind === "poly" ? o.bb : bbGrow(o.bb, Math.max(r, 15));
+  if (sp.kind === "obj"){
+    const o = sp.o, rel = relFor(o);
+    d.focus = [o]; d.items = rel; d.sub = `${o.name}`; d.subSmall = `Objek ${o.no} · ${KIND_NAME[o.kind]} · ${o.folder}`;
+    let ext = objExt(o); const base = ext;
+    for (const it of rel) ext = bbUnion(ext, it.f.bb);
+    const bw = Math.max(base[2] - base[0], 30), bh = Math.max(base[3] - base[1], 30);
+    if (ext[2] - ext[0] > bw * 3 || ext[3] - ext[1] > bh * 3) ext = bbGrow(base, Math.max(bw, bh) * 0.25);
+    d.ext = ext;
+    if (o.kind === "point" && r > 0) d.circle = {c:o.m, r};
+    d.info.push(["Nama objek", o.name], ["Layer My Maps", o.folder]);
+    d.info.push(...objCoordRows(o));
+    if (o.kind === "poly") d.info.push(["Luas objek", `${fmtA(o.area)} m² (${(o.area / 1e4).toLocaleString("id-ID", {maximumFractionDigits:4})} ha)`]);
+    if (o.kind === "line") d.info.push(["Panjang", `${fmtA(o.len)} m`]);
+    const nb = rel.filter(x => x.f.src === "bid").length, np = rel.length - nb, ntt = rel.filter(x => x.f.tt.some(t => !t.same)).length;
+    const where = o.kind === "poly" ? "di dalam poligon" : `dalam radius ${fmtA(r)} m`;
+    d.info.push(["Bidang terkait", `${nb} bidang terdaftar, ${np} PBT ${where}` + (ntt ? `; ${ntt} terlibat tumpang tindih` : "")]);
+    if (o.desc) d.info.push(["Deskripsi", o.desc.replace(/\s*\n\s*/g, "; ")]);
+    d.posHead = o.kind === "poly" ? "Dalam objek" : "Jarak";
+  } else if (sp.kind === "index" || sp.kind === "all"){
+    const objs = sp.objs;
+    let ext = null; for (const o of objs) ext = bbUnion(ext, objExt(o));
+    const seen = new Map();
+    for (const o of objs) for (const it of relFor(o)) if (!seen.has(it.f)) seen.set(it.f, {f:it.f});
+    if (!objs.length){
+      for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats){ ext = bbUnion(ext, f.bb); if (f.tt.length) seen.set(f, {f}); }
+      if (seen.size === 0 && P.lyr.bid.feats.length + P.lyr.pbt.feats.length <= 80) for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats) seen.set(f, {f});
+    }
+    d.ext = ext || [0, 0, 100, 100];
+    d.focus = objs;
+    d.items = [...seen.values()].sort((p, q) => (p.f.src === q.f.src ? 0 : p.f.src === "bid" ? -1 : 1) || (q.f.lab[1] - p.f.lab[1]) || (p.f.lab[0] - q.f.lab[0]));
+    d.sub = sp.kind === "index" ? "Lembar indeks objek kerja" : (objs.length ? `Seluruh objek kerja (${objs.length})` : "Bidang tanah dan PBT");
+    const cnt = k => objs.filter(o => o.kind === k).length;
+    if (objs.length) d.info.push(["Objek kerja", ["point", "line", "poly"].filter(k => cnt(k)).map(k => `${cnt(k)} ${KIND_NAME[k].toLowerCase()}`).join(", ")]);
+    const folders = [...new Set(objs.map(o => o.folder))]; if (folders.length) d.info.push(["Layer My Maps", folders.join(", ")]);
+    const [cx, cy] = [(d.ext[0] + d.ext[2]) / 2, (d.ext[1] + d.ext[3]) / 2], [lon, lat] = P.proj.toLL(cx, cy);
+    d.info.push(["Tengah peta", llText(lon, lat)]);
+    const nb = d.items.filter(x => x.f.src === "bid").length, np = d.items.length - nb;
+    if (P.lyr.bid.feats.length || P.lyr.pbt.feats.length) d.info.push(["Bidang terkait", `${nb} bidang terdaftar, ${np} PBT` + (objs.length ? ` (radius ${fmtA(r)} m dari titik/garis, di dalam poligon)` : " yang tumpang tindih")]);
+    const ntt = P.tt.filter(t => !t.same).length; if (P.ttState === "done") d.info.push(["Tumpang tindih", `${ntt} kasus sebagian, ${P.tt.length - ntt} berimpit (seluruh data)`]);
+    if (sp.kind === "index") d.objTable = true;
+    d.posHead = "";
+  } else if (sp.kind === "tt"){
+    const t = sp.t;
+    d.items = [{f:t.a}, {f:t.b}];
+    const near = new Map();
+    for (const x of [...t.a.tt, ...t.b.tt]) for (const f of [x.a, x.b]) if (f !== t.a && f !== t.b && !near.has(f)) near.set(f, {f});
+    d.items.push(...[...near.values()].slice(0, 20));
+    d.ext = bbGrow(bbUnion(t.a.bb, t.b.bb), 10);
+    d.hl = t;
+    d.sub = `Kasus tumpang tindih ${t.no}`;
+    d.subSmall = `${t.a.ident} × ${t.b.ident}`;
+    const [lon, lat] = P.proj.toLL(t.lab[0], t.lab[1]);
+    d.info.push(["Bidang terdaftar", [t.a.nib && "NIB " + t.a.nib, t.a.hak].filter(Boolean).join(" · ") || t.a.ident],
+      ["PBT", t.b.ident], ["Luas bidang / PBT", `${fmtA(t.a.luasAttr ?? t.a.area)} m² / ${fmtA(t.b.luasAttr ?? t.b.area)} m²`],
+      ["Luas tumpang tindih", `${fmtA(t.area)} m² (${fmtPct(t.pa)} dari bidang, ${fmtPct(t.pb)} dari PBT)`],
+      ["Lintang, bujur (tengah)", llText(lon, lat)], ["", dmsText(lon, lat)]);
+    if (t.nibSame) d.info.push(["Catatan", "NIB bidang dan PBT sama"]);
+    const hit = P.objs.filter(o => bbHit(o.kind === "poly" ? o.bb : bbGrow(o.bb, r), t.bb)); if (hit.length) d.info.push(["Objek kerja terdekat", hit.slice(0, 4).map(o => o.name).join(", ")]);
+    d.focus = hit;
+    d.posHead = "";
+  }
+  return d;
+}
+const objCol = o => P.cfg.objColor === "one" ? "#D500F9" : (o.color || o.fcolor || "#D500F9");
+function renderSheet(sp, pi, pn, W, H){
+  const cfg = P.cfg, d = sheetData(sp);
+  const u = Math.min(W, H) / 297, M = Math.max(7, 10 * u + 2), IW = W - 2 * M, IH = H - 2 * M;
+  const pad = 2.4 * u, lw = Math.max(0.18, 0.3 * u);
+  const hasBm = !!(BASEMAPS[cfg.bm] && BASEMAPS[cfg.bm].url) && [...TILE.values()].some(v => typeof v === "string" && v !== "ERR");   // warna terang hanya bila citra benar-benar tampil
+  const C = hasBm ? {bid:"#FFEA00", pbt:"#18FFFF", bidFill:"none", pbtFill:"none"} : {bid:"#C62828", pbt:"#1565C0", bidFill:"#FFF3C4", pbtFill:"#D6ECFF"};
+  const uid = "p" + pi + Math.random().toString(36).slice(2, 7);
+  const box = (x, y, w, h) => `<rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>`;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}" font-family="${FF}" fill="#111">` +
+    `<defs><pattern id="${uid}h" patternUnits="userSpaceOnUse" width="${n2(1.6 * u)}" height="${n2(1.6 * u)}" patternTransform="rotate(45)"><rect width="${n2(1.6 * u)}" height="${n2(1.6 * u)}" fill="#FF1744" fill-opacity=".25"/><line x1="0" y1="0" x2="0" y2="${n2(1.6 * u)}" stroke="#FF1744" stroke-width="${n2(0.55 * u)}"/></pattern>` +
+    `<pattern id="${uid}s" patternUnits="userSpaceOnUse" width="${n2(2 * u)}" height="${n2(2 * u)}" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="${n2(2 * u)}" stroke="#FF9100" stroke-width="${n2(0.4 * u)}"/></pattern></defs>` +
+    `<rect width="${W}" height="${H}" fill="#fff"/><rect x="${n2(M - 1.4)}" y="${n2(M - 1.4)}" width="${n2(IW + 2.8)}" height="${n2(IH + 2.8)}" fill="none" stroke="#111" stroke-width="${n2(lw * 2.4)}"/>`;
+
+  // tabel
+  const T0 = d.objTable ? objTable(d) : featTable(d);
+  const legend = legendItems(d, C, hasBm);
+
+  // panel blok
+  const titleBlock = w => {
+    const ts = 3.9 * u, ss = 2.8 * u, xs = 2.1 * u;
+    const tl = wrap(cfg.title, ts, true, w - 2 * pad), sl = wrap(d.sub || "", ss, true, w - 2 * pad), xl = d.subSmall ? wrap(d.subSmall, xs, false, w - 2 * pad) : [];
+    const lines = []; let yy = pad * 0.9;
+    for (const l of tl){ yy += ts; lines.push([yy, l, {size:ts, bold:true, anchor:"middle"}]); yy += ts * 0.2; }
+    if (sl.length) yy += 1 * u;
+    for (const l of sl){ yy += ss; lines.push([yy, l, {size:ss, bold:true, anchor:"middle", fill:"#6A1B9A"}]); yy += ss * 0.25; }
+    for (const l of xl){ yy += xs * 1.2; lines.push([yy, l, {size:xs, anchor:"middle", fill:"#444"}]); }
+    const h = yy + pad * 1.1;
+    return {h, draw:(x, y) => { let o = box(x, y, w, h);
+      for (const [dy, l, opt] of lines) o += T(x + w / 2, y + dy, l, opt);
+      return o; }};
+  };
+  const infoBlock = w => {
+    const ks = 2.05 * u, lh = ks * 1.35, rows = d.info;
+    const lab = Math.min(w * 0.42, Math.max(...rows.map(r => tw(r[0], ks, false)), 10) + 1.5 * u);
+    const wr = rows.map(([a, b]) => [a, wrap(b, ks, false, w - 2 * pad - lab - 2 * u).slice(0, a === "Deskripsi" ? 4 : 3)]);
+    const h = pad + 3 * u + wr.reduce((acc, r) => acc + Math.max(1, r[1].length) * lh, 0) + pad * 0.6;
+    return {h, draw:(x, y) => {
+      let o = box(x, y, w, h) + T(x + pad, y + pad + 2.1 * u, d.objTable || sp.kind === "all" ? "KETERANGAN" : sp.kind === "tt" ? "KETERANGAN TUMPANG TINDIH" : "KETERANGAN OBJEK", {size:2.4 * u, bold:true});
+      let yy = y + pad + 2.1 * u + lh * 1.25;
+      for (const [a, ls] of wr){ if (a) o += T(x + pad, yy, clip(a, ks, false, lab - u), {size:ks, fill:"#333"}) + T(x + pad + lab, yy, ":", {size:ks});
+        ls.forEach((t, i) => o += T(x + pad + lab + 2 * u, yy + i * lh, t, {size:ks, extra: /^(X |\d+°)/.test(t) ? ' font-family="IBM Plex Mono, Consolas, monospace"' : ""})); yy += Math.max(1, ls.length) * lh; }
+      return o; }};
+  };
+  const legendBlock = w => {
+    const ls = 2.05 * u, lh = 4 * u, sw = 6.5 * u, sh = 3 * u;
+    const cols = w > 95 * u ? 2 : 1, cw = (w - 2 * pad) / cols;
+    const rows = Math.ceil(legend.length / cols);
+    const h = pad + 3.2 * u + rows * lh + pad * 0.5;
+    return {h, draw:(x, y) => {
+      let o = box(x, y, w, h) + T(x + pad, y + pad + 2.1 * u, "LEGENDA", {size:2.4 * u, bold:true});
+      legend.forEach((it, i) => {
+        const cx = x + pad + (i % cols) * cw, cy = y + pad + 4 * u + Math.floor(i / cols) * lh;
+        o += legendSym(it, cx, cy, sw, sh, u, uid, lw);
+        o += T(cx + sw + 1.8 * u, cy + sh * 0.8, clip(it.text, ls, false, cw - sw - 2.6 * u), {size:ls});
+      });
+      return o; }};
+  };
+  const nsBlock = (w, scale) => {
+    const h = 22 * u;
+    return {h, draw:(x, y) => {
+      let o = box(x, y, w, h);
+      const nw = Math.min(w * 0.24, 18 * u), ax = x + nw / 2 + pad * 0.4, ay = y + pad + 2.6 * u, ah = h - 2 * pad - 4 * u;
+      o += T(ax, ay, "U", {size:3 * u, bold:true, anchor:"middle"});
+      const top = ay + 1.3 * u, bot = top + ah, hw = ah * 0.28;
+      o += `<path d="M${n2(ax)} ${n2(top)} L${n2(ax + hw)} ${n2(bot)} L${n2(ax)} ${n2(bot - ah * 0.25)} Z" fill="#111"/><path d="M${n2(ax)} ${n2(top)} L${n2(ax - hw)} ${n2(bot)} L${n2(ax)} ${n2(bot - ah * 0.25)} Z" fill="#fff" stroke="#111" stroke-width="${n2(lw)}"/>`;
+      o += `<line x1="${n2(x + nw + pad)}" y1="${n2(y)}" x2="${n2(x + nw + pad)}" y2="${n2(y + h)}" stroke="#111" stroke-width="${n2(lw)}"/>`;
+      const sx = x + nw + pad * 2, swd = x + w - pad * 1.4 - sx;
+      o += T(sx + swd / 2, y + pad + 3 * u, `SKALA 1 : ${scale.toLocaleString("id-ID")}`, {size:2.8 * u, bold:true, anchor:"middle"});
+      const mPerMm = scale / 1000;
+      let len = niceStep(swd * 0.8 * mPerMm); for (let g = 0; len / mPerMm > swd * 0.92 && g < 60; g++) len = stepDown(len);
+      const bw = len / mPerMm, bx = sx + (swd - bw) / 2, by = y + h * 0.5, bh = 1.4 * u, seg = 4;
+      for (let i = 0; i < seg; i++) o += `<rect x="${n2(bx + bw * i / seg)}" y="${n2(by)}" width="${n2(bw / seg)}" height="${n2(bh)}" fill="${i % 2 ? "#fff" : "#111"}" stroke="#111" stroke-width="${n2(lw * 0.8)}"/>`;
+      const unit = len >= 1000 ? "km" : "m", dv = len >= 1000 ? 1000 : 1;
+      for (const i of [0, seg / 2, seg]) o += T(bx + bw * i / seg, by + bh + 2.7 * u, (len * i / seg / dv).toLocaleString("id-ID", {maximumFractionDigits:2}) + (i === seg ? " " + unit : ""), {size:2 * u, anchor:"middle"});
+      o += T(sx + swd / 2, y + h - pad * 0.8, `Proyeksi: ${P.proj.name}`, {size:1.75 * u, anchor:"middle", fill:"#444"});
+      return o; }};
+  };
+  const footBlock = w => {
+    const fs2 = 2.15 * u, lh = fs2 * 1.3;
+    const il = wrap(cfg.instansi, fs2, true, w - 2 * pad), tl = wrap([cfg.tanggal, `Lembar ${pi + 1} dari ${pn}`].filter(Boolean).join(" · "), fs2 * 0.92, false, w - 2 * pad);
+    const cat = cfg.catatan ? wrap(cfg.catatan, fs2 * 0.85, false, w - 2 * pad).slice(0, 3) : [];
+    const h = pad * 1.1 + (il.length + tl.length + cat.length) * lh + 1 * u + pad * 0.4;
+    return {h, draw:(x, y) => { let o = box(x, y, w, h), yy = y + pad + fs2 * 0.9;
+      for (const t of cat){ o += T(x + w / 2, yy, t, {size:fs2 * 0.85, anchor:"middle", fill:"#444", extra:' font-style="italic"'}); yy += lh; }
+      for (const t of il){ o += T(x + w / 2, yy, t, {size:fs2, bold:true, anchor:"middle"}); yy += lh; }
+      yy += 0.6 * u; for (const t of tl){ o += T(x + w / 2, yy, t, {size:fs2 * 0.92, anchor:"middle"}); yy += lh; }
+      return o; }};
+  };
+
+  // susun
+  if (cfg.orient === "landscape"){
+    const pw = IW * (W >= 400 ? 0.32 : 0.36), mw = IW - pw;
+    const map = drawMap(M, M, mw, IH, d, C, u, lw, uid);
+    s += map.svg;
+    const px = M + mw;
+    const blocks = [titleBlock(pw), infoBlock(pw), legendBlock(pw), nsBlock(pw, map.scale)], foot = footBlock(pw);
+    let yy = M; for (const b of blocks){ s += b.draw(px, yy); yy += b.h; }
+    const th = M + IH - foot.h - yy;
+    s += th > 12 * u ? drawTableBox(px, yy, pw, th, T0, u, pad, lw) : box(px, yy, pw, Math.max(0, th));
+    s += foot.draw(px, M + IH - foot.h);
+  } else {
+    const tb = titleBlock(IW); s += tb.draw(M, M);
+    const lw2 = IW * 0.46, rw = IW - lw2;
+    const left = [infoBlock(lw2), legendBlock(lw2), nsBlock(lw2, 1000), footBlock(lw2)];
+    const leftH = left.reduce((a, b) => a + b.h, 0);
+    const bh = Math.min(Math.max(leftH, IH * 0.3), IH * 0.52);
+    const mapH = IH - tb.h - bh;
+    const map = drawMap(M, M + tb.h, IW, mapH, d, C, u, lw, uid);
+    s += map.svg;
+    let yy = M + tb.h + mapH;
+    for (const b of [infoBlock(lw2), legendBlock(lw2), nsBlock(lw2, map.scale)]){ s += b.draw(M, yy); yy += b.h; }
+    const foot = footBlock(lw2), fy = Math.max(yy, M + IH - foot.h);
+    if (fy > yy + 0.1) s += box(M, yy, lw2, fy - yy);
+    s += foot.draw(M, fy);
+    s += drawTableBox(M + lw2, M + tb.h + mapH, rw, bh, T0, u, pad, lw);
+  }
+  return s + "</svg>";
+}
+function legendItems(d, C, hasBm){
+  const it = [], kinds = new Set(d.focus.map(o => o.kind));
+  const pc = d.focus.length && P.cfg.objColor === "one" ? "#D500F9" : (d.focus[0] ? objCol(d.focus[0]) : "#D500F9");
+  if (kinds.has("point")) it.push({t:"pt", color:pc, text:"Titik objek kerja"});
+  if (kinds.has("line")) it.push({t:"ln", color:pc, text:"Garis objek kerja"});
+  if (kinds.has("poly")) it.push({t:"pg", color:pc, text:"Poligon objek kerja"});
+  if (d.circle) it.push({t:"circle", color:"#fff", text:`Radius ${fmtA(d.circle.r)} m dari titik`});
+  if (P.lyr.bid.feats.length) it.push({t:"fill", stroke:C.bid, fill:C.bidFill, text:"Bidang tanah terdaftar"});
+  if (P.lyr.pbt.feats.length) it.push({t:"fill", stroke:C.pbt, fill:C.pbtFill, dash:true, text:"PBT (Peta Bidang Tanah)"});
+  if (P.tt.some(t => !t.same)) it.push({t:"hatch", text:"Tumpang tindih bidang–PBT"});
+  if (P.tt.some(t => t.same)) it.push({t:"same", text:"Bidang & PBT berimpit"});
+  if (d.items.length) it.push({t:"num", text: d.items.some(x => x.f.src === "pbt") ? "Nomor bidang / PBT (P1…)" : "Nomor bidang di tabel"});
+  if (hasBm) it.push({t:"bm", text: BASEMAPS[P.cfg.bm].attr || BASEMAPS[P.cfg.bm].label});
+  return it;
+}
+function legendSym(it, x, y, sw, sh, u, uid, lw){
+  const r = `x="${n2(x)}" y="${n2(y)}" width="${n2(sw)}" height="${n2(sh)}"`;
+  switch (it.t){
+    case "pt": return `<circle cx="${n2(x + sw / 2)}" cy="${n2(y + sh / 2)}" r="${n2(1.2 * u)}" fill="${it.color}" stroke="#fff" stroke-width="${n2(0.45 * u)}"/><circle cx="${n2(x + sw / 2)}" cy="${n2(y + sh / 2)}" r="${n2(1.45 * u)}" fill="none" stroke="#000" stroke-width="${n2(0.12 * u)}"/>`;
+    case "ln": return `<line x1="${n2(x)}" y1="${n2(y + sh / 2)}" x2="${n2(x + sw)}" y2="${n2(y + sh / 2)}" stroke="${it.color}" stroke-width="${n2(0.7 * u)}"/>`;
+    case "pg": return `<rect ${r} fill="${it.color}" fill-opacity=".15" stroke="${it.color}" stroke-width="${n2(0.6 * u)}"/>`;
+    case "circle": return `<rect ${r} fill="#555"/><path d="M${n2(x + 0.6 * u)} ${n2(y + sh / 2)} A${n2(sw / 2 - 0.6 * u)} ${n2(sh / 2 - 0.3 * u)} 0 1 1 ${n2(x + sw - 0.6 * u)} ${n2(y + sh / 2)}" fill="none" stroke="#fff" stroke-width="${n2(0.35 * u)}" stroke-dasharray="${n2(0.9 * u)} ${n2(0.6 * u)}"/>`;
+    case "fill": return `<rect ${r} fill="${it.fill === "none" ? "#666" : it.fill}" stroke="${it.stroke}" stroke-width="${n2(0.45 * u)}"${it.dash ? ` stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}"` : ""}/>`;
+    case "hatch": return `<rect ${r} fill="url(#${uid}h)" stroke="#FF1744" stroke-width="${n2(0.45 * u)}"/>`;
+    case "same": return `<rect ${r} fill="url(#${uid}s)" stroke="#FF9100" stroke-width="${n2(0.3 * u)}"/>`;
+    case "num": return T(x + sw / 2, y + sh * 0.85, "12", {size:2.6 * u, bold:true, anchor:"middle"});
+    case "bm": return `<rect ${r} fill="#7A8B6F"/>`;
+  }
+  return "";
+}
+function featTable(d){
+  const {nums, rows} = featRowsFor(d.items, d);
+  d.nums = nums;
+  const showNama = P.cfg.nama && rows.some(r => r.nama);
+  const cols = [
+    {h:"No", k:"no", a:"middle"},
+    {h:"NIB / No. PBT", k:"id"},
+    {h:"Hak", k:"hak"},
+    ...(showNama ? [{h:"Nama", k:"nama"}] : []),
+    {h:"Luas (m²)", k:"luas", a:"end"},
+    ...(d.posHead ? [{h:d.posHead, k:"pos", a:"end"}] : []),
+    {h:"Tumpang tindih", k:"tt"},
+  ].filter(c => c.k === "no" || rows.some(r => r[c.k]));
+  return {cap: d.items.length ? `DAFTAR BIDANG (${d.items.length})` : "DAFTAR BIDANG", cols, rows: rows.map(r => ({cells: cols.map(c => r[c.k] || ""), bad:r.bad})),
+    empty: P.lyr.bid.feats.length || P.lyr.pbt.feats.length ? "Tidak ada bidang di sekitar objek ini." : "SHP bidang tanah / PBT belum dimasukkan."};
+}
+function objTable(d){
+  const cols = [{h:"No", k:"no", a:"middle"}, {h:"Nama objek", k:"name"}, {h:"Jenis", k:"kind"}, {h:"Bidang", k:"nb", a:"end"}, {h:"PBT", k:"np", a:"end"}, {h:"TT", k:"ntt", a:"end"}];
+  const hasL = P.lyr.bid.feats.length || P.lyr.pbt.feats.length;
+  const use = hasL ? cols : cols.slice(0, 3);
+  const rows = d.focus.map(o => { const rel = relFor(o), nb = rel.filter(x => x.f.src === "bid").length, ntt = rel.filter(x => x.f.tt.some(t => !t.same)).length;
+    return {cells: use.map(c => ({no:String(o.no), name:o.name, kind:KIND_NAME[o.kind], nb:String(nb), np:String(rel.length - nb), ntt: ntt ? String(ntt) : "-"})[c.k]), bad: ntt > 0}; });
+  return {cap:`DAFTAR OBJEK KERJA (${rows.length})`, cols:use, rows, empty:"Tidak ada objek."};
+}
+function drawTableBox(x, y, w, h, tb, u, pad, lw){
+  let fs = 2.05 * u;
+  const nat = sz => tb.cols.map((c, ci) => Math.min(ci === 0 ? 99 : w * 0.42, Math.max(tw(c.h, sz, true), ...tb.rows.slice(0, 200).map(r => tw(r.cells[ci], sz, false)))) + sz * 1.2);
+  let cw = nat(fs), tot = cw.reduce((a, b) => a + b, 0);
+  const avail = w - 2 * pad;
+  if (tot > avail){ const f2 = Math.max(1.45 * u, fs * avail / tot); fs = f2; cw = nat(fs); tot = cw.reduce((a, b) => a + b, 0); }
+  if (tot > avail){ const fixed = cw.map((v, i) => tb.cols[i].a ? v : 0), fx = fixed.reduce((a, b) => a + b, 0), flex = tot - fx; cw = cw.map((v, i) => tb.cols[i].a ? v : v * Math.max(0.2, (avail - fx) / flex)); }
+  else cw = cw.map(v => v * avail / tot);
+  tot = cw.reduce((a, b) => a + b, 0);
+  const rowH = fs * 1.7, headH = fs * 2, capH = fs * 2.5;
+  let o = `<rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>` + T(x + pad, y + pad * 0.6 + fs * 1.2, tb.cap, {size:fs * 1.12, bold:true});
+  let yy = y + pad * 0.6 + capH;
+  if (!tb.rows.length){ return o + T(x + pad, yy + fs * 1.2, tb.empty, {size:fs, fill:"#555", extra:' font-style="italic"'}); }
+  const fit = Math.max(1, Math.floor((y + h - pad * 0.6 - yy - headH) / rowH));
+  let rows = tb.rows, more = 0;
+  if (rows.length > fit){ more = rows.length - (fit - 1); rows = rows.slice(0, fit - 1); }
+  const tx = x + pad;
+  o += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tot)}" height="${n2(headH)}" fill="#E9ECE9" stroke="#111" stroke-width="${n2(lw)}"/>`;
+  let xx = tx;
+  tb.cols.forEach((c, ci) => { o += T(xx + cw[ci] / 2, yy + headH / 2 + fs * 0.36, clip(c.h, fs, true, cw[ci] - fs * 0.5), {size:fs, bold:true, anchor:"middle"}); xx += cw[ci]; });
+  yy += headH; const top = yy - headH;
+  rows.forEach((r, ri) => {
+    if (r.bad) o += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tot)}" height="${n2(rowH)}" fill="#FFE3E3"/>`;
+    else if (ri % 2) o += `<rect x="${n2(tx)}" y="${n2(yy)}" width="${n2(tot)}" height="${n2(rowH)}" fill="#F5F6F4"/>`;
+    xx = tx;
+    tb.cols.forEach((c, ci) => { const an = c.a || "start", px = an === "middle" ? xx + cw[ci] / 2 : an === "end" ? xx + cw[ci] - fs * 0.45 : xx + fs * 0.45;
+      o += T(px, yy + rowH / 2 + fs * 0.36, clip(r.cells[ci], fs, ci === 0, cw[ci] - fs * 0.8), {size:fs, bold:ci === 0, anchor:an === "start" ? null : an}); xx += cw[ci]; });
+    o += `<line x1="${n2(tx)}" y1="${n2(yy + rowH)}" x2="${n2(tx + tot)}" y2="${n2(yy + rowH)}" stroke="#999" stroke-width="${n2(lw * 0.5)}"/>`;
+    yy += rowH;
+  });
+  o += `<rect x="${n2(tx)}" y="${n2(top)}" width="${n2(tot)}" height="${n2(yy - top)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/>`;
+  xx = tx; for (let ci = 0; ci < tb.cols.length - 1; ci++){ xx += cw[ci]; o += `<line x1="${n2(xx)}" y1="${n2(top)}" x2="${n2(xx)}" y2="${n2(yy)}" stroke="#111" stroke-width="${n2(lw * 0.6)}"/>`; }
+  if (more) o += T(tx, yy + fs * 1.4, `… dan ${more} lainnya, lihat tabel Excel.`, {size:fs * 0.95, fill:"#444", extra:' font-style="italic"'});
+  return o;
+}
+function drawMap(x, y, w, h, d, C, u, lw, uid){
+  const cfg = P.cfg, g = 6 * u, iw = w - 2 * g, ih = h - 2 * g, ix = x + g, iy = y + g;
+  const [bx0, by0, bx1, by1] = d.ext, ew = Math.max(bx1 - bx0, 20), eh = Math.max(by1 - by0, 20);
+  const need = Math.max(ew * 1.12 / iw, eh * 1.12 / ih) * 1000;
+  const scale = cfg.scale === "auto" ? (NICE_SCALES.find(v => v >= Math.max(need, 250)) || Math.ceil(need / 1000) * 1000) : Number(cfg.scale);
+  const k = 1000 / scale, cx = (bx0 + bx1) / 2, cy = (by0 + by1) / 2;
+  const X = v => ix + iw / 2 + (v - cx) * k, Y = v => iy + ih / 2 - (v - cy) * k, toMm = (a, b) => [X(a), Y(b)];
+  const wx0 = cx - iw / 2 / k, wx1 = cx + iw / 2 / k, wy0 = cy - ih / 2 / k, wy1 = cy + ih / 2 / k, ext = [wx0, wy0, wx1, wy1];
+  let s = `<defs><clipPath id="${uid}c"><rect x="${n2(ix)}" y="${n2(iy)}" width="${n2(iw)}" height="${n2(ih)}"/></clipPath></defs>`;
+  s += `<rect x="${n2(x)}" y="${n2(y)}" width="${n2(w)}" height="${n2(h)}" fill="none" stroke="#111" stroke-width="${n2(lw)}"/><rect x="${n2(ix)}" y="${n2(iy)}" width="${n2(iw)}" height="${n2(ih)}" fill="#fff" stroke="#111" stroke-width="${n2(lw)}"/>`;
+  const bmr = basemapSvg({scale, ext}, toMm); P.tileUrls.push(...bmr.urls);
+  let under = bmr.svg, polys = "", over = "", labels = "";
+  const vis = f => bbHit(f.bb, ext);
+  const halo = (c = "#fff", wdt = 0.55) => ` stroke="${c}" stroke-width="${n2(wdt * u)}" paint-order="stroke" stroke-linejoin="round"`;
+  // PBT lalu bidang
+  const sw = Math.max(0.2, 0.32 * u);
+  for (const f of P.lyr.pbt.feats) if (vis(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.pbtFill}" fill-opacity="${C.pbtFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.pbt}" stroke-width="${n2(sw)}" stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}" stroke-linejoin="round"/>`;
+  for (const f of P.lyr.bid.feats) if (vis(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.bidFill}" fill-opacity="${C.bidFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.bid}" stroke-width="${n2(sw)}" stroke-linejoin="round"/>`;
+  for (const t of P.tt) if (bbHit(t.bb, ext)){
+    const dd = pathD(mpRings(t.geom), toMm, true); if (!dd) continue;
+    const hl = d.hl === t;
+    polys += t.same ? `<path d="${dd}" fill="url(#${uid}s)" fill-rule="evenodd" stroke="#FF9100" stroke-width="${n2(0.25 * u)}"/>`
+      : `<path d="${dd}" fill="url(#${uid}h)" fill-rule="evenodd" stroke="#FF1744" stroke-width="${n2((hl ? 0.6 : 0.35) * u)}"/>`;
+  }
+  // nomor bidang (yang ada di tabel)
+  const nums = d.nums || new Map();
+  for (const [f, no] of nums){
+    if (!vis(f)) continue;
+    const [lx, ly] = toMm(f.lab[0], f.lab[1]); if (lx < ix || lx > ix + iw || ly < iy || ly > iy + ih) continue;
+    const ls = 2.5 * u, isP = f.src === "pbt";
+    labels += T(lx, ly + ls * 0.35, no, {size:ls, bold:true, anchor:"middle", fill: isP ? "#0D47A1" : "#111", extra:halo()});
+    if (P.cfg.labNib && f.nib) labels += T(lx, ly + ls * 1.25, f.nib, {size:ls * 0.6, anchor:"middle", fill:"#222", extra:halo("#fff", 0.4)});
+  }
+  if (d.circle){ const [ccx, ccy] = toMm(...d.circle.c); over += `<circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${n2(0.75 * u)}"/><circle cx="${n2(ccx)}" cy="${n2(ccy)}" r="${n2(d.circle.r * k)}" fill="none" stroke="#fff" stroke-width="${n2(0.4 * u)}" stroke-dasharray="${n2(1.4 * u)} ${n2(0.9 * u)}"/>`; }
+  // objek kerja: semua yang tampak, fokus ditebalkan
+  const focus = new Set(d.focus);
+  const objs = P.objs.filter(o => !P.objOff.has(o.id) && bbHit(o.bb, bbGrow(ext, 1)));
+  const idxPage = d.objTable;
+  for (const o of objs){
+    const col = objCol(o), f = focus.has(o), wdt = (f ? 0.65 : 0.4) * u;
+    if (o.kind === "poly") over += `<path d="${pathD(o.mr, toMm, true)}" fill="${col}" fill-opacity="${f ? 0.12 : 0.06}" fill-rule="evenodd" stroke="#000" stroke-opacity=".5" stroke-width="${n2(wdt + 0.35 * u)}" stroke-linejoin="round"/><path d="${pathD(o.mr, toMm, true)}" fill="none" stroke="${col}" stroke-width="${n2(wdt)}" stroke-linejoin="round"/>`;
+    else if (o.kind === "line") over += `<path d="${pathD(o.m, toMm, false)}" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="${n2(wdt + 0.35 * u)}"/><path d="${pathD(o.m, toMm, false)}" fill="none" stroke="${col}" stroke-width="${n2(wdt)}"/>`;
+    else { const [px, py] = toMm(...o.m), r = (f ? 1.35 : 1) * u;
+      over += `<circle cx="${n2(px)}" cy="${n2(py)}" r="${n2(r + 0.3 * u)}" fill="#000" fill-opacity=".55"/><circle cx="${n2(px)}" cy="${n2(py)}" r="${n2(r)}" fill="${col}" stroke="#fff" stroke-width="${n2(0.4 * u)}"/>`; }
+    const [lx, ly] = toMm(...o.lab), ls = (f && !idxPage ? 2.6 : 2.1) * u;
+    const txt = idxPage ? `${o.no}` + (objs.length <= 25 ? ` ${o.name}` : "") : (f || objs.length <= 30 ? o.name : "");
+    if (txt) labels += T(lx + (o.kind === "point" ? 2 * u : 0), ly - (o.kind === "point" ? 1.4 * u : 0), clip(txt, ls, true, 55 * u), {size:ls, bold:true, anchor: o.kind === "point" ? null : "middle", fill:"#4A148C", extra:halo("#fff", 0.6)});
+  }
+  // grid
+  let grid = "", glab = "";
+  const gs = 1.75 * u, mode = cfg.grid === "tm" && !P.proj.isTM ? "geo" : cfg.grid;
+  const tick = (x1, y1, x2, y2) => `<line x1="${n2(x1)}" y1="${n2(y1)}" x2="${n2(x2)}" y2="${n2(y2)}" stroke="#111" stroke-width="${n2(lw)}"/>`;
+  const gl = (x1, y1, x2, y2) => `<line x1="${n2(x1)}" y1="${n2(y1)}" x2="${n2(x2)}" y2="${n2(y2)}" stroke="#fff" stroke-opacity=".8" stroke-width="${n2(lw * 0.5)}" stroke-dasharray="${n2(1.2 * u)} ${n2(1.2 * u)}"/><line x1="${n2(x1)}" y1="${n2(y1)}" x2="${n2(x2)}" y2="${n2(y2)}" stroke="#333" stroke-opacity=".6" stroke-width="${n2(lw * 0.3)}" stroke-dasharray="${n2(1.2 * u)} ${n2(1.2 * u)}" stroke-dashoffset="${n2(1.2 * u)}"/>`;
+  if (mode === "tm"){
+    const step = niceStep(Math.max(wx1 - wx0, wy1 - wy0) / 5);
+    for (let v = Math.ceil(wx0 / step) * step; v <= wx1; v += step){ const px = X(v); grid += gl(px, iy, px, iy + ih); glab += tick(px, iy - 1.2 * u, px, iy) + tick(px, iy + ih, px, iy + ih + 1.2 * u);
+      if (px - ix > 8 * u && ix + iw - px > 8 * u) glab += T(px, iy - 2 * u, Math.round(v).toLocaleString("id-ID") + " mT", {size:gs, anchor:"middle"}) + T(px, iy + ih + 1.7 * u + gs, Math.round(v).toLocaleString("id-ID") + " mT", {size:gs, anchor:"middle"}); }
+    for (let v = Math.ceil(wy0 / step) * step; v <= wy1; v += step){ const py = Y(v); grid += gl(ix, py, ix + iw, py); glab += tick(ix - 1.2 * u, py, ix, py) + tick(ix + iw, py, ix + iw + 1.2 * u, py);
+      if (py - iy > 8 * u && iy + ih - py > 8 * u) glab += T(ix - 2 * u, py, Math.round(v).toLocaleString("id-ID") + " mU", {size:gs, anchor:"middle", rot:-90}) + T(ix + iw + 2 * u + gs * 0.75, py, Math.round(v).toLocaleString("id-ID") + " mU", {size:gs, anchor:"middle", rot:-90}); }
+  } else {
+    const c4 = [[wx0, wy0], [wx1, wy0], [wx0, wy1], [wx1, wy1]].map(([a, b]) => P.proj.toLL(a, b));
+    const lo0 = Math.min(...c4.map(p => p[0])), lo1 = Math.max(...c4.map(p => p[0])), la0 = Math.min(...c4.map(p => p[1])), la1 = Math.max(...c4.map(p => p[1]));
+    const STEPS = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600].map(v => v / 3600);
+    const step = STEPS.find(v => v >= Math.max(lo1 - lo0, la1 - la0) / 5) || 1;
+    const F = P.proj.fromLL;
+    for (let v = Math.ceil(lo0 / step) * step; v <= lo1; v += step){
+      const [a0, b0] = toMm(...F(v, la0)), [a1, b1] = toMm(...F(v, la1));
+      const xAt = yy => a0 + (a1 - a0) * (yy - b0) / ((b1 - b0) || 1e-9), xt = xAt(iy), xb = xAt(iy + ih);
+      if (cfg.grid) grid += gl(xb, iy + ih, xt, iy);
+      glab += tick(xt, iy - 1.2 * u, xt, iy) + tick(xb, iy + ih, xb, iy + ih + 1.2 * u);
+      if (xt - ix > 9 * u && ix + iw - xt > 9 * u) glab += T(xt, iy - 2 * u, dms(v, "BT", "BB"), {size:gs, anchor:"middle"}) + T(xb, iy + ih + 1.7 * u + gs, dms(v, "BT", "BB"), {size:gs, anchor:"middle"});
+    }
+    for (let v = Math.ceil(la0 / step) * step; v <= la1; v += step){
+      const [a0, b0] = toMm(...F(lo0, v)), [a1, b1] = toMm(...F(lo1, v));
+      const yAt = xx => b0 + (b1 - b0) * (xx - a0) / ((a1 - a0) || 1e-9), yl = yAt(ix), yr = yAt(ix + iw);
+      if (cfg.grid) grid += gl(ix, yl, ix + iw, yr);
+      glab += tick(ix - 1.2 * u, yl, ix, yl) + tick(ix + iw, yr, ix + iw + 1.2 * u, yr);
+      if (yl - iy > 9 * u && iy + ih - yl > 9 * u) glab += T(ix - 2 * u, yl, dms(v, "LU", "LS"), {size:gs, anchor:"middle", rot:-90}) + T(ix + iw + 2 * u + gs * 0.75, yr, dms(v, "LU", "LS"), {size:gs, anchor:"middle", rot:-90});
+    }
+  }
+  const attr = bmr.svg && bmr.attr ? T(ix + iw - 1.2 * u, iy + ih - 1.2 * u, bmr.attr, {size:1.5 * u, anchor:"end", fill:"#fff", extra:` stroke="#000" stroke-opacity=".55" stroke-width="${n2(0.35 * u)}" paint-order="stroke"`}) : "";
+  s += `<g clip-path="url(#${uid}c)">${under}${polys}${grid}${over}${labels}${attr}</g>${glab}`;
+  return {svg:s, scale};
+}
+/* SVG basemap untuk satu bingkai peta (koordinat kerja → lon/lat lewat P.proj) */
+function basemapSvg(view, toMm){
+  const bm = BASEMAPS[P.cfg.bm]; if (!bm || !bm.url || !P.proj) return {svg:"", urls:[]};
+  const [wx0, wy0, wx1, wy1] = view.ext, F = P.proj.fromLL;
+  const pts = [[wx0, wy0], [wx1, wy0], [wx0, wy1], [wx1, wy1], [(wx0 + wx1) / 2, wy0], [(wx0 + wx1) / 2, wy1], [wx0, (wy0 + wy1) / 2], [wx1, (wy0 + wy1) / 2]].map(([a, b]) => P.proj.toLL(a, b));
+  const lo0 = Math.min(...pts.map(p => p[0])), lo1 = Math.max(...pts.map(p => p[0])), la0 = Math.min(...pts.map(p => p[1])), la1 = Math.max(...pts.map(p => p[1]));
+  const mPerPx = 0.2 * view.scale / 1000, latc = (la0 + la1) / 2;
+  let z = Math.round(Math.log2(156543.034 * Math.cos(latc * Math.PI / 180) / mPerPx)) + Number(P.cfg.bmDetail || 0);
+  z = Math.max(3, Math.min(bm.max, z));
+  let tx0 = Math.floor(lon2t(lo0, z)), tx1 = Math.floor(lon2t(lo1, z)), ty0 = Math.floor(lat2t(la1, z)), ty1 = Math.floor(lat2t(la0, z));
+  while ((tx1 - tx0 + 1) * (ty1 - ty0 + 1) > 300 && z > 3){ z--; tx0 = Math.floor(lon2t(lo0, z)); tx1 = Math.floor(lon2t(lo1, z)); ty0 = Math.floor(lat2t(la1, z)); ty1 = Math.floor(lat2t(la0, z)); }
+  const urls = []; let s = "";
+  for (let tx = tx0; tx <= tx1; tx++) for (let ty = ty0; ty <= ty1; ty++){
+    const url = tileUrl(bm, z, tx, ty); urls.push(url);
+    const dd = TILE.get(url); if (!dd || dd === "ERR" || typeof dd !== "string") continue;
+    const P0 = toMm(...F(t2lon(tx, z), t2lat(ty, z))), P1 = toMm(...F(t2lon(tx + 1, z), t2lat(ty, z))), P2 = toMm(...F(t2lon(tx, z), t2lat(ty + 1, z)));
+    s += `<image href="${dd}" x="0" y="0" width="1.004" height="1.004" preserveAspectRatio="none" transform="matrix(${n2r(P1[0] - P0[0])} ${n2r(P1[1] - P0[1])} ${n2r(P2[0] - P0[0])} ${n2r(P2[1] - P0[1])} ${n2r(P0[0])} ${n2r(P0[1])})"/>`;
+  }
+  return {svg: s ? `<g opacity="${(Number(P.cfg.bmOpacity) / 100).toFixed(2)}">${s}</g>` : "", urls, attr: bm.attr};
+}
+
+/* ================= Render UI ================= */
+function renderObj(){
+  const el = $("#obj-summary");
+  const warn = P.objWarn.map(w => `<div class="note">${esc(w)}</div>`).join("");
+  if (!P.objs.length){ el.innerHTML = warn; return; }
+  const folders = [...new Set(P.objs.map(o => o.folder))];
+  const cnt = (fo, k) => P.objs.filter(o => o.folder === fo && o.kind === k).length;
+  el.innerHTML = warn + `<div class="tbl" style="max-height:240px"><table><thead><tr><th></th><th>Layer</th><th class="num">Titik</th><th class="num">Garis</th><th class="num">Poligon</th></tr></thead><tbody>${
+    folders.map(fo => { const os = P.objs.filter(o => o.folder === fo), on = os.filter(o => !P.objOff.has(o.id)).length;
+      return `<tr><td><input type="checkbox" data-fo="${esc(fo)}" ${on ? "checked" : ""} aria-label="Pakai layer ${esc(fo)}"></td><td><span class="sw" style="background:${esc(objCol(os[0]))}"></span> ${esc(fo)}</td><td class="num">${cnt(fo, "point")}</td><td class="num">${cnt(fo, "line")}</td><td class="num">${cnt(fo, "poly")}</td></tr>`; }).join("")}</tbody></table></div>
+    <details><summary>Pilih objek satu per satu (${P.objs.length - P.objOff.size} dari ${P.objs.length} dipakai)</summary>
+      <div class="row small" style="margin-bottom:8px"><button class="ghost" id="obj-all">Pakai semua</button><button class="ghost" id="obj-none">Lepas semua</button></div>
+      <div class="objlist">${P.objs.slice(0, 1000).map(o => `<label><input type="checkbox" data-obj="${o.id}" ${P.objOff.has(o.id) ? "" : "checked"}><span class="sw${o.kind === "point" ? " pt" : ""}" style="background:${esc(objCol(o))}"></span><span>${o.no}. ${esc(o.name)}</span><span class="muted small">${KIND_NAME[o.kind]}</span></label>`).join("")}</div>
+    </details>
+    <p class="small muted">${fmt(P.objs.length)} objek dari ${folders.length} layer${P.proj ? " · proyeksi kerja " + esc(P.proj.name) : ""}</p>`;
+  el.querySelectorAll("[data-fo]").forEach(c => c.onchange = () => { for (const o of P.objs) if (o.folder === c.dataset.fo){ if (c.checked) P.objOff.delete(o.id); else P.objOff.add(o.id); } renderObj(); changed(); });
+  el.querySelectorAll("[data-obj]").forEach(c => c.onchange = () => { const id = +c.dataset.obj; if (c.checked) P.objOff.delete(id); else P.objOff.add(id); changed(); });
+  const all = $("#obj-all"), none = $("#obj-none");
+  if (all) all.onclick = () => { P.objOff.clear(); renderObj(); changed(); };
+  if (none) none.onclick = () => { P.objs.forEach(o => P.objOff.add(o.id)); renderObj(); changed(); };
+}
+function renderLyr(){
+  for (const k of ["bid", "pbt"]){
+    const L = P.lyr[k], el = $("#sum-" + k);
+    $("#pill-" + k).textContent = L.feats.length ? `${fmt(L.feats.length)} bidang` : "kosong";
+    $("#pill-" + k).className = "pill" + (L.feats.length ? " acc" : "");
+    if (!L.layers.length){ el.innerHTML = ""; continue; }
+    const K = L.keys, kk = [["NIB", K.nib], ["Hak", K.hak], ["Nama", K.nama], ["Luas", K.luas], ...(k === "pbt" ? [["No. PBT", K.pbt]] : [])].filter(x => x[1]);
+    el.innerHTML = `<p class="small muted">${L.layers.map(l => `${esc(l.name)} (${fmt(l.n)})`).join(", ")} · ${esc(L.crs ? L.crs.name : "-")}</p>` +
+      (kk.length ? `<p class="small muted">Kolom terbaca: ${kk.map(([a, b]) => `${a} = <span class="mono">${esc(b)}</span>`).join(", ")}</p>` : "");
+  }
+  $("#lyr-warn").innerHTML = [...P.lyr.bid.warnings, ...P.lyr.pbt.warnings].map(w => `<div class="note">${esc(w)}</div>`).join("");
+}
+function renderTT(){
+  const el = $("#tt-body"), A = P.lyr.bid.feats, B = P.lyr.pbt.feats;
+  if (!A.length || !B.length){ el.innerHTML = `<div class="empty">Masukkan SHP bidang tanah dan SHP PBT untuk memeriksa tumpang tindih.</div>`; return; }
+  if (P.ttState === "nolib"){ el.innerHTML = `<div class="note bad">Pustaka analisis poligon belum termuat (perlu koneksi internet saat membuka halaman). Muat ulang halaman lalu coba lagi.</div>`; return; }
+  if (P.ttState !== "done") return;
+  const part = P.tt.filter(t => !t.same), same = P.tt.length - part.length;
+  const nA = new Set(part.map(t => t.a)).size, nB = new Set(part.map(t => t.b)).size, tot = part.reduce((s, t) => s + t.area, 0);
+  el.innerHTML = `<div class="stats">
+      <div class="stat ${part.length ? "bad" : "good"}"><b>${fmt(part.length)}</b><span>kasus tumpang tindih sebagian</span></div>
+      <div class="stat"><b>${fmt(nA)}</b><span>bidang terdaftar terlibat</span></div>
+      <div class="stat"><b>${fmt(nB)}</b><span>PBT terlibat</span></div>
+      <div class="stat"><b>${fmtA(tot)}</b><span>m² total luas tumpang tindih</span></div>
+      <div class="stat"><b>${fmt(same)}</b><span>berimpit (kemungkinan bidang yang sama)</span></div>
+    </div>
+    ${P.tt.length ? `<div class="tbl"><table><thead><tr><th class="num">No</th><th>Bidang terdaftar</th><th>PBT</th><th class="num">Luas TT (m²)</th><th class="num">% bidang</th><th class="num">% PBT</th><th>Kategori</th></tr></thead><tbody>${
+      P.tt.slice(0, 400).map(t => `<tr><td class="num">${t.no}</td><td>${esc(t.a.ident)}${t.a.hak && t.a.hak !== t.a.ident ? ` <span class="muted">${esc(t.a.hak)}</span>` : ""}</td><td>${esc(t.b.ident)}</td><td class="num">${fmtA(t.area)}</td><td class="num">${fmtPct(t.pa)}</td><td class="num">${fmtPct(t.pb)}</td><td><span class="pill ${t.same ? "warn" : "bad"}">${ttCat(t)}</span>${t.nibSame ? ` <span class="pill">NIB sama</span>` : ""}</td></tr>`).join("")}</tbody></table></div>
+      ${P.tt.length > 400 ? `<p class="small muted">Menampilkan 400 dari ${fmt(P.tt.length)}; daftar lengkap ada di unduhan Excel.</p>` : ""}` : `<div class="note info">Tidak ada bidang terdaftar yang tumpang tindih dengan PBT (di atas ${esc(P.cfg.ttMin)} m²).</div>`}
+    <p class="small muted">Berimpit artinya bidang dan PBT saling menutupi ≥ ${esc(P.cfg.ttSame)}%, biasanya PBT dari bidang yang sudah terdaftar. Di peta, tumpang tindih sebagian diarsir merah dan yang berimpit diarsir oranye tipis.</p>`;
+}
+function fillSelect(sel, opts, val){ sel.innerHTML = opts.map(([v, t]) => `<option value="${esc(v)}">${esc(t)}</option>`).join(""); sel.value = val; if (sel.value !== val && opts.length) sel.value = opts[0][0]; }
+function renderForm(){
+  const c = P.cfg;
+  for (const k of ["title", "instansi", "tanggal", "catatan"]){ const e = $("#c-" + k); if (document.activeElement !== e) e.value = c[k] || ""; }
+  for (const k of ["mode", "kind", "paper", "orient", "grid", "objColor", "bmDetail"]) $("#c-" + k).value = c[k];
+  for (const k of ["radius", "ttMin", "ttSame"]){ const e = $("#c-" + k); if (document.activeElement !== e) e.value = c[k]; }
+  for (const k of ["index", "ttOnly", "nama", "labNib"]) $("#c-" + k).checked = !!c[k];
+  fillSelect($("#c-scale"), [["auto", "Otomatis (menyesuaikan objek)"], ...NICE_SCALES.filter(s => s >= 250 && s <= 50000).map(s => [String(s), "1 : " + s.toLocaleString("id-ID")])], c.scale);
+  fillSelect($("#c-bm"), Object.entries(BASEMAPS).map(([k, b]) => [k, b.label]), c.bm);
+  $("#c-bmOpacity").value = c.bmOpacity; $("#v-bmOpacity").textContent = c.bmOpacity + "%";
+  $("#c-index").disabled = c.mode !== "obj"; $("#c-ttOnly").disabled = !P.tt.length;
+}
+const PREV_MAX = 12;
+function renderPreview(){
+  const el = $("#prev-body"), has = P.objs.length > 0 || P.lyr.bid.feats.length > 0 || P.lyr.pbt.feats.length > 0;
+  if (!has || !P.proj){ for (const id of ["#dl-pdf", "#dl-png", "#dl-xlsx", "#dl-kml", "#btn-print"]) $(id).disabled = true;
+    el.innerHTML = `<div class="empty">Pratinjau muncul setelah objek kerja atau SHP bidang dimasukkan.</div>`; return; }
+  try { buildPages(PREV_MAX); } catch(e){ console.error(e); el.innerHTML = `<div class="note bad">Gagal menyusun peta: ${esc(e.message)}</div>`; return; }
+  const n = P.specs.length;
+  for (const id of ["#dl-pdf", "#dl-png", "#btn-print"]) $(id).disabled = !n;
+  $("#dl-xlsx").disabled = $("#dl-kml").disabled = false;
+  if (!n){ el.innerHTML = `<div class="empty">${P.cfg.mode === "tt" ? (P.ttState === "run" ? "Menunggu analisis tumpang tindih selesai…" : "Tidak ada kasus tumpang tindih sebagian untuk dicetak.") : "Tidak ada objek yang dipilih untuk dicetak. Periksa pilihan layer/objek dan jenis objek."}</div>`; return; }
+  const [W, H] = P.pageSize;
+  el.innerHTML = `<div class="pages">${n > PREV_MAX ? `<div class="note info">Pratinjau menampilkan ${PREV_MAX} lembar pertama dari ${n}. Unduhan PDF/PNG berisi semua lembar.</div>` : ""}${P.pages.map((p, i) => `<span class="pagecap">Lembar ${i + 1} dari ${n} · ${esc(P.cfg.paper)} ${W}×${H} mm</span><div class="page">${p}</div>`).join("")}</div>`;
+  $("#page-style").textContent = `@page{size:${W}mm ${H}mm;margin:0}`;
+  const need = [...new Set(P.tileUrls)].filter(u => !TILE.has(u));
+  if (need.length){ tileJob = loadTiles(need).then(() => { tileJob = null; renderPreview(); }); }
+  else if (!tileJob && !/gagal/.test($("#bm-status").textContent)) $("#bm-status").textContent = "";
+}
+function renderAll(){ renderObj(); renderLyr(); renderTT(); renderForm(); renderPreview(); }
+let chT;
+function changed(){ clearTimeout(chT); chT = setTimeout(() => { savePrefs(); renderForm(); renderPreview(); }, 180); }
+
+/* ================= Ekspor ================= */
+const fileBase = () => { const t = (P.cfg.title || "Peta_Kerja").replace(/[^\w\- ]+/g, " ").trim().replace(/\s+/g, "_").slice(0, 60); return t || "Peta_Kerja_Lapang"; };
+/* susun semua lembar, muat citra yang dibutuhkan, lalu susun ulang dengan citra */
+async function buildAllWithTiles(prog){
+  if (tileJob){ prog("Menunggu citra basemap…"); await tileJob; }
+  buildPages(0);
+  const need = [...new Set(P.tileUrls)].filter(u => !TILE.has(u));
+  if (need.length){ prog(`Memuat citra untuk ${P.pages.length} lembar…`); await loadTiles(need); buildPages(0); }
+}
+function svgToCanvas(svg, dpi){
+  const [W, H] = P.pageSize;
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => { const c = document.createElement("canvas"); c.width = Math.round(W / 25.4 * dpi); c.height = Math.round(H / 25.4 * dpi);
+      const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height); res(c); };
+    img.onerror = () => rej(new Error("SVG tidak bisa dirender"));
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
+}
+const pickDpi = () => { const [W, H] = P.pageSize; return Math.max(96, Math.min(200, Math.floor(Math.sqrt(45e6 / (W * H / 645.16))))); };
+const canvasBlob = (c, type, q) => new Promise(r => c.toBlob(r, type, q));
+async function withStatus(btn, fn){
+  btn.disabled = true; const st = $("#dl-status");
+  try { await fn(m => st.innerHTML = `<span class="spin"></span>${esc(m)}`); }
+  catch(e){ console.error(e); toast("Gagal: " + e.message); }
+  st.textContent = ""; btn.disabled = false; renderPreview();
+}
+$("#dl-pdf").onclick = e => withStatus(e.currentTarget, async prog => {
+  if (!window.jspdf) throw new Error("pustaka PDF belum termuat");
+  await buildAllWithTiles(prog);
+  const [W, H] = P.pageSize, dpi = pickDpi();
+  const pdf = new window.jspdf.jsPDF({orientation: W > H ? "landscape" : "portrait", unit:"mm", format:[W, H], compress:true});
+  for (let i = 0; i < P.pages.length; i++){
+    prog(`Menyusun PDF lembar ${i + 1}/${P.pages.length}…`);
+    const c = await svgToCanvas(P.pages[i], dpi);
+    if (i) pdf.addPage([W, H], W > H ? "landscape" : "portrait");
+    pdf.addImage(c.toDataURL("image/jpeg", 0.9), "JPEG", 0, 0, W, H, undefined, "FAST");
+  }
+  await saveFile(fileBase() + ".pdf", pdf.output("blob"));
+});
+$("#dl-png").onclick = e => withStatus(e.currentTarget, async prog => {
+  await buildAllWithTiles(prog);
+  const dpi = pickDpi();
+  if (P.pages.length === 1){ prog("Menyusun PNG…"); await saveFile(fileBase() + ".png", await canvasBlob(await svgToCanvas(P.pages[0], dpi), "image/png")); return; }
+  const z = new JSZip();
+  for (let i = 0; i < P.pages.length; i++){ prog(`Menyusun PNG lembar ${i + 1}/${P.pages.length}…`); z.file(`${fileBase()}_lembar${String(i + 1).padStart(3, "0")}.png`, await canvasBlob(await svgToCanvas(P.pages[i], dpi), "image/png")); }
+  await saveFile(fileBase() + "_PNG.zip", await z.generateAsync({type:"blob"}));
+});
+$("#btn-print").onclick = e => withStatus(e.currentTarget, async prog => {
+  await buildAllWithTiles(prog);
+  $("#print-area").innerHTML = P.pages.join("");
+  await new Promise(r => setTimeout(r, 60)); window.print();
+});
+const gmaps = (lon, lat) => `https://www.google.com/maps/search/?api=1&query=${lat.toFixed(6)},${lon.toFixed(6)}`;
+$("#dl-xlsx").onclick = e => withStatus(e.currentTarget, async () => {
+  const sheets = [], r = Number(P.cfg.radius) || 0;
+  if (P.objs.length){
+    const head = ["No", "Nama objek", "Layer", "Jenis", "Lintang", "Bujur", ...(P.proj.isTM ? ["X (" + P.proj.name + ")", "Y"] : []), "Luas (m²)", "Panjang (m)", "Bidang terkait", "PBT terkait", "Terlibat tumpang tindih", "Deskripsi", "Link Google Maps"];
+    const rows = P.objs.map(o => { const [x, y] = o.kind === "point" ? o.m : o.lab, [lon, lat] = P.proj.toLL(x, y), rel = relFor(o), nb = rel.filter(q => q.f.src === "bid").length;
+      return [o.no, o.name, o.folder, KIND_NAME[o.kind], +lat.toFixed(7), +lon.toFixed(7), ...(P.proj.isTM ? [+x.toFixed(3), +y.toFixed(3)] : []), o.kind === "poly" ? +o.area.toFixed(2) : "", o.kind === "line" ? +o.len.toFixed(2) : "", nb, rel.length - nb, rel.filter(q => q.f.tt.some(t => !t.same)).length, o.desc, gmaps(lon, lat)]; });
+    sheets.push({name:"Objek kerja", head, rows});
+    const head2 = ["No objek", "Nama objek", "Sumber", "NIB", "No. PBT", "Hak", "Nama pemegang hak", "Luas atribut (m²)", "Luas hitung (m²)", "Jarak ke titik/garis (m)", "Luas di dalam poligon (m²)", "% bidang di dalam poligon", "Tumpang tindih dengan"];
+    const rows2 = [];
+    for (const o of P.objs) for (const it of relFor(o)){ const f = it.f;
+      rows2.push([o.no, o.name, LYR_NAME[f.src], f.nib, f.pbt, f.hak, f.nama, f.luasAttr ?? "", +f.area.toFixed(2), it.d !== undefined ? +it.d.toFixed(2) : "", it.ar !== undefined ? +it.ar.toFixed(2) : "", it.pct !== undefined ? +(it.pct * 100).toFixed(2) : "",
+        f.tt.map(t => { const q = t.a === f ? t.b : t.a; return `${q.ident} (${fmtA(t.area)} m², ${ttCat(t).toLowerCase()})`; }).join("; ")]); }
+    sheets.push({name:"Bidang per objek", head:head2, rows:rows2});
+  }
+  if (P.tt.length){
+    sheets.push({name:"Tumpang tindih", head:["No", "Kategori", "NIB bidang", "Hak bidang", "Nama pemegang hak", "Luas bidang (m²)", "No. PBT / ID", "NIB PBT", "Luas PBT (m²)", "Luas tumpang tindih (m²)", "% dari bidang", "% dari PBT", "NIB sama", "Lintang", "Bujur", "Link Google Maps"],
+      rows: P.tt.map(t => { const [lon, lat] = P.proj.toLL(t.lab[0], t.lab[1]);
+        return [t.no, ttCat(t), t.a.nib, t.a.hak, t.a.nama, +(t.a.luasAttr ?? t.a.area).toFixed(2), t.b.ident, t.b.nib, +(t.b.luasAttr ?? t.b.area).toFixed(2), +t.area.toFixed(2), +(t.pa * 100).toFixed(2), +(t.pb * 100).toFixed(2), t.nibSame ? "Ya" : "", +lat.toFixed(7), +lon.toFixed(7), gmaps(lon, lat)]; })});
+  }
+  if (!sheets.length) sheets.push({name:"Info", head:["Keterangan"], rows:[["Belum ada objek kerja atau hasil tumpang tindih."]]});
+  await saveFile(fileBase() + "_tabel.xlsx", await xlsxBlob(sheets));
+});
+/* KML untuk dibawa ke lapangan (Google Earth / My Maps / aplikasi GPS) */
+function kmlEsc(s){ return String(s ?? "").replace(/[&<>]/g, c => ({"&":"&amp;", "<":"&lt;", ">":"&gt;"}[c])); }
+const kc = (hex, a) => { const h = String(hex || "#ff00ff").replace("#", "").padEnd(6, "0"); return a + h.slice(4, 6) + h.slice(2, 4) + h.slice(0, 2); };
+const llStr = ring => ring.map(([a, b]) => `${a.toFixed(7)},${b.toFixed(7)},0`).join(" ");
+const polyKml = mp => (mp.length > 1 ? "<MultiGeometry>" : "") + mp.map(pl => `<Polygon><outerBoundaryIs><LinearRing><coordinates>${llStr(closeRing(pl[0]))}</coordinates></LinearRing></outerBoundaryIs>${pl.slice(1).map(h => `<innerBoundaryIs><LinearRing><coordinates>${llStr(closeRing(h))}</coordinates></LinearRing></innerBoundaryIs>`).join("")}</Polygon>`).join("") + (mp.length > 1 ? "</MultiGeometry>" : "");
+const closeRing = r => (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) ? [...r, r[0]] : r;
+const kmlExt = attrs => `<ExtendedData>${Object.entries(attrs).filter(([, v]) => v !== null && v !== undefined && v !== "").map(([k, v]) => `<Data name="${kmlEsc(k)}"><value>${kmlEsc(v)}</value></Data>`).join("")}</ExtendedData>`;
+$("#dl-kml").onclick = e => withStatus(e.currentTarget, async () => {
+  const T2 = P.proj.toLL, parts = [];
+  const st = (id, line, lw, fill) => `<Style id="${id}"><LineStyle><color>${line}</color><width>${lw}</width></LineStyle><PolyStyle><color>${fill}</color>${fill.startsWith("00") ? "<fill>0</fill>" : ""}</PolyStyle><IconStyle><color>${line}</color><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>`;
+  const head = st("bid", "ff00eaff", 2, "00000000") + st("bidtt", "ff4417ff", 3, "00000000") + st("pbt", "ffffff18", 2, "00000000") + st("tt", "ff4417ff", 2, "884417ff") + st("same", "ff0091ff", 1, "440091ff");
+  const objStyles = new Map();
+  const objs = P.objs.filter(o => !P.objOff.has(o.id));
+  for (const o of objs){ const c = objCol(o); if (!objStyles.has(c)) objStyles.set(c, st("o" + objStyles.size, kc(c, "ff"), 3, kc(c, "33"))); }
+  const sid = c => "o" + [...objStyles.keys()].indexOf(c);
+  if (objs.length) parts.push(`<Folder><name>Objek kerja</name>${objs.map(o => {
+    const g = o.kind === "point" ? `<Point><coordinates>${o.ll[0]},${o.ll[1]},0</coordinates></Point>` : o.kind === "line" ? (o.ll.length > 1 ? "<MultiGeometry>" : "") + o.ll.map(l => `<LineString><coordinates>${llStr(l)}</coordinates></LineString>`).join("") + (o.ll.length > 1 ? "</MultiGeometry>" : "") : polyKml(o.ll);
+    return `<Placemark><name>${kmlEsc(o.no + ". " + o.name)}</name><description>${kmlEsc(o.desc)}</description><styleUrl>#${sid(objCol(o))}</styleUrl>${kmlExt({Layer:o.folder, ...o.attrs})}${g}</Placemark>`; }).join("")}</Folder>`);
+  // bidang: yang terkait objek, atau semua bila tanpa objek / sedikit
+  const pick = src => { const all = P.lyr[src].feats; if (!objs.length || all.length <= 3000) return all; const s = new Set(); for (const o of objs) for (const it of relFor(o)) if (it.f.src === src) s.add(it.f); for (const t of P.tt) s.add(src === "bid" ? t.a : t.b); return [...s]; };
+  for (const src of ["bid", "pbt"]){
+    const fs = pick(src); if (!fs.length) continue;
+    parts.push(`<Folder><name>${LYR_NAME[src]}</name>${fs.map(f => `<Placemark><name>${kmlEsc(f.ident)}</name><styleUrl>#${src === "bid" && f.tt.some(t => !t.same) ? "bidtt" : src}</styleUrl>${kmlExt({...f.attrs, "Luas hitung (m²)": f.area.toFixed(2)})}${polyKml(f.ll)}</Placemark>`).join("")}</Folder>`);
+  }
+  if (P.tt.length) parts.push(`<Folder><name>Tumpang tindih bidang–PBT</name>${P.tt.map(t => `<Placemark><name>${kmlEsc(`TT ${t.no}: ${t.a.ident} × ${t.b.ident}`)}</name><description>${kmlEsc(`${ttCat(t)}. Luas ${fmtA(t.area)} m² (${fmtPct(t.pa)} dari bidang, ${fmtPct(t.pb)} dari PBT)`)}</description><styleUrl>#${t.same ? "same" : "tt"}</styleUrl>${polyKml(t.geom.map(pl => pl.map(r => r.map(([x, y]) => T2(x, y)))))}</Placemark>`).join("")}</Folder>`);
+  const kml = `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>${kmlEsc(P.cfg.title || "Peta kerja lapang")}</name>${head}${[...objStyles.values()].join("")}${parts.join("")}</Document></kml>`;
+  await saveFile(fileBase() + ".kml", new Blob([kml], {type:"application/vnd.google-earth.kml+xml"}));
+});
+
+/* ================= Link Google My Maps ================= */
+const mmId = s => { const m = /[?&]mid=([\w-]+)/.exec(String(s || "")); return m ? m[1] : null; };
+$("#mm-go").onclick = async () => {
+  const note = $("#mm-note"), id = mmId($("#mm-link").value);
+  if (!id){ note.innerHTML = `<div class="note bad">Link tidak dikenali. Link Google My Maps biasanya berbentuk https://www.google.com/maps/d/…?mid=…</div>`; return; }
+  const url = `https://www.google.com/maps/d/kml?mid=${encodeURIComponent(id)}&forcekml=1`;
+  note.innerHTML = `<p class="status"><span class="spin"></span>Mengambil KML dari Google My Maps…</p>`;
+  try {
+    const r = await fetch(url); if (!r.ok) throw new Error("HTTP " + r.status);
+    const bytes = new Uint8Array(await r.arrayBuffer());
+    const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b;
+    note.innerHTML = "";
+    await ingestObj([{path: isZip ? "MyMaps.kmz" : "MyMaps.kml", bytes}]);
+  } catch {
+    note.innerHTML = `<div class="note info">Browser tidak mengizinkan halaman ini mengambil langsung dari Google. Klik <a href="${esc(url)}" target="_blank" rel="noopener">unduh KML peta ini</a> (file akan terunduh), lalu seret file itu ke kotak di bawah. Peta My Maps harus bisa dibuka oleh siapa saja yang punya link.</div>`;
+  }
+};
+
+/* ================= Serah-terima dari halaman Join ================= */
+function idb(){ return new Promise((res, rej) => { const r = indexedDB.open("joinspasial", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function kvGet(k){ const db = await idb(); return new Promise((res, rej) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function checkHandoff(){
+  try {
+    const h = await kvGet("peta"); if (!h || !h.bytes) return;
+    const b = $("#btn-handoff"); b.hidden = false;
+    const when = new Date(h.time);
+    b.textContent = `Pakai hasil join terakhir (${when.toLocaleDateString("id-ID")})`;
+    b.onclick = async () => { P.lyr.bid.leaves.clear(); await ingestLyr("bid", [{path:h.name || "hasil_join.zip", bytes:new Uint8Array(h.bytes)}]); };
+  } catch {}
+}
+
+/* ================= Event ================= */
+function dropZone(el, fn){
+  el.addEventListener("dragover", e => { e.preventDefault(); el.classList.add("over"); });
+  el.addEventListener("dragleave", () => el.classList.remove("over"));
+  el.addEventListener("drop", async e => { e.preventDefault(); e.stopPropagation(); el.classList.remove("over"); try { await fn(await entriesFromDrop(e.dataTransfer)); } catch(err){ toast("Gagal membaca: " + err.message); } });
+}
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", e => e.preventDefault());
+dropZone($("#drop-obj"), ingestObj);
+dropZone($("#drop-bid"), items => ingestLyr("bid", items));
+dropZone($("#drop-pbt"), items => ingestLyr("pbt", items));
+const filesOf = e => { const fs = [...e.target.files].map(f => ({path:f.webkitRelativePath || f.name, file:f})); e.target.value = ""; return fs; };
+$("#pick-obj").onclick = () => $("#in-obj").click();
+$("#in-obj").onchange = e => ingestObj(filesOf(e)).catch(err => toast("Gagal membaca: " + err.message));
+let lyrTarget = "bid";
+document.querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { lyrTarget = b.dataset.pick; $("#in-lyr").click(); });
+document.querySelectorAll("[data-pickdir]").forEach(b => b.onclick = () => { lyrTarget = b.dataset.pickdir; $("#in-lyr-dir").click(); });
+for (const id of ["#in-lyr", "#in-lyr-dir"]) $(id).onchange = e => ingestLyr(lyrTarget, filesOf(e)).catch(err => toast("Gagal membaca: " + err.message));
+document.querySelectorAll("[data-clear]").forEach(b => b.onclick = () => { P.lyr[b.dataset.clear] = mkLyr(); afterData(); });
+$("#clear-obj").onclick = () => { P.objSrc = []; P.objLeaves.clear(); P.objWarn = []; P.objs = []; P.objOff = new Set(); $("#mm-note").innerHTML = ""; afterData(); };
+for (const k of ["title", "instansi", "tanggal", "catatan"]) $("#c-" + k).oninput = e => { P.cfg[k] = e.target.value; changed(); };
+for (const k of ["mode", "kind", "scale", "paper", "orient", "grid", "objColor", "bmDetail", "bm"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; if (k === "objColor") renderObj(); changed(); };
+for (const k of ["index", "ttOnly", "nama", "labNib"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.checked; changed(); };
+$("#c-radius").oninput = e => { P.cfg.radius = e.target.value; P.objs.forEach(o => o._rel = null); changed(); };
+for (const k of ["ttMin", "ttSame"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; savePrefs(); computeTT(); };
+$("#c-bmOpacity").oninput = e => { P.cfg.bmOpacity = e.target.value; $("#v-bmOpacity").textContent = e.target.value + "%"; changed(); };
+$("#btn-reset").onclick = () => { P.cfg = {...DEF, tanggal: todayStr()}; savePrefs(); renderForm(); computeTT(); };
+window.addEventListener("afterprint", () => { $("#print-area").innerHTML = ""; });
+
+loadPrefs();
+if (!P.cfg.tanggal) P.cfg.tanggal = todayStr();
+renderAll();
+checkHandoff();
+</script>
