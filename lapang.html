@@ -186,6 +186,25 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
 .page svg [data-c]{cursor:pointer}
 .page svg [data-c]:hover{opacity:.75}
 .inedit{position:fixed;z-index:60;font:inherit;font-size:14px;background:#fff;color:#111;border:2px solid #0E6A5B;border-radius:6px;padding:4px 7px;box-shadow:0 6px 24px rgba(0,0,0,.25);resize:both;min-width:160px;max-width:calc(100vw - 24px)}
+.page{position:relative}
+.splitter{position:absolute;z-index:3;touch-action:none}
+.splitter.v{top:0;bottom:0;width:14px;margin-left:-7px;cursor:ew-resize}
+.splitter.h{left:0;right:0;height:14px;margin-top:-7px;cursor:ns-resize}
+.splitter::after{content:"";position:absolute;background:#0E6A5B;opacity:0;transition:opacity .15s;border-radius:2px}
+.splitter.v::after{left:6px;top:0;bottom:0;width:2px}
+.splitter.h::after{top:6px;left:0;right:0;height:2px}
+.splitter:hover::after,.splitter.drag::after{opacity:.9}
+.splitter span{position:absolute;font:600 11.5px/1 var(--f-body);background:#0E6A5B;color:#fff;padding:4px 7px;border-radius:5px;white-space:nowrap;opacity:0;pointer-events:none}
+.splitter.v span{top:8px;left:12px}.splitter.h span{left:8px;top:12px}
+.splitter:hover span,.splitter.drag span{opacity:1}
+.inedit-bar{position:fixed;z-index:61;display:flex;gap:4px;flex-wrap:wrap;align-items:center;background:#16211E;color:#fff;padding:4px;border-radius:7px;font-size:11.5px;max-width:calc(100vw - 16px)}
+.inedit-bar button{font-size:12px;padding:3px 9px;background:#2A3632;color:#fff;border-color:#3B4944}
+.inedit-bar button:hover{border-color:#43B9A2}
+.inedit-bar span{padding:0 6px;opacity:.8}
+.layctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 16px}
+.layctl label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:500}
+.hidlist{display:flex;flex-wrap:wrap;gap:6px}
+.hidlist button{font-size:12.5px;padding:3px 10px}
 .inedit-tip{position:fixed;z-index:61;font-size:11.5px;background:#16211E;color:#fff;padding:3px 8px;border-radius:5px;pointer-events:none}
 </style>
 <header class="appbar" id="appbar">
@@ -195,7 +214,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
     <div class="appact"><button class="primary" data-proxy="#dl-pdf" disabled>Unduh PDF</button><button data-proxy="#dl-kml" disabled>KML</button><button data-proxy="#dl-xlsx" disabled>Tabel</button></div>
   </div>
   <nav class="secnav" aria-label="Bagian halaman">
-    <a href="#sec-obj"><b>1</b>Objek</a><a href="#sec-lyr"><b>2</b>Bidang tanah</a><a href="#sec-tt"><b>3</b>Tumpang tindih</a><a href="#sec-map"><b>4</b>Peta</a><a href="#sec-br"><b>5</b>Tata ruang &amp; desa</a><a href="#sec-sty"><b>6</b>Gaya &amp; warna</a><a href="#sec-prev"><b>7</b>Pratinjau &amp; unduh</a>
+    <a href="#sec-obj"><b>1</b>Objek</a><a href="#sec-lyr"><b>2</b>Bidang tanah</a><a href="#sec-tt"><b>3</b>Tumpang tindih</a><a href="#sec-map"><b>4</b>Peta</a><a href="#sec-br"><b>5</b>Tata ruang &amp; desa</a><a href="#sec-sty"><b>6</b>Gaya &amp; tata letak</a><a href="#sec-prev"><b>7</b>Pratinjau &amp; unduh</a>
   </nav>
 </header>
 <div class="wrap wide">
@@ -331,7 +350,22 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
   </section>
 
   <section class="card" id="sec-sty">
-    <h2><span class="n">6</span>Gaya &amp; warna simbol</h2>
+    <h2><span class="n">6</span>Gaya, tata letak, dan teks lembar</h2>
+    <h3>Tata letak</h3>
+    <div class="layctl">
+      <label>Lebar peta pada lembar mendatar <span class="mono" id="v-mapW"></span><input type="range" id="c-mapW" min="40" max="85" step="1"></label>
+      <label>Tinggi peta pada lembar tegak <span class="mono" id="v-mapH"></span><input type="range" id="c-mapH" min="30" max="88" step="1"></label>
+      <label>Ukuran teks judul<select id="c-fsTitle"></select></label>
+      <label>Ukuran teks keterangan, legenda, skala<select id="c-fsPanel"></select></label>
+      <label>Ukuran teks tabel daftar bidang<select id="c-fsTable"></select></label>
+      <label>Ukuran label di peta (nomor bidang, nama objek, koordinat)<select id="c-fsMap"></select></label>
+    </div>
+    <p class="small muted">Lebar/tinggi peta juga bisa diatur dengan menyeret garis batas peta di pratinjau. Kosongkan ke otomatis dengan tombol di bawah.</p>
+    <h3>Bagian yang ditampilkan</h3>
+    <div class="row small" id="blk-list"></div>
+    <div id="hid-box"></div>
+    <div class="row small"><button class="ghost" id="btn-layreset">Kembalikan tata letak & ukuran otomatis</button></div>
+    <h3>Warna simbol</h3>
     <p class="muted small">Warna berlaku untuk peta dan legenda di semua lembar. Bisa juga langsung klik 2x simbol di kotak legenda pada pratinjau. "Otomatis" memakai warna bawaan (warna menyesuaikan bila basemap citra tampil).</p>
     <div class="stylist" id="sty-list"></div>
     <div class="row small"><span class="muted" id="txt-count"></span><button class="ghost" id="btn-txtreset">Kembalikan semua teks bawaan</button><button class="ghost" id="btn-colreset">Kembalikan semua warna otomatis</button></div>
@@ -350,7 +384,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
       <span class="status" id="dl-status"></span>
     </div>
     <p class="small muted">KML bisa dibuka di Google Earth, diimpor ke Google My Maps, atau aplikasi peta lapang (Avenza, Locus, SW Maps) untuk melihat posisi Anda terhadap bidang dan tumpang tindih saat di lapangan.</p>
-    <div class="edithint"><kbd>klik 2×</kbd> teks pada peta (judul, keterangan, legenda, nama objek, judul tabel) untuk mengubahnya langsung. Perubahan berlaku ke semua lembar. Klik 2× simbol legenda untuk mengganti warnanya.</div>
+    <div class="edithint"><kbd>klik 2×</kbd> teks pada peta untuk mengubah isi, memperbesar/memperkecil, atau menyembunyikannya. Klik 2× simbol legenda untuk mengganti warna. Seret garis tepi peta untuk mengatur lebar peta. Semua perubahan berlaku ke semua lembar.</div>
     <div id="prev-body"><div class="empty">Pratinjau muncul setelah objek kerja atau SHP bidang dimasukkan.</div></div>
   </section>
   </div>
@@ -551,7 +585,9 @@ function clip(s, size, bold, maxW){
 }
 const n2 = v => +v.toFixed(2);
 function T(x, y, s, o = {}){
-  return `<text x="${n2(x)}" y="${n2(y)}" font-size="${n2(o.size || 3)}"${o.bold ? ' font-weight="bold"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""}${o.fill ? ` fill="${o.fill}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${n2(x)} ${n2(y)})"` : ""}${o.extra || ""}${o.k ? ` data-k="${esc(o.k)}"` : ""}>${esc(s)}</text>`;
+  if (o.k && typeof isHid === "function" && isHid(o.k)) return "";
+  const zk = o.k && typeof tszOf === "function" ? tszOf(o.k) : 1;
+  return `<text x="${n2(x)}" y="${n2(y)}" font-size="${n2((o.size || 3) * zk)}"${o.bold ? ' font-weight="bold"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""}${o.fill ? ` fill="${o.fill}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${n2(x)} ${n2(y)})"` : ""}${o.extra || ""}${o.k ? ` data-k="${esc(o.k)}"` : ""}>${esc(s)}</text>`;
 }
 
 /* ================= Layout lembar ================= */
@@ -666,7 +702,7 @@ const DEF = {
   catatan: "Peta kerja ini bersifat indikatif untuk keperluan peninjauan lapang, bukan penetapan batas bidang tanah.",
   mode: "obj", kind: "", radius: "50", scale: "auto", index: true, ttOnly: false, nama: true, labNib: false,
   paper: "A4", orient: "landscape", grid: "geo", objColor: "mm",
-  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true, showAll: false, qr: true, col: {}, txt: {}, adm: true, ovs: [],
+  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true, showAll: false, qr: true, col: {}, txt: {}, adm: true, ovs: [], lay: {}, hide: {}, tsz: {},
 };
 const mkLyr = () => ({leaves:new Map(), layers:[], feats:[], fields:[], crs:null, warnings:[], ix:null, keys:{}});
 const P = {
@@ -680,7 +716,10 @@ const LYR_NAME = {bid: "Bidang tanah", pbt: "PBT"};
 const cntText = (nb, np) => `${nb} bidang terdaftar` + (P.lyr.pbt.feats.length ? `, ${np} PBT` : "");
 const LS_KEY = "petaLapang.v1";
 function loadPrefs(){ try { const s = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (s && typeof s === "object") for (const k of Object.keys(P.cfg)) if (k in s) P.cfg[k] = s[k]; } catch {}
-  P.cfg.col = P.cfg.col && typeof P.cfg.col === "object" ? {...P.cfg.col} : {}; P.cfg.txt = P.cfg.txt && typeof P.cfg.txt === "object" ? {...P.cfg.txt} : {}; }
+  for (const k of ["col", "txt", "lay", "hide", "tsz"]) P.cfg[k] = P.cfg[k] && typeof P.cfg[k] === "object" ? {...P.cfg[k]} : {}; }
+const isHid = k => !!(k && P.cfg.hide && P.cfg.hide[k]);
+const tszOf = k => (P.cfg.tsz && Number(P.cfg.tsz[k])) || 1;
+const layN = (k, def) => { const v = Number(P.cfg.lay[k]); return v > 0 ? v : def; };
 /* teks yang diubah pengguna (klik 2x di peta) dan warna simbol */
 const TXDEF = {};
 const tx = (k, def) => { TXDEF[k] = def; const v = P.cfg.txt[k]; return v === undefined || v === null || v === "" ? def : v; };
@@ -1340,8 +1379,10 @@ function qrSvg(text, x, y, side){
 const objCol = o => P.cfg.col.obj ? P.cfg.col.obj : P.cfg.objColor === "one" ? COLDEF.obj : (o.color || o.fcolor || COLDEF.obj);
 function renderSheet(sp, pi, pn, W, H){
   const cfg = P.cfg, d = sheetData(sp);
-  const u = Math.min(W, H) / 297, M = Math.max(7, 10 * u + 2), IW = W - 2 * M, IH = H - 2 * M;
-  const pad = 2.4 * u, lw = Math.max(0.18, 0.3 * u);
+  const u0 = Math.min(W, H) / 297, M = Math.max(7, 10 * u0 + 2), IW = W - 2 * M, IH = H - 2 * M;
+  const fT = layN("fsTitle", 1), fB = layN("fsTable", 1), fMp = layN("fsMap", 1), u = u0 * layN("fsPanel", 1);
+  const pad = 2.4 * u, lw = Math.max(0.18, 0.3 * u0);
+  d.u0 = u0;
   const hasBm = !!(BASEMAPS[cfg.bm] && BASEMAPS[cfg.bm].url) && [...TILE.values()].some(v => typeof v === "string" && v !== "ERR");   // warna terang hanya bila citra benar-benar tampil
   const C0 = hasBm ? {bid:"#FFEA00", pbt:"#18FFFF", bidFill:"none", pbtFill:"none"} : {bid:"#C62828", pbt:"#1565C0", bidFill:"#FFF3C4", pbtFill:"#D6ECFF"};
   const C = {...C0, bid:colOf("bid", C0.bid), pbt:colOf("pbt", C0.pbt), tt:colOf("tt"), same:colOf("same"), circle:colOf("circle")};
@@ -1354,24 +1395,30 @@ function renderSheet(sp, pi, pn, W, H){
 
   // tabel
   const T0 = d.objTable ? objTable(d) : featTable(d);
-  const legend = legendItems(d, C, hasBm);
+  let split = {dir:"", a:0, b:1, pct:0};
+  const legend = legendItems(d, C, hasBm).filter(it => !isHid("txt:leg:" + it.key));
 
   // panel blok
   const titleBlock = w => {
-    const ts = 3.9 * u, ss = 2.8 * u, xs = 2.1 * u;
-    const tl = wrap(cfg.title, ts, true, w - 2 * pad), sl = wrap(d.sub || "", ss, true, w - 2 * pad), xl = d.subSmall ? wrap(d.subSmall, xs, false, w - 2 * pad) : [];
+    if (isHid("blk:title")) return null;
+    const ts = 3.9 * u0 * fT, ss = 2.8 * u0 * fT, xs = 2.1 * u0 * fT;
+    const tl = isHid("cfg:title") ? [] : wrap(cfg.title, ts * tszOf("cfg:title"), true, w - 2 * pad), sl = isHid(d.subKey) || isHid("x:sub") ? [] : wrap(d.sub || "", ss * tszOf(d.subKey || "x:sub"), true, w - 2 * pad), xl = d.subSmall && !isHid("x:subsmall") ? wrap(d.subSmall, xs * tszOf("x:subsmall"), false, w - 2 * pad) : [];
     const lines = []; let yy = pad * 0.9;
-    for (const l of tl){ yy += ts; lines.push([yy, l, {size:ts, bold:true, anchor:"middle", k:"cfg:title"}]); yy += ts * 0.2; }
-    if (sl.length) yy += 1 * u;
-    for (const l of sl){ yy += ss; lines.push([yy, l, {size:ss, bold:true, anchor:"middle", fill:"#6A1B9A", k:d.subKey}]); yy += ss * 0.25; }
-    for (const l of xl){ yy += xs * 1.2; lines.push([yy, l, {size:xs, anchor:"middle", fill:"#444"}]); }
+    const zt = tszOf("cfg:title"), zs = tszOf(d.subKey || "x:sub"), zx = tszOf("x:subsmall");
+    for (const l of tl){ yy += ts * zt; lines.push([yy, l, {size:ts, bold:true, anchor:"middle", k:"cfg:title"}]); yy += ts * zt * 0.2; }
+    if (sl.length && tl.length) yy += 1 * u;
+    for (const l of sl){ yy += ss * zs; lines.push([yy, l, {size:ss, bold:true, anchor:"middle", fill:"#6A1B9A", k:d.subKey || "x:sub"}]); yy += ss * zs * 0.25; }
+    for (const l of xl){ yy += xs * zx * 1.2; lines.push([yy, l, {size:xs, anchor:"middle", fill:"#444", k:"x:subsmall"}]); }
+    if (!lines.length) return null;
     const h = yy + pad * 1.1;
     return {h, draw:(x, y) => { let o = box(x, y, w, h);
       for (const [dy, l, opt] of lines) o += T(x + w / 2, y + dy, l, opt);
       return o; }};
   };
   const infoBlock = w => {
-    const ks = 2.05 * u, lh = ks * 1.35, rows = d.info, rowsT = rows.map(([a, b]) => [a ? tx("lab:" + a, a) : a, b]);
+    if (isHid("blk:info")) return null;
+    const rows = d.info.filter(([a]) => !isHid("txt:lab:" + a)); if (!rows.length) return null;
+    const ks = 2.05 * u, lh = ks * 1.35, rowsT = rows.map(([a, b]) => [a ? tx("lab:" + a, a) : a, b]);
     const lab = Math.min(w * 0.42, Math.max(...rowsT.map(r => tw(r[0], ks, false)), 10) + 1.5 * u);
     const wr = rowsT.map(([a, b], i) => [a, wrap(b, ks, false, w - 2 * pad - lab - 2 * u).slice(0, rows[i][0] === "Deskripsi" ? 4 : 3), rows[i][0]]);
     const h = pad + 3 * u + wr.reduce((acc, r) => acc + Math.max(1, r[1].length) * lh, 0) + pad * 0.6;
@@ -1384,6 +1431,7 @@ function renderSheet(sp, pi, pn, W, H){
       return o; }};
   };
   const legendBlock = w => {
+    if (isHid("blk:legend") || !legend.length) return null;
     const ls = 2.05 * u, lh = 4 * u, sw = 6.5 * u, sh = 3 * u;
     const cols = w > 95 * u ? 2 : 1, cw = (w - 2 * pad) / cols;
     const rows = Math.ceil(legend.length / cols);
@@ -1399,18 +1447,19 @@ function renderSheet(sp, pi, pn, W, H){
       return o; }};
   };
   const qrBlock = w => {
-    if (!P.cfg.qr || !d.qr || typeof window.qrcode !== "function") return null;
+    if (!P.cfg.qr || isHid("blk:qr") || !d.qr || typeof window.qrcode !== "function") return null;
     const q = qrSvg(d.qr.url, 0, 0, 1); if (!q) return null;
     const side = Math.min(26 * u, w * 0.34), h = side + 2 * pad;
     const fs = 2.05 * u, tx0 = pad * 2 + side, tw0 = w - tx0 - pad;
-    const lines = [...wrap(tx("qr_head", "Pindai untuk membuka lokasi di Google Maps (navigasi ke titik):"), fs, true, tw0).map(t => [t, "txt:qr_head"]), ...wrap(d.qr.label, fs, false, tw0).map(t => [t, false])];
+    const lines = [...wrap(tx("qr_head", "Pindai untuk membuka lokasi di Google Maps (navigasi ke titik):"), fs, true, tw0).map(t => [t, "txt:qr_head"]), ...(isHid("x:qrlab") ? [] : wrap(d.qr.label, fs, false, tw0).map(t => [t, "x:qrlab"]))];
     return {h, draw:(x, y) => {
       let o = box(x, y, w, h) + `<rect x="${n2(x + pad)}" y="${n2(y + pad)}" width="${n2(side)}" height="${n2(side)}" fill="#fff"/>` + qrSvg(d.qr.url, x + pad, y + pad, side);
-      let yy = y + pad + fs * 1.1; for (const [t, b] of lines){ o += T(x + tx0, yy, t, {size:fs, bold:!!b, k:b || null}); yy += fs * 1.35; }
-      o += T(x + tx0, y + h - pad, clip(d.qr.url.replace(/^https:\/\//, ""), fs * 0.75, false, tw0), {size:fs * 0.75, fill:"#555"});
+      let yy = y + pad + fs * 1.1; for (const [t, b] of lines){ o += T(x + tx0, yy, t, {size:fs, bold:b === "txt:qr_head", k:b || null}); yy += fs * 1.35; }
+      o += T(x + tx0, y + h - pad, clip(d.qr.url.replace(/^https:\/\//, ""), fs * 0.75, false, tw0), {size:fs * 0.75, fill:"#555", k:"x:qrurl"});
       return o; }};
   };
   const nsBlock = (w, scale) => {
+    if (isHid("blk:ns")) return null;
     const h = 22 * u;
     return {h, draw:(x, y) => {
       let o = box(x, y, w, h);
@@ -1420,20 +1469,22 @@ function renderSheet(sp, pi, pn, W, H){
       o += `<path d="M${n2(ax)} ${n2(top)} L${n2(ax + hw)} ${n2(bot)} L${n2(ax)} ${n2(bot - ah * 0.25)} Z" fill="#111"/><path d="M${n2(ax)} ${n2(top)} L${n2(ax - hw)} ${n2(bot)} L${n2(ax)} ${n2(bot - ah * 0.25)} Z" fill="#fff" stroke="#111" stroke-width="${n2(lw)}"/>`;
       o += `<line x1="${n2(x + nw + pad)}" y1="${n2(y)}" x2="${n2(x + nw + pad)}" y2="${n2(y + h)}" stroke="#111" stroke-width="${n2(lw)}"/>`;
       const sx = x + nw + pad * 2, swd = x + w - pad * 1.4 - sx;
-      o += T(sx + swd / 2, y + pad + 3 * u, `SKALA 1 : ${scale.toLocaleString("id-ID")}`, {size:2.8 * u, bold:true, anchor:"middle"});
+      o += T(sx + swd / 2, y + pad + 3 * u, `SKALA 1 : ${scale.toLocaleString("id-ID")}`, {size:2.8 * u, bold:true, anchor:"middle", k:"x:skala"});
       const mPerMm = scale / 1000;
       let len = niceStep(swd * 0.8 * mPerMm); for (let g = 0; len / mPerMm > swd * 0.92 && g < 60; g++) len = stepDown(len);
       const bw = len / mPerMm, bx = sx + (swd - bw) / 2, by = y + h * 0.5, bh = 1.4 * u, seg = 4;
       for (let i = 0; i < seg; i++) o += `<rect x="${n2(bx + bw * i / seg)}" y="${n2(by)}" width="${n2(bw / seg)}" height="${n2(bh)}" fill="${i % 2 ? "#fff" : "#111"}" stroke="#111" stroke-width="${n2(lw * 0.8)}"/>`;
       const unit = len >= 1000 ? "km" : "m", dv = len >= 1000 ? 1000 : 1;
       for (const i of [0, seg / 2, seg]) o += T(bx + bw * i / seg, by + bh + 2.7 * u, (len * i / seg / dv).toLocaleString("id-ID", {maximumFractionDigits:2}) + (i === seg ? " " + unit : ""), {size:2 * u, anchor:"middle"});
-      o += T(sx + swd / 2, y + h - pad * 0.8, `Proyeksi: ${P.proj.name}`, {size:1.75 * u, anchor:"middle", fill:"#444"});
+      o += T(sx + swd / 2, y + h - pad * 0.8, `Proyeksi: ${P.proj.name}`, {size:1.75 * u, anchor:"middle", fill:"#444", k:"x:proj"});
       return o; }};
   };
   const footBlock = w => {
+    if (isHid("blk:foot")) return {h:0, draw:() => ""};
     const fs2 = 2.15 * u, lh = fs2 * 1.3;
-    const il = wrap(cfg.instansi, fs2, true, w - 2 * pad), tl = [...wrap(cfg.tanggal || "", fs2 * 0.92, false, w - 2 * pad).map(t => [t, "cfg:tanggal"]), [`Lembar ${pi + 1} dari ${pn}`, null]];
-    const cat = cfg.catatan ? wrap(cfg.catatan, fs2 * 0.85, false, w - 2 * pad).slice(0, 3) : [];
+    const il = isHid("cfg:instansi") ? [] : wrap(cfg.instansi, fs2, true, w - 2 * pad), tl = [...(isHid("cfg:tanggal") ? [] : wrap(cfg.tanggal || "", fs2 * 0.92, false, w - 2 * pad).map(t => [t, "cfg:tanggal"])), ...(isHid("x:lembar") ? [] : [[`Lembar ${pi + 1} dari ${pn}`, "x:lembar"]])];
+    const cat = cfg.catatan && !isHid("cfg:catatan") ? wrap(cfg.catatan, fs2 * 0.85, false, w - 2 * pad).slice(0, 3) : [];
+    if (!il.length && !tl.length && !cat.length) return {h:0, draw:() => ""};
     const h = pad * 1.1 + (il.length + tl.length + cat.length) * lh + 1 * u + pad * 0.4;
     return {h, draw:(x, y) => { let o = box(x, y, w, h), yy = y + pad + fs2 * 0.9;
       for (const t of cat){ o += T(x + w / 2, yy, t, {size:fs2 * 0.85, anchor:"middle", fill:"#444", extra:' font-style="italic"', k:"cfg:catatan"}); yy += lh; }
@@ -1444,32 +1495,39 @@ function renderSheet(sp, pi, pn, W, H){
 
   // susun
   if (cfg.orient === "landscape"){
-    const pw = IW * (W >= 400 ? 0.32 : 0.36), mw = IW - pw;
-    const map = drawMap(M, M, mw, IH, d, C, u, lw, uid);
+    const mwPct = Math.min(85, Math.max(40, layN("mapW", (1 - (W >= 400 ? 0.32 : 0.36)) * 100)));
+    let mw = IW * mwPct / 100, pw = IW - mw;
+    const fitH = w => [titleBlock(w), infoBlock(w), qrBlock(w), legendBlock(w), nsBlock(w, 1000)].filter(Boolean).reduce((a, b) => a + b.h, 0) + footBlock(w).h;
+    for (let g = 0; g < 40 && mw > IW * 0.4 && fitH(pw) > IH - 14 * u0; g++){ mw -= IW * 0.01; pw = IW - mw; }   // panel terlalu sempit: lebarkan sampai semua kotak muat
+    const map = drawMap(M, M, mw, IH, d, C, u0 * fMp, lw, uid);
     s += map.svg;
+    split = {dir:"v", a:M / W, b:IW / W, pct:mw / IW * 100};
     const px = M + mw;
     const blocks = [titleBlock(pw), infoBlock(pw), qrBlock(pw), legendBlock(pw), nsBlock(pw, map.scale)].filter(Boolean), foot = footBlock(pw);
     let yy = M; for (const b of blocks){ s += b.draw(px, yy); yy += b.h; }
     const th = M + IH - foot.h - yy;
-    s += th > 12 * u ? drawTableBox(px, yy, pw, th, T0, u, pad, lw) : box(px, yy, pw, Math.max(0, th));
+    s += th > 12 * u && !isHid("blk:table") ? drawTableBox(px, yy, pw, th, T0, u0 * fB, pad, lw) : box(px, yy, pw, Math.max(0, th));
     s += foot.draw(px, M + IH - foot.h);
   } else {
-    const tb = titleBlock(IW); s += tb.draw(M, M);
-    const lw2 = IW * 0.46, rw = IW - lw2;
+    const tb = titleBlock(IW) || {h:0, draw:() => ""}; s += tb.draw(M, M);
+    const noTab = isHid("blk:table"), lw2 = noTab ? IW : IW * 0.46, rw = IW - lw2;
     const left = [infoBlock(lw2), qrBlock(lw2), legendBlock(lw2), nsBlock(lw2, 1000), footBlock(lw2)].filter(Boolean);
     const leftH = left.reduce((a, b) => a + b.h, 0);
-    const bh = Math.min(Math.max(leftH, IH * 0.3), IH * 0.52);
-    const mapH = IH - tb.h - bh;
-    const map = drawMap(M, M + tb.h, IW, mapH, d, C, u, lw, uid);
+    const autoBh = Math.min(Math.max(leftH, IH * 0.3), IH * 0.52);
+    const mhPct = Math.min(88, Math.max(30, layN("mapH", (IH - tb.h - autoBh) / IH * 100)));
+    const needL = [infoBlock(lw2), qrBlock(lw2), legendBlock(lw2), nsBlock(lw2, 1000)].filter(Boolean).reduce((a, b) => a + b.h, 0) + footBlock(lw2).h;
+    const mapH = Math.max(IH * 0.25, Math.min(IH * mhPct / 100, IH - tb.h - Math.max(10 * u0, needL))), bh = IH - tb.h - mapH;
+    split = {dir:"h", a:(M + tb.h) / H, b:IH / H, pct:mapH / IH * 100};
+    const map = drawMap(M, M + tb.h, IW, mapH, d, C, u0 * fMp, lw, uid);
     s += map.svg;
     let yy = M + tb.h + mapH;
     for (const b of [infoBlock(lw2), qrBlock(lw2), legendBlock(lw2), nsBlock(lw2, map.scale)].filter(Boolean)){ s += b.draw(M, yy); yy += b.h; }
     const foot = footBlock(lw2), fy = Math.max(yy, M + IH - foot.h);
     if (fy > yy + 0.1) s += box(M, yy, lw2, fy - yy);
     s += foot.draw(M, fy);
-    s += drawTableBox(M + lw2, M + tb.h + mapH, rw, bh, T0, u, pad, lw);
+    if (!noTab) s += drawTableBox(M + lw2, M + tb.h + mapH, rw, bh, T0, u0 * fB, pad, lw);
   }
-  return s + "</svg>";
+  return s.replace("<svg ", `<svg data-split="${split.dir}" data-a="${split.a.toFixed(5)}" data-b="${split.b.toFixed(5)}" data-pct="${split.pct.toFixed(1)}" `) + "</svg>";
 }
 function legendItems(d, C, hasBm){
   const it = [], kinds = new Set(d.focus.map(o => o.kind));
@@ -1528,6 +1586,7 @@ function featTable(d){
     {h:"Tumpang tindih", k:"tt"},
   ].filter(c => c.k === "no" || rows.some(r => r[c.k]));
   cols.forEach(c => { c.key = "txt:col:" + c.k; c.h = tx("col:" + c.k, c.h); });
+  for (let i = cols.length - 1; i > 0; i--) if (isHid(cols[i].key)) cols.splice(i, 1);
   return {cap: tx("tcap", "DAFTAR BIDANG") + (d.items.length ? ` (${d.items.length})` : ""), capKey:"txt:tcap", cols, rows: rows.map(r => ({cells: cols.map(c => r[c.k] || ""), bad:r.bad})),
     empty: d.drawAll ? "Data bidang banyak; masukkan titik/poligon objek kerja agar peta dan daftar fokus ke lokasi." : P.lyr.bid.feats.length || P.lyr.pbt.feats.length ? "Tidak ada bidang di sekitar objek ini." : "SHP bidang tanah belum dimasukkan."};
 }
@@ -1535,9 +1594,10 @@ function objTable(d){
   const cols = [{h:"No", k:"no", a:"middle"}, {h:"Nama objek", k:"name"}, {h:"Jenis", k:"kind"}, {h:"Bidang", k:"nb", a:"end"}, {h:"PBT", k:"np", a:"end"}, {h:"TT", k:"ntt", a:"end"}];
   const hasL = P.lyr.bid.feats.length || P.lyr.pbt.feats.length;
   const use = hasL ? cols.filter(c => P.lyr.pbt.feats.length || (c.k !== "np" && c.k !== "ntt")) : cols.slice(0, 3);
+  use.forEach(c => { c.key = "txt:col:" + c.k; c.h = tx("col:" + c.k, c.h); });
+  for (let i = use.length - 1; i > 0; i--) if (isHid(use[i].key)) use.splice(i, 1);
   const rows = d.focus.map(o => { const rel = relFor(o), nb = rel.filter(x => x.f.src === "bid").length, ntt = rel.filter(x => x.f.tt.some(t => !t.same)).length;
     return {cells: use.map(c => ({no:String(o.no), name:o.name, kind:KIND_NAME[o.kind], nb:String(nb), np:String(rel.length - nb), ntt: ntt ? String(ntt) : "-"})[c.k]), bad: ntt > 0}; });
-  use.forEach(c => { c.key = "txt:col:" + c.k; c.h = tx("col:" + c.k, c.h); });
   return {cap:`${tx("tcap_obj", "DAFTAR OBJEK KERJA")} (${rows.length})`, capKey:"txt:tcap_obj", cols:use, rows, empty:"Tidak ada objek."};
 }
 function drawTableBox(x, y, w, h, tb, u, pad, lw){
@@ -1576,7 +1636,7 @@ function drawTableBox(x, y, w, h, tb, u, pad, lw){
   return o;
 }
 function drawMap(x, y, w, h, d, C, u, lw, uid){
-  const cfg = P.cfg, g = 6 * u, iw = w - 2 * g, ih = h - 2 * g, ix = x + g, iy = y + g;
+  const cfg = P.cfg, g = Math.max(6 * (d.u0 || u), 4.5 * u), iw = w - 2 * g, ih = h - 2 * g, ix = x + g, iy = y + g;
   const [bx0, by0, bx1, by1] = d.ext, ew = Math.max(bx1 - bx0, 20), eh = Math.max(by1 - by0, 20);
   const need = Math.max(ew * 1.12 / iw, eh * 1.12 / ih) * 1000;
   const scale = cfg.scale === "auto" ? (NICE_SCALES.find(v => v >= Math.max(need, 250)) || Math.ceil(need / 1000) * 1000) : Number(cfg.scale);
@@ -1677,6 +1737,7 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
     }
   }
   const attr = bmr.svg && bmr.attr ? T(ix + iw - 1.2 * u, iy + ih - 1.2 * u, bmr.attr, {size:1.5 * u, anchor:"end", fill:"#fff", extra:` stroke="#000" stroke-opacity=".55" stroke-width="${n2(0.35 * u)}" paint-order="stroke"`}) : "";
+  if (isHid("blk:grid")) glab = glab.replace(/<text[^>]*>[^<]*<\/text>/g, "");
   s += `<g clip-path="url(#${uid}c)">${under}${polys}${grid}${over}${labels}${attr}</g>${glab}`;
   return {svg:s, scale};
 }
@@ -1790,12 +1851,13 @@ function renderPreview(){
   const [W, H] = P.pageSize;
   el.innerHTML = `<div class="pages">${n > PREV_MAX ? `<div class="note info">Pratinjau menampilkan ${PREV_MAX} lembar pertama dari ${n}. Unduhan PDF/PNG berisi semua lembar.</div>` : ""}${P.pages.map((p, i) => `<span class="pagecap">Lembar ${i + 1} dari ${n} · ${esc(P.cfg.paper)} ${W}×${H} mm</span><div class="page">${p}</div>`).join("")}</div>`;
   $("#page-style").textContent = `@page{size:${W}mm ${H}mm;margin:0}`;
+  attachSplitters();
   const need = [...new Set(P.tileUrls)].filter(u => !TILE.has(u));
   if (need.length){ tileJob = loadTiles(need).then(() => { tileJob = null; renderPreview(); }); }
   else if (!tileJob && !/gagal/.test($("#bm-status").textContent)) $("#bm-status").textContent = "";
   queueAdm();
 }
-function renderAll(){ renderObj(); renderLyr(); renderTT(); renderForm(); renderStyle(); renderOverlays(); renderBrState(); renderPreview(); }
+function renderAll(){ renderObj(); renderLyr(); renderTT(); renderForm(); renderStyle(); renderLayout(); renderOverlays(); renderBrState(); renderPreview(); }
 let chT;
 function changed(){ clearTimeout(chT); chT = setTimeout(() => { savePrefs(); renderForm(); renderPreview(); }, 180); }
 
@@ -1966,6 +2028,59 @@ $("#c-radius").oninput = e => { P.cfg.radius = e.target.value; P.objs.forEach(o 
 for (const k of ["ttMin", "ttSame"]) $("#c-" + k).onchange = e => { P.cfg[k] = e.target.value; savePrefs(); computeTT(); };
 $("#c-bmOpacity").oninput = e => { P.cfg.bmOpacity = e.target.value; $("#v-bmOpacity").textContent = e.target.value + "%"; changed(); };
 $("#btn-reset").onclick = () => { P.cfg = {...DEF, col: P.cfg.col, txt: P.cfg.txt, tanggal: todayStr()}; savePrefs(); renderForm(); computeTT(); };
+
+/* ================= Tata letak lembar: lebar peta, ukuran teks, sembunyikan teks ================= */
+const FS_OPTS = [["0.7", "70%"], ["0.8", "80%"], ["0.9", "90%"], ["1", "100% (bawaan)"], ["1.1", "110%"], ["1.25", "125%"], ["1.4", "140%"], ["1.6", "160%"]];
+const BLOCKS = [["blk:title", "Judul"], ["blk:info", "Keterangan"], ["blk:qr", "QR code"], ["blk:legend", "Legenda"], ["blk:ns", "Arah utara & skala"], ["blk:table", "Daftar bidang"], ["blk:foot", "Instansi & tanggal"], ["blk:grid", "Koordinat tepi peta"]];
+function hidName(k){
+  const B = BLOCKS.find(b => b[0] === k); if (B) return B[1];
+  const fixed = {"cfg:title":"Judul", "cfg:instansi":"Instansi", "cfg:tanggal":"Tanggal", "cfg:catatan":"Catatan", "x:sub":"Subjudul", "x:subsmall":"Keterangan kecil di bawah judul", "x:lembar":"Nomor lembar", "x:proj":"Keterangan proyeksi", "x:skala":"Teks skala", "x:qrurl":"Alamat link QR", "x:qrlab":"Keterangan lokasi QR", "txt:qr_head":"Judul QR", "txt:h_leg":"Judul legenda", "txt:sub_index":"Subjudul indeks", "txt:tcap":"Judul daftar bidang", "txt:tcap_obj":"Judul daftar objek"};
+  if (fixed[k]) return fixed[k];
+  if (k.startsWith("txt:lab:")) return "Baris keterangan: " + tx(k.slice(4), k.slice(8));
+  if (k.startsWith("txt:leg:")) return "Legenda: " + (TXDEF[k.slice(4)] !== undefined ? tx(k.slice(4), TXDEF[k.slice(4)]) : k.slice(8));
+  if (k.startsWith("txt:col:")) return "Kolom tabel: " + (TXDEF[k.slice(4)] || k.slice(8));
+  if (k.startsWith("txt:h_info")) return "Judul keterangan";
+  if (k.startsWith("obj:")){ const o = P.objs.find(o => o.id === +k.slice(4)); return "Label objek: " + (o ? o.name : k); }
+  return k;
+}
+function setHid(k, on){ if (on) P.cfg.hide[k] = true; else delete P.cfg.hide[k]; savePrefs(); renderLayout(); renderPreview(); }
+function renderLayout(){
+  const L = P.cfg.lay;
+  for (const k of ["fsTitle", "fsPanel", "fsTable", "fsMap"]) fillSelect($("#c-" + k), FS_OPTS, String(L[k] || "1"));
+  const autoW = P.cfg.paper === "A4" ? 64 : 68;
+  $("#c-mapW").value = L.mapW || autoW; $("#v-mapW").textContent = L.mapW ? L.mapW + "%" : "otomatis";
+  $("#c-mapH").value = L.mapH || 60; $("#v-mapH").textContent = L.mapH ? L.mapH + "%" : "otomatis";
+  $("#blk-list").innerHTML = BLOCKS.map(([k, n]) => `<label class="chk"><input type="checkbox" data-blk="${k}" ${isHid(k) ? "" : "checked"}> ${esc(n)}</label>`).join("");
+  $("#blk-list").querySelectorAll("[data-blk]").forEach(c => c.onchange = () => setHid(c.dataset.blk, !c.checked));
+  const hid = Object.keys(P.cfg.hide).filter(k => !k.startsWith("blk:")), nsz = Object.keys(P.cfg.tsz).length;
+  $("#hid-box").innerHTML = (hid.length ? `<p class="small muted">Teks yang disembunyikan (klik untuk menampilkan lagi):</p><div class="hidlist">${hid.map(k => `<button data-unhide="${esc(k)}">↺ ${esc(hidName(k))}</button>`).join("")}</div>` : "")
+    + (nsz ? `<p class="small muted">${nsz} teks diubah ukurannya. <button class="ghost" id="btn-tszreset">Kembalikan ukuran teks</button></p>` : "");
+  $("#hid-box").querySelectorAll("[data-unhide]").forEach(b => b.onclick = () => setHid(b.dataset.unhide, false));
+  const tr = $("#btn-tszreset"); if (tr) tr.onclick = () => { P.cfg.tsz = {}; savePrefs(); renderLayout(); renderPreview(); };
+}
+for (const k of ["fsTitle", "fsPanel", "fsTable", "fsMap"]) $("#c-" + k).onchange = e => { if (e.target.value === "1") delete P.cfg.lay[k]; else P.cfg.lay[k] = e.target.value; savePrefs(); changed(); };
+for (const k of ["mapW", "mapH"]){
+  $("#c-" + k).oninput = e => { P.cfg.lay[k] = e.target.value; $("#v-" + k).textContent = e.target.value + "%"; changed(); };
+}
+$("#btn-layreset").onclick = () => { P.cfg.lay = {}; P.cfg.tsz = {}; for (const k of Object.keys(P.cfg.hide)) if (k.startsWith("blk:")) delete P.cfg.hide[k]; savePrefs(); renderLayout(); renderPreview(); };
+/* garis batas peta di pratinjau bisa diseret */
+function attachSplitters(){
+  document.querySelectorAll("#prev-body .page").forEach(pg => {
+    const sv = pg.querySelector("svg[data-split]"); if (!sv || !sv.dataset.split) return;
+    const dir = sv.dataset.split, a = +sv.dataset.a, b = +sv.dataset.b, pct = +sv.dataset.pct;
+    const h = document.createElement("div"); h.className = "splitter " + dir; h.title = dir === "v" ? "Seret untuk mengatur lebar peta" : "Seret untuk mengatur tinggi peta";
+    const place = p => { const f = a + b * p / 100; if (dir === "v") h.style.left = (f * 100) + "%"; else h.style.top = (f * 100) + "%"; h.firstChild.textContent = (dir === "v" ? "Lebar peta " : "Tinggi peta ") + Math.round(p) + "%"; };
+    h.innerHTML = "<span></span>"; place(pct); pg.appendChild(h);
+    h.onpointerdown = e => {
+      e.preventDefault(); h.setPointerCapture(e.pointerId); h.classList.add("drag"); let cur = pct;
+      h.onpointermove = ev => { const r = pg.getBoundingClientRect(), f = dir === "v" ? (ev.clientX - r.left) / r.width : (ev.clientY - r.top) / r.height;
+        cur = Math.min(dir === "v" ? 85 : 88, Math.max(dir === "v" ? 40 : 30, (f - a) / b * 100)); place(cur); };
+      h.onpointerup = () => { h.onpointermove = h.onpointerup = null; h.classList.remove("drag");
+        if (Math.abs(cur - pct) < 0.5) return;
+        P.cfg.lay[dir === "v" ? "mapW" : "mapH"] = String(Math.round(cur)); savePrefs(); renderLayout(); renderPreview(); };
+    };
+  });
+}
 
 /* ================= Bale Ruang NTB: layer tata ruang dan batas desa ================= */
 const BR_BASE = "https://raw.githubusercontent.com/atrbpnproject/baleruangntb/main/";
@@ -2237,18 +2352,20 @@ function txtGet(k){
   if (k.startsWith("cfg:")) return P.cfg[k.slice(4)] || "";
   if (k.startsWith("obj:")){ const o = P.objs.find(o => o.id === +k.slice(4)); return o ? o.name : ""; }
   if (k.startsWith("txt:")) return P.cfg.txt[k.slice(4)] ?? TXDEF[k.slice(4)] ?? "";
+  if (k.startsWith("x:")){ const el = document.querySelector(`.page svg [data-k="${CSS.escape(k)}"]`); return el ? el.textContent : ""; }
   return "";
 }
 function txtSet(k, v){
   if (k.startsWith("cfg:")) P.cfg[k.slice(4)] = v;
   else if (k.startsWith("obj:")){ const o = P.objs.find(o => o.id === +k.slice(4)); if (o && v.trim()) o.name = v.trim(); }
   else if (k.startsWith("txt:")){ if (v.trim()) P.cfg.txt[k.slice(4)] = v.trim(); else delete P.cfg.txt[k.slice(4)]; }
+  else return;
   savePrefs(); renderForm(); renderStyle(); if (k.startsWith("obj:")) renderObj(); renderPreview();
 }
 let inEd = null;
 function closeEditor(commit){
-  if (!inEd) return; const {ta, tip, k, v0} = inEd; inEd = null;
-  const v = ta.value; ta.remove(); tip.remove();
+  if (!inEd) return; const {ta, tip, bar, k, v0} = inEd; inEd = null;
+  const v = ta.value; ta.remove(); tip.remove(); bar.remove();
   if (commit && v !== v0){ txtSet(k, v); toast(k.startsWith("txt:") && !v.trim() ? "Teks dikembalikan ke bawaan." : "Teks diperbarui di semua lembar."); }
 }
 function openEditor(el){
@@ -2259,11 +2376,22 @@ function openEditor(el){
   ta.style.width = w + "px";
   ta.style.left = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2)) + "px";
   ta.style.top = Math.max(12, Math.min(innerHeight - 120, r.top - 6)) + "px";
+  const ro = k.startsWith("x:"); if (ro) ta.readOnly = true;
   const tip = document.createElement("div"); tip.className = "inedit-tip";
-  tip.textContent = (multi ? "Ctrl+Enter simpan" : "Enter simpan") + " · Esc batal" + (k.startsWith("txt:") ? " · kosongkan untuk teks bawaan" : "") + " · berlaku di semua lembar";
-  document.body.append(ta, tip);
-  const tr = ta.getBoundingClientRect(); tip.style.left = Math.max(8, Math.min(innerWidth - tip.offsetWidth - 8, tr.left)) + "px"; tip.style.top = (tr.bottom + 4) + "px";
-  inEd = {ta, tip, k, v0}; ta.focus(); ta.select();
+  tip.textContent = ro ? "Teks ini dibuat otomatis; bisa diubah ukurannya atau disembunyikan · Esc tutup" : (multi ? "Ctrl+Enter simpan" : "Enter simpan") + " · Esc batal" + (k.startsWith("txt:") ? " · kosongkan untuk teks bawaan" : "") + " · berlaku di semua lembar";
+  const bar = document.createElement("div"); bar.className = "inedit-bar";
+  const zNow = () => Math.round(tszOf(k) * 100) + "%";
+  bar.innerHTML = `<button data-z="-1" title="Perkecil teks">A−</button><span>${zNow()}</span><button data-z="1" title="Perbesar teks">A+</button><button data-hide>Sembunyikan</button>`;
+  document.body.append(ta, bar, tip);
+  const tr = ta.getBoundingClientRect(); bar.style.left = tip.style.left = Math.max(8, Math.min(innerWidth - Math.max(tip.offsetWidth, bar.offsetWidth) - 8, tr.left)) + "px";
+  bar.style.top = (tr.bottom + 4) + "px"; tip.style.top = (tr.bottom + 8 + bar.offsetHeight) + "px";
+  bar.addEventListener("mousedown", e => e.preventDefault());
+  bar.querySelectorAll("[data-z]").forEach(b => b.onclick = () => {
+    const z = Math.min(3, Math.max(0.4, tszOf(k) * (b.dataset.z === "1" ? 1.15 : 1 / 1.15)));
+    if (Math.abs(z - 1) < 0.03) delete P.cfg.tsz[k]; else P.cfg.tsz[k] = +z.toFixed(3);
+    bar.querySelector("span").textContent = zNow(); savePrefs(); renderLayout(); renderPreview(); });
+  bar.querySelector("[data-hide]").onclick = () => { closeEditor(false); setHid(k, true); toast("Teks disembunyikan di semua lembar. Tampilkan lagi lewat bagian 6."); };
+  inEd = {ta, tip, bar, k, v0}; ta.focus(); ta.select();
   ta.onkeydown = e => { if (e.key === "Escape"){ e.preventDefault(); closeEditor(false); }
     else if (e.key === "Enter" && (!multi || e.ctrlKey || e.metaKey)){ e.preventDefault(); closeEditor(true); } };
   ta.onblur = () => setTimeout(() => { if (inEd && inEd.ta === ta) closeEditor(true); }, 0);
