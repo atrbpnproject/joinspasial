@@ -195,7 +195,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
     <div class="appact"><button class="primary" data-proxy="#dl-pdf" disabled>Unduh PDF</button><button data-proxy="#dl-kml" disabled>KML</button><button data-proxy="#dl-xlsx" disabled>Tabel</button></div>
   </div>
   <nav class="secnav" aria-label="Bagian halaman">
-    <a href="#sec-obj"><b>1</b>Objek</a><a href="#sec-lyr"><b>2</b>Bidang &amp; PBT</a><a href="#sec-tt"><b>3</b>Tumpang tindih</a><a href="#sec-map"><b>4</b>Peta</a><a href="#sec-br"><b>5</b>Tata ruang &amp; desa</a><a href="#sec-sty"><b>6</b>Gaya &amp; warna</a><a href="#sec-prev"><b>7</b>Pratinjau &amp; unduh</a>
+    <a href="#sec-obj"><b>1</b>Objek</a><a href="#sec-lyr"><b>2</b>Bidang tanah</a><a href="#sec-tt"><b>3</b>Tumpang tindih</a><a href="#sec-map"><b>4</b>Peta</a><a href="#sec-br"><b>5</b>Tata ruang &amp; desa</a><a href="#sec-sty"><b>6</b>Gaya &amp; warna</a><a href="#sec-prev"><b>7</b>Pratinjau &amp; unduh</a>
   </nav>
 </header>
 <div class="wrap wide">
@@ -227,7 +227,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
   </section>
 
   <section class="card" id="sec-lyr">
-    <h2><span class="n">2</span>Bidang tanah dan PBT</h2>
+    <h2><span class="n">2</span>Bidang tanah <span class="muted" style="font-weight:500;font-size:15px">dan PBT bila ada</span></h2>
     <p class="muted small">Masukkan SHP poligon (zip, folder, atau file .shp + .dbf + .shx + .prj). Sistem koordinat dibaca dari .prj (TM-3, UTM, geografis, Web Mercator). Bila .prj tidak ada, sistem koordinat ditebak dari angka koordinatnya. Beberapa ZIP sekaligus (misalnya per kecamatan) digabung jadi satu layer. Keduanya boleh dikosongkan bila hanya perlu peta objek.</p>
     <div class="grid2">
       <div class="drop" id="drop-bid">
@@ -243,8 +243,8 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
         <div id="sum-bid"></div>
       </div>
       <div class="drop" id="drop-pbt">
-        <h3>PBT (Peta Bidang Tanah) <span class="pill" id="pill-pbt">kosong</span></h3>
-        <p class="hint">Layer PBT yang akan dicek tumpang tindihnya dengan bidang terdaftar.</p>
+        <h3>PBT (Peta Bidang Tanah) <span class="pill" id="pill-pbt">opsional</span></h3>
+        <p class="hint">Tidak wajib. Isi hanya bila ingin mengecek tumpang tindih bidang terdaftar dengan PBT. Tanpa PBT, peta kerja tetap dibuat dengan bidang tanah saja.</p>
         <div class="row">
           <button data-pick="pbt">Pilih file</button>
           <button data-pickdir="pbt">Pilih folder</button>
@@ -264,7 +264,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
   </section>
 
   <section class="card" id="sec-tt">
-    <h2><span class="n">3</span>Tumpang tindih bidang tanah dengan PBT</h2>
+    <h2><span class="n">3</span>Tumpang tindih bidang tanah dengan PBT <span class="muted" style="font-weight:500;font-size:15px">opsional</span></h2>
     <div class="form">
       <label>Abaikan tumpang tindih di bawah (m²)<input type="number" id="c-ttMin" min="0" step="0.5"></label>
       <label>Disebut berimpit (bidang yang sama) bila saling menutupi ≥ (%)<input type="number" id="c-ttSame" min="50" max="100" step="1"></label>
@@ -278,7 +278,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
       <label>Susunan lembar<select id="c-mode">
         <option value="obj">Satu lembar per objek (per titik / per poligon)</option>
         <option value="all">Semua objek dalam satu lembar</option>
-        <option value="tt">Satu lembar per kasus tumpang tindih</option>
+        <option value="tt" id="opt-tt">Satu lembar per kasus tumpang tindih (perlu SHP PBT)</option>
       </select></label>
       <label>Jenis objek yang dicetak<select id="c-kind">
         <option value="">Semua (titik, garis, poligon)</option>
@@ -677,6 +677,7 @@ const P = {
   pages: [], specs: [], pageSize: [297, 210], tileUrls: [], overlays: [],
 };
 const LYR_NAME = {bid: "Bidang tanah", pbt: "PBT"};
+const cntText = (nb, np) => `${nb} bidang terdaftar` + (P.lyr.pbt.feats.length ? `, ${np} PBT` : "");
 const LS_KEY = "petaLapang.v1";
 function loadPrefs(){ try { const s = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (s && typeof s === "object") for (const k of Object.keys(P.cfg)) if (k in s) P.cfg[k] = s[k]; } catch {}
   P.cfg.col = P.cfg.col && typeof P.cfg.col === "object" ? {...P.cfg.col} : {}; P.cfg.txt = P.cfg.txt && typeof P.cfg.txt === "object" ? {...P.cfg.txt} : {}; }
@@ -1276,7 +1277,7 @@ function sheetData(sp){
     if (o.kind === "line") d.info.push(["Panjang", `${fmtA(o.len)} m`]);
     const nb = rel.filter(x => x.f.src === "bid").length, np = rel.length - nb, ntt = rel.filter(x => x.f.tt.some(t => !t.same)).length;
     const where = o.kind === "poly" ? "di dalam poligon" : `dalam radius ${fmtA(r)} m`;
-    d.info.push(["Bidang terkait", `${nb} bidang terdaftar, ${np} PBT ${where}` + (ntt ? `; ${ntt} terlibat tumpang tindih` : "")]);
+    d.info.push(["Bidang terkait", `${cntText(nb, np)} ${where}` + (ntt ? `; ${ntt} terlibat tumpang tindih` : "")]);
     if (o.desc) d.info.push(["Deskripsi", o.desc.replace(/\s*\n\s*/g, "; ")]);
     d.posHead = o.kind === "poly" ? "Dalam objek" : "Jarak";
   } else if (sp.kind === "index" || sp.kind === "all"){
@@ -1286,20 +1287,20 @@ function sheetData(sp){
     for (const o of objs) for (const it of relFor(o)) if (!seen.has(it.f)) seen.set(it.f, {f:it.f});
     if (!objs.length){
       for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats){ ext = bbUnion(ext, f.bb); if (f.tt.length) seen.set(f, {f}); }
-      if (seen.size === 0 && P.lyr.bid.feats.length + P.lyr.pbt.feats.length <= 80) for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats) seen.set(f, {f});
+      if (seen.size === 0){ d.drawAll = true; if (P.lyr.bid.feats.length + P.lyr.pbt.feats.length <= 600) for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats) seen.set(f, {f}); }
     }
     d.ext = ext || [0, 0, 100, 100];
     d.focus = objs;
     d.items = [...seen.values()].sort((p, q) => (p.f.src === q.f.src ? 0 : p.f.src === "bid" ? -1 : 1) || ((q.f.bb[1] + q.f.bb[3]) - (p.f.bb[1] + p.f.bb[3])) || ((p.f.bb[0] + p.f.bb[2]) - (q.f.bb[0] + q.f.bb[2])));
     d.subKey = sp.kind === "index" ? "txt:sub_index" : null;
-    d.sub = sp.kind === "index" ? tx("sub_index", "Lembar indeks objek kerja") : (objs.length ? `Seluruh objek kerja (${objs.length})` : "Bidang tanah dan PBT");
+    d.sub = sp.kind === "index" ? tx("sub_index", "Lembar indeks objek kerja") : (objs.length ? `Seluruh objek kerja (${objs.length})` : P.lyr.pbt.feats.length ? "Bidang tanah dan PBT" : "Bidang tanah terdaftar");
     const cnt = k => objs.filter(o => o.kind === k).length;
     if (objs.length) d.info.push(["Objek kerja", ["point", "line", "poly"].filter(k => cnt(k)).map(k => `${cnt(k)} ${KIND_NAME[k].toLowerCase()}`).join(", ")]);
     const folders = [...new Set(objs.map(o => o.folder))]; if (folders.length) d.info.push(["Layer My Maps", folders.join(", ")]);
     const [cx, cy] = [(d.ext[0] + d.ext[2]) / 2, (d.ext[1] + d.ext[3]) / 2], [lon, lat] = P.proj.toLL(cx, cy);
     d.info.push(["Tengah peta", llText(lon, lat)]);
-    const nb = d.items.filter(x => x.f.src === "bid").length, np = d.items.length - nb;
-    if (P.lyr.bid.feats.length || P.lyr.pbt.feats.length) d.info.push(["Bidang terkait", `${nb} bidang terdaftar, ${np} PBT` + (objs.length ? ` (radius ${fmtA(r)} m dari titik/garis, di dalam poligon)` : " yang tumpang tindih")]);
+    const nb = d.drawAll && !d.items.length ? P.lyr.bid.feats.length : d.items.filter(x => x.f.src === "bid").length, np = d.drawAll && !d.items.length ? P.lyr.pbt.feats.length : d.items.length - nb;
+    if (P.lyr.bid.feats.length || P.lyr.pbt.feats.length) d.info.push(["Bidang terkait", cntText(nb, np) + (objs.length ? ` (radius ${fmtA(r)} m dari titik/garis, di dalam poligon)` : d.drawAll ? "" : " yang tumpang tindih")]);
     const ntt = P.tt.filter(t => !t.same).length; if (P.ttState === "done") d.info.push(["Tumpang tindih", `${ntt} kasus sebagian, ${P.tt.length - ntt} berimpit (seluruh data)`]);
     if (sp.kind === "index") d.objTable = true;
     d.posHead = "";
@@ -1518,7 +1519,7 @@ function featTable(d){
   const showNama = P.cfg.nama && rows.some(r => r.nama);
   const cols = [
     {h:"No", k:"no", a:"middle"},
-    {h:"NIB / No. PBT", k:"id"},
+    {h: P.lyr.pbt.feats.length ? "NIB / No. PBT" : "NIB", k:"id"},
     {h:"Hak", k:"hak"},
     ...(showNama ? [{h:"Nama", k:"nama"}] : []),
     ...(P.cfg.adm ? [{h:"Desa", k:"desa"}, {h:"Kecamatan", k:"kec"}] : []),
@@ -1528,12 +1529,12 @@ function featTable(d){
   ].filter(c => c.k === "no" || rows.some(r => r[c.k]));
   cols.forEach(c => { c.key = "txt:col:" + c.k; c.h = tx("col:" + c.k, c.h); });
   return {cap: tx("tcap", "DAFTAR BIDANG") + (d.items.length ? ` (${d.items.length})` : ""), capKey:"txt:tcap", cols, rows: rows.map(r => ({cells: cols.map(c => r[c.k] || ""), bad:r.bad})),
-    empty: P.lyr.bid.feats.length || P.lyr.pbt.feats.length ? "Tidak ada bidang di sekitar objek ini." : "SHP bidang tanah / PBT belum dimasukkan."};
+    empty: d.drawAll ? "Data bidang banyak; masukkan titik/poligon objek kerja agar peta dan daftar fokus ke lokasi." : P.lyr.bid.feats.length || P.lyr.pbt.feats.length ? "Tidak ada bidang di sekitar objek ini." : "SHP bidang tanah belum dimasukkan."};
 }
 function objTable(d){
   const cols = [{h:"No", k:"no", a:"middle"}, {h:"Nama objek", k:"name"}, {h:"Jenis", k:"kind"}, {h:"Bidang", k:"nb", a:"end"}, {h:"PBT", k:"np", a:"end"}, {h:"TT", k:"ntt", a:"end"}];
   const hasL = P.lyr.bid.feats.length || P.lyr.pbt.feats.length;
-  const use = hasL ? cols : cols.slice(0, 3);
+  const use = hasL ? cols.filter(c => P.lyr.pbt.feats.length || (c.k !== "np" && c.k !== "ntt")) : cols.slice(0, 3);
   const rows = d.focus.map(o => { const rel = relFor(o), nb = rel.filter(x => x.f.src === "bid").length, ntt = rel.filter(x => x.f.tt.some(t => !t.same)).length;
     return {cells: use.map(c => ({no:String(o.no), name:o.name, kind:KIND_NAME[o.kind], nb:String(nb), np:String(rel.length - nb), ntt: ntt ? String(ntt) : "-"})[c.k]), bad: ntt > 0}; });
   use.forEach(c => { c.key = "txt:col:" + c.k; c.h = tx("col:" + c.k, c.h); });
@@ -1605,7 +1606,7 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
   const sw = Math.max(0.2, 0.32 * u);
   const nums0 = d.nums || new Map(), tiny = f => (f.bb[2] - f.bb[0]) * k < 0.45 && (f.bb[3] - f.bb[1]) * k < 0.45 && !nums0.has(f) && !f.tt.length;
   // bawaan: hanya bidang yang ada di daftar (beririsan radius/poligon); opsi showAll menggambar semua yang tampak
-  const onlyRel = !cfg.showAll && !d.objTable, draw = f => vis(f) && (onlyRel ? nums0.has(f) : !tiny(f));
+  const onlyRel = !cfg.showAll && !d.objTable && !d.drawAll, draw = f => vis(f) && (onlyRel ? nums0.has(f) : !tiny(f));
   for (const f of P.lyr.pbt.feats) if (draw(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.pbtFill}" fill-opacity="${C.pbtFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.pbt}" stroke-width="${n2(sw)}" stroke-dasharray="${n2(1.1 * u)} ${n2(0.6 * u)}" stroke-linejoin="round"/>`;
   for (const f of P.lyr.bid.feats) if (draw(f)) polys += `<path d="${pathD(f.mr, toMm, true)}" fill="${C.bidFill}" fill-opacity="${C.bidFill === "none" ? 0 : 0.55}" fill-rule="evenodd" stroke="${C.bid}" stroke-width="${n2(sw)}" stroke-linejoin="round"/>`;
   for (const t of P.tt) if (bbHit(t.bb, ext) && (!onlyRel || nums0.has(t.a) || nums0.has(t.b))){
@@ -1724,7 +1725,7 @@ function renderObj(){
 function renderLyr(){
   for (const k of ["bid", "pbt"]){
     const L = P.lyr[k], el = $("#sum-" + k);
-    $("#pill-" + k).textContent = L.feats.length ? `${fmt(L.feats.length)} bidang` : "kosong";
+    $("#pill-" + k).textContent = L.feats.length ? `${fmt(L.feats.length)} bidang` : k === "pbt" ? "opsional" : "kosong";
     $("#pill-" + k).className = "pill" + (L.feats.length ? " acc" : "");
     if (!L.layers.length){ el.innerHTML = ""; continue; }
     const K = L.keys, kk = [["NIB", K.nib], ["Hak", K.hak], ["Nama", K.nama], ["Luas", K.luas], ...(k === "pbt" ? [["No. PBT", K.pbt]] : [])].filter(x => x[1]);
@@ -1744,7 +1745,9 @@ function groupWarn(ws){
 }
 function renderTT(){
   const el = $("#tt-body"), A = P.lyr.bid.feats, B = P.lyr.pbt.feats;
-  if (!A.length || !B.length){ el.innerHTML = `<div class="empty">Masukkan SHP bidang tanah dan SHP PBT untuk memeriksa tumpang tindih.</div>`; return; }
+  $("#sec-tt .form").hidden = !B.length;
+  if (!B.length){ el.innerHTML = `<p class="small muted">Bagian ini opsional dan hanya dipakai bila SHP PBT dimasukkan di bagian 2. Tanpa PBT, peta kerja tetap dibuat dengan bidang tanah saja.</p>`; return; }
+  if (!A.length){ el.innerHTML = `<div class="empty">Masukkan juga SHP bidang tanah terdaftar untuk memeriksa tumpang tindih dengan PBT.</div>`; return; }
   if (P.ttState === "nolib"){ el.innerHTML = `<div class="note bad">Pustaka analisis poligon belum termuat (perlu koneksi internet saat membuka halaman). Muat ulang halaman lalu coba lagi.</div>`; return; }
   if (P.ttState !== "done") return;
   const part = P.tt.filter(t => !t.same), same = P.tt.length - part.length;
@@ -1772,6 +1775,7 @@ function renderForm(){
   fillSelect($("#c-bm"), Object.entries(BASEMAPS).map(([k, b]) => [k, b.label]), c.bm);
   $("#c-bmOpacity").value = c.bmOpacity; $("#v-bmOpacity").textContent = c.bmOpacity + "%";
   $("#c-index").disabled = c.mode !== "obj"; $("#c-ttOnly").disabled = !P.tt.length;
+  $("#opt-tt").disabled = !P.lyr.pbt.feats.length && c.mode !== "tt";
 }
 const PREV_MAX = 12;
 function renderPreview(){
