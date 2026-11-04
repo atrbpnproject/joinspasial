@@ -151,7 +151,7 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
 /* Menu bar aplikasi */
 :root{--abh:100px}
 .appbar{display:block;gap:0;position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:saturate(1.4) blur(8px);-webkit-backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
-.appbar-in{box-sizing:border-box;width:100%;max-width:1640px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:14px;min-width:0}
+.appbar-in{box-sizing:border-box;width:100%;max-width:1120px;margin:0 auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:14px;min-width:0}
 .brand{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--ink);text-decoration:none;white-space:nowrap}
 .brand svg{width:22px;height:22px;color:var(--accent);flex:none}
 .apptabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1 1 auto}
@@ -161,7 +161,7 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
 .apptabs a[aria-current=page]{color:var(--accent);background:var(--accent-soft);font-weight:600}
 .appact{display:flex;gap:6px;flex:none}
 .appact button{padding:6px 11px;font-size:13px}
-.secnav{box-sizing:border-box;width:100%;max-width:1640px;border-top:0;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.secnav{box-sizing:border-box;width:100%;max-width:1120px;border-top:0;margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
 .secnav::-webkit-scrollbar{display:none}
 .secnav a{padding:8px 10px;font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;display:flex;gap:6px;align-items:baseline}
 .secnav a b{font-family:var(--f-mono);font-weight:500;font-size:11.5px;color:var(--accent)}
@@ -170,17 +170,11 @@ input[type=number]{box-sizing:border-box;font:inherit;font-size:13.5px;backgroun
 @media (max-width:720px){.appbar-in{flex-wrap:wrap;row-gap:6px}.apptabs{order:3;flex-basis:100%}.appact{margin-left:auto}.brand span{display:none}}
 @media print{.appbar{display:none!important}}
 /* Tata letak dua kolom: pengaturan di kiri, pratinjau di kanan (layar lebar) */
-.wrap.wide{max-width:1640px;padding-top:22px}
+.wrap.wide{padding-top:22px}
 section.card{scroll-margin-top:calc(var(--abh) + 12px)}
 .layout{display:flex;flex-direction:column;gap:22px;min-width:0}
 .side{display:flex;flex-direction:column;gap:22px;min-width:0}
 .mainp{min-width:0}
-@media (min-width:1180px){
-  .layout{display:grid;grid-template-columns:minmax(400px,540px) minmax(0,1fr);align-items:start}
-  .mainp{position:sticky;top:calc(var(--abh) + 12px)}
-  #sec-prev{max-height:calc(100vh - var(--abh) - 28px);overflow:auto}
-  #sec-prev .dlbar{position:sticky;top:-20px;background:var(--surface);z-index:2;padding-block:4px}
-}
 .stylist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .styrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
 .styrow:last-child{border-bottom:0}
@@ -201,7 +195,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
     <div class="appact"><button class="primary" data-proxy="#dl-pdf" disabled>Unduh PDF</button><button data-proxy="#dl-kml" disabled>KML</button><button data-proxy="#dl-xlsx" disabled>Tabel</button></div>
   </div>
   <nav class="secnav" aria-label="Bagian halaman">
-    <a href="#sec-obj"><b>1</b>Objek</a><a href="#sec-lyr"><b>2</b>Bidang &amp; PBT</a><a href="#sec-tt"><b>3</b>Tumpang tindih</a><a href="#sec-map"><b>4</b>Peta</a><a href="#sec-sty"><b>5</b>Gaya &amp; warna</a><a href="#sec-prev"><b>6</b>Pratinjau &amp; unduh</a>
+    <a href="#sec-obj"><b>1</b>Objek</a><a href="#sec-lyr"><b>2</b>Bidang &amp; PBT</a><a href="#sec-tt"><b>3</b>Tumpang tindih</a><a href="#sec-map"><b>4</b>Peta</a><a href="#sec-br"><b>5</b>Tata ruang &amp; desa</a><a href="#sec-sty"><b>6</b>Gaya &amp; warna</a><a href="#sec-prev"><b>7</b>Pratinjau &amp; unduh</a>
   </nav>
 </header>
 <div class="wrap wide">
@@ -324,8 +318,20 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
     <div class="row"><button class="ghost" id="btn-reset">Kembalikan isian bawaan</button></div>
   </section>
 
+  <section class="card" id="sec-br">
+    <h2><span class="n">5</span>Tata ruang dan batas desa (Bale Ruang NTB)</h2>
+    <p class="muted small">Data diambil dari Bale Ruang NTB lewat internet, hanya bagian di sekitar lokasi kerja. Desa dan kecamatan dibaca dari batas desa NTB (indikatif) di titik tengah setiap bidang, PBT, dan objek kerja.</p>
+    <label class="chk small"><input type="checkbox" id="c-adm"> Isi desa dan kecamatan setiap bidang, PBT, dan objek kerja (tampil di tabel peta, keterangan, dan Excel)</label>
+    <p class="status" id="adm-status"></p>
+    <h3>Layer tata ruang</h3>
+    <div class="row"><button id="br-load">Tampilkan layer yang tersedia di lokasi ini</button><span class="status" id="br-status"></span></div>
+    <div id="br-list"></div>
+    <p class="small muted" id="ov-hint" hidden>Layer paling atas di daftar digambar paling atas di peta; bidang tanah selalu di atas semua layer.</p>
+    <div id="ov-body"></div>
+  </section>
+
   <section class="card" id="sec-sty">
-    <h2><span class="n">5</span>Gaya &amp; warna simbol</h2>
+    <h2><span class="n">6</span>Gaya &amp; warna simbol</h2>
     <p class="muted small">Warna berlaku untuk peta dan legenda di semua lembar. Bisa juga langsung klik 2x simbol di kotak legenda pada pratinjau. "Otomatis" memakai warna bawaan (warna menyesuaikan bila basemap citra tampil).</p>
     <div class="stylist" id="sty-list"></div>
     <div class="row small"><span class="muted" id="txt-count"></span><button class="ghost" id="btn-txtreset">Kembalikan semua teks bawaan</button><button class="ghost" id="btn-colreset">Kembalikan semua warna otomatis</button></div>
@@ -334,7 +340,7 @@ section.card{scroll-margin-top:calc(var(--abh) + 12px)}
 
   <div class="mainp">
   <section class="card" id="sec-prev">
-    <h2><span class="n">6</span>Pratinjau dan unduh</h2>
+    <h2><span class="n">7</span>Pratinjau dan unduh</h2>
     <div class="row dlbar">
       <button class="primary" id="dl-pdf" disabled>Unduh PDF</button>
       <button id="dl-png" disabled>Unduh PNG</button>
@@ -660,7 +666,7 @@ const DEF = {
   catatan: "Peta kerja ini bersifat indikatif untuk keperluan peninjauan lapang, bukan penetapan batas bidang tanah.",
   mode: "obj", kind: "", radius: "50", scale: "auto", index: true, ttOnly: false, nama: true, labNib: false,
   paper: "A4", orient: "landscape", grid: "geo", objColor: "mm",
-  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true, showAll: false, qr: true, col: {}, txt: {},
+  bm: "esri", bmOpacity: "100", bmDetail: "0", ttMin: "1", ttSame: "90", crs: "", nearOnly: true, showAll: false, qr: true, col: {}, txt: {}, adm: true, ovs: [],
 };
 const mkLyr = () => ({leaves:new Map(), layers:[], feats:[], fields:[], crs:null, warnings:[], ix:null, keys:{}});
 const P = {
@@ -668,7 +674,7 @@ const P = {
   lyr: {bid: mkLyr(), pbt: mkLyr()},
   proj: null, tt: [], ttState: "",
   cfg: {...DEF, tanggal: ""},
-  pages: [], specs: [], pageSize: [297, 210], tileUrls: [],
+  pages: [], specs: [], pageSize: [297, 210], tileUrls: [], overlays: [],
 };
 const LYR_NAME = {bid: "Bidang tanah", pbt: "PBT"};
 const LS_KEY = "petaLapang.v1";
@@ -1234,7 +1240,7 @@ function featRowsFor(items, ctx){
     if (it.d !== undefined) pos = it.d === 0 ? "kena" : `${fmtA(it.d)} m`;
     else if (it.ar !== undefined) pos = `${fmtA(it.ar)} m² (${fmtPct(it.pct)})`;
     return {no:nums.get(f), src: f.src === "bid" ? "Bidang" : "PBT", id: f.src === "pbt" ? f.ident : (f.nib || "-"), hak: f.src === "bid" ? (f.hak || "") : (f.nib && f.nib !== f.ident ? "NIB " + f.nib : ""), nama:f.nama,
-      luas: fmtA(f.luasAttr ?? f.area), pos, tt: tts.join("; "), bad: f.tt.some(t => !t.same)};
+      luas: fmtA(f.luasAttr ?? f.area), pos, tt: tts.join("; "), bad: f.tt.some(t => !t.same), desa: f.adm ? f.adm.desa : "", kec: f.adm ? f.adm.kec : ""};
   })};
 }
 
@@ -1264,6 +1270,7 @@ function sheetData(sp){
     if (o.kind === "point" && r > 0) d.circle = {c:o.m, r};
     { const [qx, qy] = o.kind === "point" ? o.m : o.lab, [lon, lat] = P.proj.toLL(qx, qy); d.qr = {url:gmaps(lon, lat), label:`${o.name} · ${llText(lon, lat)}${o.kind === "point" ? "" : " (tengah objek)"}`}; }
     d.info.push(["Nama objek", o.name], ["Layer My Maps", o.folder]);
+    if (P.cfg.adm && o.adm) d.info.push(["Desa / kecamatan", admText(o.adm)]);
     d.info.push(...objCoordRows(o));
     if (o.kind === "poly") d.info.push(["Luas objek", `${fmtA(o.area)} m² (${(o.area / 1e4).toLocaleString("id-ID", {maximumFractionDigits:4})} ha)`]);
     if (o.kind === "line") d.info.push(["Panjang", `${fmtA(o.len)} m`]);
@@ -1311,6 +1318,7 @@ function sheetData(sp){
       ["PBT", t.b.ident], ["Luas bidang / PBT", `${fmtA(t.a.luasAttr ?? t.a.area)} m² / ${fmtA(t.b.luasAttr ?? t.b.area)} m²`],
       ["Luas tumpang tindih", `${fmtA(t.area)} m² (${fmtPct(t.pa)} dari bidang, ${fmtPct(t.pb)} dari PBT)`],
       ["Lintang, bujur (tengah)", llText(lon, lat)], ["", dmsText(lon, lat)]);
+    if (P.cfg.adm && (t.a.adm || t.b.adm)) d.info.push(["Desa / kecamatan", admText(t.a.adm || t.b.adm)]);
     if (t.nibSame) d.info.push(["Catatan", "NIB bidang dan PBT sama"]);
     d.qr = {url:gmaps(lon, lat), label:`Tumpang tindih ${t.no} · ${llText(lon, lat)}`};
     const hit = P.objs.filter(o => bbHit(o.kind === "poly" ? o.bb : bbGrow(o.bb, r), t.bb)); if (hit.length) d.info.push(["Objek kerja terdekat", hit.slice(0, 4).map(o => o.name).join(", ")]);
@@ -1384,6 +1392,7 @@ function renderSheet(sp, pi, pn, W, H){
       legend.forEach((it, i) => {
         const cx = x + pad + (i % cols) * cw, cy = y + pad + 4 * u + Math.floor(i / cols) * lh;
         o += it.c ? `<g data-c="${it.c}">${legendSym(it, cx, cy, sw, sh, u, uid, lw)}<rect x="${n2(cx)}" y="${n2(cy)}" width="${n2(sw)}" height="${n2(sh)}" fill="#000" fill-opacity="0"/></g>` : legendSym(it, cx, cy, sw, sh, u, uid, lw);
+        if (it.t === "head"){ o += T(cx, cy + sh * 0.8, clip(tx("leg:" + it.key, it.text), ls, true, cw - 0.8 * u), {size:ls, bold:true, k:"txt:leg:" + it.key}); return; }
         o += T(cx + sw + 1.8 * u, cy + sh * 0.8, clip(tx("leg:" + it.key, it.text), ls, false, cw - sw - 2.6 * u), {size:ls, k:"txt:leg:" + it.key});
       });
       return o; }};
@@ -1473,12 +1482,24 @@ function legendItems(d, C, hasBm){
   if (P.tt.some(t => !t.same)) it.push({t:"hatch", key:"tt", c:"tt", color:C.tt, text:"Tumpang tindih bidang–PBT"});
   if (P.tt.some(t => t.same)) it.push({t:"same", key:"same", c:"same", color:C.same, text:"Bidang & PBT berimpit"});
   if (d.items.length) it.push({t:"num", key:"num", text: (d.items.some(x => x.f.src === "pbt") ? "Nomor bidang / PBT (P1…)" : "Nomor bidang di tabel") + (d.circle ? ", beririsan radius" : "")});
+  for (const ov of P.overlays){
+    if (!ov.feats || ov.hidden || !ov.style.legend) continue;
+    const st = ov.style, base = {stroke:Number(st.strokeW) > 0 ? st.stroke : "none", op:Number(st.fillOp) / 100, dash:st.dash};
+    const vis = ov.feats.filter(f => bbHit(f.bb, bbGrow(d.ext, 150)));
+    if (!vis.length) continue;
+    it.push({t:"head", key:"ovh:" + ov.key, text: st.title || ovAutoTitle(ov)});
+    if (st.by){ const cm = ovColorMap(ov), vals = [...new Set(vis.map(f => ovVal(ov, f)))].sort((a, b) => a.localeCompare(b, "id", {numeric:true}));
+      for (const v of vals) it.push({t:"ov", key:`ov:${ov.key}:${v}`, ...base, color:cm.get(v), text:v}); }
+    else it.push({t:"ov", key:`ov:${ov.key}`, ...base, color:st.fill, text:ov.label});
+  }
   if (hasBm) it.push({t:"bm", key:"bm", text: BASEMAPS[P.cfg.bm].attr || BASEMAPS[P.cfg.bm].label});
   return it;
 }
 function legendSym(it, x, y, sw, sh, u, uid, lw){
   const r = `x="${n2(x)}" y="${n2(y)}" width="${n2(sw)}" height="${n2(sh)}"`;
   switch (it.t){
+    case "head": return "";
+    case "ov": return `<rect ${r} fill="#fff"/><rect ${r} fill="${it.color}" fill-opacity="${(it.op ?? 1).toFixed(2)}" stroke="${it.stroke === "none" ? "#999" : it.stroke}" stroke-width="${n2(lw)}"${dashArr(it.dash, lw)}/>`;
     case "pt": return `<circle cx="${n2(x + sw / 2)}" cy="${n2(y + sh / 2)}" r="${n2(1.2 * u)}" fill="${it.color}" stroke="#fff" stroke-width="${n2(0.45 * u)}"/><circle cx="${n2(x + sw / 2)}" cy="${n2(y + sh / 2)}" r="${n2(1.45 * u)}" fill="none" stroke="#000" stroke-width="${n2(0.12 * u)}"/>`;
     case "ln": return `<line x1="${n2(x)}" y1="${n2(y + sh / 2)}" x2="${n2(x + sw)}" y2="${n2(y + sh / 2)}" stroke="${it.color}" stroke-width="${n2(0.7 * u)}"/>`;
     case "pg": return `<rect ${r} fill="${it.color}" fill-opacity=".15" stroke="${it.color}" stroke-width="${n2(0.6 * u)}"/>`;
@@ -1500,6 +1521,7 @@ function featTable(d){
     {h:"NIB / No. PBT", k:"id"},
     {h:"Hak", k:"hak"},
     ...(showNama ? [{h:"Nama", k:"nama"}] : []),
+    ...(P.cfg.adm ? [{h:"Desa", k:"desa"}, {h:"Kecamatan", k:"kec"}] : []),
     {h:"Luas (m²)", k:"luas", a:"end"},
     ...(d.posHead ? [{h:d.posHead, k:"pos", a:"end"}] : []),
     {h:"Tumpang tindih", k:"tt"},
@@ -1565,6 +1587,19 @@ function drawMap(x, y, w, h, d, C, u, lw, uid){
   const bmr = basemapSvg({scale, ext}, toMm); P.tileUrls.push(...bmr.urls);
   let under = bmr.svg, polys = "", over = "", labels = "";
   const vis = f => bbHit(f.bb, ext);
+  for (const ov of [...P.overlays].reverse()){   // kartu teratas digambar paling atas
+    if (!ov.feats || ov.hidden) continue;
+    const st = ov.style, cm = ovColorMap(ov), op = Number(st.fillOp) / 100, sw = Number(st.strokeW);
+    for (const f of ov.feats){
+      if (!vis(f)) continue;
+      const col = st.by ? cm.get(ovVal(ov, f)) : st.fill;
+      for (const pt of f.parts){
+        if (pt.kind === "poly") under += `<path d="${pathD(pt.rings, toMm, true)}" fill="${col}" fill-opacity="${op}" fill-rule="evenodd" stroke="${sw > 0 ? st.stroke : "none"}" stroke-width="${n2(sw)}" stroke-linejoin="round"${dashArr(st.dash, sw)}/>`;
+        else if (pt.kind === "line") under += `<path d="${pathD(pt.rings, toMm, false)}" fill="none" stroke="${col}" stroke-width="${n2(Math.max(sw, 0.3))}"${dashArr(st.dash, sw)}/>`;
+        else for (const c of pt.rings[0]){ const [px, py] = toMm(c[0], c[1]); under += `<circle cx="${n2(px)}" cy="${n2(py)}" r="${n2(0.8 * u)}" fill="${col}" stroke="${st.stroke}" stroke-width="${n2(sw)}"/>`; }
+      }
+    }
+  }
   const halo = (c = "#fff", wdt = 0.55) => ` stroke="${c}" stroke-width="${n2(wdt * u)}" paint-order="stroke" stroke-linejoin="round"`;
   // PBT lalu bidang
   const sw = Math.max(0.2, 0.32 * u);
@@ -1754,8 +1789,9 @@ function renderPreview(){
   const need = [...new Set(P.tileUrls)].filter(u => !TILE.has(u));
   if (need.length){ tileJob = loadTiles(need).then(() => { tileJob = null; renderPreview(); }); }
   else if (!tileJob && !/gagal/.test($("#bm-status").textContent)) $("#bm-status").textContent = "";
+  queueAdm();
 }
-function renderAll(){ renderObj(); renderLyr(); renderTT(); renderForm(); renderStyle(); renderPreview(); }
+function renderAll(){ renderObj(); renderLyr(); renderTT(); renderForm(); renderStyle(); renderOverlays(); renderBrState(); renderPreview(); }
 let chT;
 function changed(){ clearTimeout(chT); chT = setTimeout(() => { savePrefs(); renderForm(); renderPreview(); }, 180); }
 
@@ -1816,21 +1852,22 @@ const gmaps = (lon, lat) => `https://www.google.com/maps/search/?api=1&query=${l
 $("#dl-xlsx").onclick = e => withStatus(e.currentTarget, async () => {
   const sheets = [], r = Number(P.cfg.radius) || 0;
   if (P.objs.length){
-    const head = ["No", "Nama objek", "Layer", "Jenis", "Lintang", "Bujur", ...(P.proj.isTM ? ["X (" + P.proj.name + ")", "Y"] : []), "Luas (m²)", "Panjang (m)", "Bidang terkait", "PBT terkait", "Terlibat tumpang tindih", "Deskripsi", "Link Google Maps"];
+    const head = ["No", "Nama objek", "Layer", "Jenis", "Lintang", "Bujur", ...(P.proj.isTM ? ["X (" + P.proj.name + ")", "Y"] : []), "Luas (m²)", "Panjang (m)", "Bidang terkait", "PBT terkait", "Terlibat tumpang tindih", "Deskripsi", "Link Google Maps", ...ADM_HEAD];
     const rows = P.objs.map(o => { const [x, y] = o.kind === "point" ? o.m : o.lab, [lon, lat] = P.proj.toLL(x, y), rel = relFor(o), nb = rel.filter(q => q.f.src === "bid").length;
       return [o.no, o.name, o.folder, KIND_NAME[o.kind], +lat.toFixed(7), +lon.toFixed(7), ...(P.proj.isTM ? [+x.toFixed(3), +y.toFixed(3)] : []), o.kind === "poly" ? +o.area.toFixed(2) : "", o.kind === "line" ? +o.len.toFixed(2) : "", nb, rel.length - nb, rel.filter(q => q.f.tt.some(t => !t.same)).length, o.desc, gmaps(lon, lat)]; });
+    rows.forEach((r, i) => r.push(...admCells(P.objs[i].adm)));
     sheets.push({name:"Objek kerja", head, rows});
-    const head2 = ["No objek", "Nama objek", "Sumber", "NIB", "No. PBT", "Hak", "Nama pemegang hak", "Luas atribut (m²)", "Luas hitung (m²)", "Jarak ke titik/garis (m)", "Luas di dalam poligon (m²)", "% bidang di dalam poligon", "Tumpang tindih dengan"];
+    const head2 = ["No objek", "Nama objek", "Sumber", "NIB", "No. PBT", "Hak", "Nama pemegang hak", "Luas atribut (m²)", "Luas hitung (m²)", "Jarak ke titik/garis (m)", "Luas di dalam poligon (m²)", "% bidang di dalam poligon", "Tumpang tindih dengan", ...ADM_HEAD];
     const rows2 = [];
     for (const o of P.objs) for (const it of relFor(o)){ const f = it.f;
       rows2.push([o.no, o.name, LYR_NAME[f.src], f.nib, f.pbt, f.hak, f.nama, f.luasAttr ?? "", +f.area.toFixed(2), it.d !== undefined ? +it.d.toFixed(2) : "", it.ar !== undefined ? +it.ar.toFixed(2) : "", it.pct !== undefined ? +(it.pct * 100).toFixed(2) : "",
-        f.tt.map(t => { const q = t.a === f ? t.b : t.a; return `${q.ident} (${fmtA(t.area)} m², ${ttCat(t).toLowerCase()})`; }).join("; ")]); }
+        f.tt.map(t => { const q = t.a === f ? t.b : t.a; return `${q.ident} (${fmtA(t.area)} m², ${ttCat(t).toLowerCase()})`; }).join("; "), ...admCells(f.adm)]); }
     sheets.push({name:"Bidang per objek", head:head2, rows:rows2});
   }
   if (P.tt.length){
-    sheets.push({name:"Tumpang tindih", head:["No", "Kategori", "NIB bidang", "Hak bidang", "Nama pemegang hak", "Luas bidang (m²)", "No. PBT / ID", "NIB PBT", "Luas PBT (m²)", "Luas tumpang tindih (m²)", "% dari bidang", "% dari PBT", "NIB sama", "Lintang", "Bujur", "Link Google Maps"],
+    sheets.push({name:"Tumpang tindih", head:["No", "Kategori", "NIB bidang", "Hak bidang", "Nama pemegang hak", "Luas bidang (m²)", "No. PBT / ID", "NIB PBT", "Luas PBT (m²)", "Luas tumpang tindih (m²)", "% dari bidang", "% dari PBT", "NIB sama", "Lintang", "Bujur", "Link Google Maps", ...ADM_HEAD],
       rows: P.tt.map(t => { const [lon, lat] = P.proj.toLL(t.lab[0], t.lab[1]);
-        return [t.no, ttCat(t), t.a.nib, t.a.hak, t.a.nama, +(t.a.luasAttr ?? t.a.area).toFixed(2), t.b.ident, t.b.nib, +(t.b.luasAttr ?? t.b.area).toFixed(2), +t.area.toFixed(2), +(t.pa * 100).toFixed(2), +(t.pb * 100).toFixed(2), t.nibSame ? "Ya" : "", +lat.toFixed(7), +lon.toFixed(7), gmaps(lon, lat)]; })});
+        return [t.no, ttCat(t), t.a.nib, t.a.hak, t.a.nama, +(t.a.luasAttr ?? t.a.area).toFixed(2), t.b.ident, t.b.nib, +(t.b.luasAttr ?? t.b.area).toFixed(2), +t.area.toFixed(2), +(t.pa * 100).toFixed(2), +(t.pb * 100).toFixed(2), t.nibSame ? "Ya" : "", +lat.toFixed(7), +lon.toFixed(7), gmaps(lon, lat), ...admCells(t.a.adm || t.b.adm)]; })});
   }
   if (!sheets.length) sheets.push({name:"Info", head:["Keterangan"], rows:[["Belum ada objek kerja atau hasil tumpang tindih."]]});
   await saveFile(fileBase() + "_tabel.xlsx", await xlsxBlob(sheets));
@@ -1926,6 +1963,246 @@ for (const k of ["ttMin", "ttSame"]) $("#c-" + k).onchange = e => { P.cfg[k] = e
 $("#c-bmOpacity").oninput = e => { P.cfg.bmOpacity = e.target.value; $("#v-bmOpacity").textContent = e.target.value + "%"; changed(); };
 $("#btn-reset").onclick = () => { P.cfg = {...DEF, col: P.cfg.col, txt: P.cfg.txt, tanggal: todayStr()}; savePrefs(); renderForm(); computeTT(); };
 
+/* ================= Bale Ruang NTB: layer tata ruang dan batas desa ================= */
+const BR_BASE = "https://raw.githubusercontent.com/atrbpnproject/baleruangntb/main/";
+const BR_NAMES = {
+  lsd:"LSD (Lahan Sawah Dilindungi) NTB", lp2b:"LP2B NTB (usulan final 2026)", lbs:"LBS (Lahan Baku Sawah) NTB", rtrw:"RTRW Provinsi NTB",
+  kp2b:"KP2B Provinsi NTB", pippib:"PIPPIB 2025 NTB", "rtrw-sumbawa-barat":"RTRW Kab. Sumbawa Barat", "rdtr-maluk":"RDTR Maluk",
+  "rdtr-taliwang":"RDTR Taliwang", "rtrw-sumbawa":"RTRW Kab. Sumbawa", "rdtr-sumbawa-besar":"RDTR Sumbawa Besar", "rtrw-bima":"RTRW Kab. Bima",
+  "rtrw-kota-bima":"RTRW Kota Bima", "rtrw-dompu":"RTRW Kab. Dompu", "rtrw-mataram":"RTRW Kota Mataram", "rdtr-mataram":"RDTR Kota Mataram",
+};
+const brName = k => BR_NAMES[k] || k.replace(/-/g, " ").replace(/\b(rtrw|rdtr|kek|lsd|lbs|lp2b|kp2b)\b/gi, m => m.toUpperCase()).replace(/\b[a-z]/g, m => m.toUpperCase());
+const BR_CACHE = new Map();
+function brText(path){
+  if (BR_CACHE.has(path)) return BR_CACHE.get(path);
+  const p = (async () => {
+    const r = await fetch(BR_BASE + path); if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const buf = new Uint8Array(await r.arrayBuffer());
+    if (buf[0] === 0x1f && buf[1] === 0x8b){
+      if (typeof DecompressionStream === "undefined") throw new Error("browser tidak mendukung gzip");
+      return await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
+    }
+    return new TextDecoder().decode(buf);
+  })();
+  p.catch(() => BR_CACHE.delete(path)); BR_CACHE.set(path, p); return p;
+}
+const brAssigned = code => JSON.parse(code.slice(code.lastIndexOf("]=") + 2).trim().replace(/;\s*$/, ""));
+let BR_INDEX = null;
+async function brIndex(){
+  if (!BR_INDEX){ const code = await brText("data/analysis/index.js"); BR_INDEX = JSON.parse(code.slice(code.indexOf("=") + 1).trim().replace(/;\s*$/, "")); }
+  return BR_INDEX;
+}
+/* area kerja dalam lon/lat: objek kerja + radius, atau seluruh bidang bila tanpa objek */
+function areaLL(){
+  if (!P.proj) return null;
+  const r = (Number(P.cfg.radius) || 0) + 300; let bb = null;
+  const add = b => { bb = bb ? [Math.min(bb[0], b[0]), Math.min(bb[1], b[1]), Math.max(bb[2], b[2]), Math.max(bb[3], b[3])] : [...b]; };
+  const objs = P.objs.filter(o => !P.objOff.has(o.id) && o.bb);
+  if (objs.length) objs.forEach(o => add(bbGrow(o.bb, r)));
+  else for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats) if (f.bb) add(f.bb);
+  if (!bb) return null;
+  const pts = [[bb[0], bb[1]], [bb[2], bb[1]], [bb[0], bb[3]], [bb[2], bb[3]]].map(([a, b]) => P.proj.toLL(a, b));
+  return [Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1]))];
+}
+function brCellsFor(entry, bb){
+  const g = entry.grid || 0.1, out = [];
+  for (let x = Math.floor(bb[0] / g); x <= Math.floor(bb[2] / g); x++) for (let y = Math.floor(bb[1] / g); y <= Math.floor(bb[3] / g); y++){
+    const k = `${x}:${y}`; if (entry.cells[k]) out.push(k); }
+  return out;
+}
+function geomParts(g){
+  if (!g) return [];
+  const t = g.type, c = g.coordinates;
+  if (t === "Polygon") return [{kind:"poly", rings:c}];
+  if (t === "MultiPolygon") return c.map(rings => ({kind:"poly", rings}));
+  if (t === "LineString") return [{kind:"line", rings:[c]}];
+  if (t === "MultiLineString") return c.map(l => ({kind:"line", rings:[l]}));
+  if (t === "Point") return [{kind:"point", rings:[[c]]}];
+  if (t === "MultiPoint") return [{kind:"point", rings:[c]}];
+  if (t === "GeometryCollection") return (g.geometries || []).flatMap(geomParts);
+  return [];
+}
+async function brLoadLayer(key){
+  const idx = await brIndex(), entry = idx[key]; if (!entry) throw new Error("layer tidak ada di Bale Ruang");
+  const bb = areaLL(), cells = brCellsFor(entry, bb);
+  const codes = await Promise.all(cells.map(c => brText("data/analysis/" + entry.cells[c])));
+  const packs = new Set(), direct = [];
+  for (const code of codes){ if (code.includes("__LONTAR_ANALYSIS_REFS__")) brAssigned(code).forEach(p => packs.add(p)); else direct.push(brAssigned(code)); }
+  const list = [...packs], cols = [...direct]; let i = 0;
+  const worker = async () => { while (i < list.length){ const p = list[i++]; cols.push(brAssigned(await brText(`data/analysis/${entry.folder}/packs/${p.replace(":", "_m")}.js.gz`))); } };
+  await Promise.all(Array.from({length:6}, worker));
+  const seen = new Set(), feats = [], F = P.proj.fromLL;
+  for (const col of cols) for (const f of (col.features || [])){
+    const g = f.geometry; if (!g) continue;
+    let b = g.bbox;
+    if (!b){ b = [Infinity, Infinity, -Infinity, -Infinity]; for (const part of geomParts(g)) for (const r of part.rings) for (const pt of r){ b[0] = Math.min(b[0], pt[0]); b[1] = Math.min(b[1], pt[1]); b[2] = Math.max(b[2], pt[0]); b[3] = Math.max(b[3], pt[1]); } }
+    if (b[2] < bb[0] || b[0] > bb[2] || b[3] < bb[1] || b[1] > bb[3]) continue;
+    const id = JSON.stringify([f.id ?? null, f.properties, b]); if (seen.has(id)) continue; seen.add(id);
+    const parts = geomParts(g).map(pt => ({kind:pt.kind, rings:pt.rings.map(r => r.map(c => F(c[0], c[1])))}));
+    const mb = [Infinity, Infinity, -Infinity, -Infinity];
+    for (const pt of parts) for (const r of pt.rings) for (const [x, y] of r){ mb[0] = Math.min(mb[0], x); mb[1] = Math.min(mb[1], y); mb[2] = Math.max(mb[2], x); mb[3] = Math.max(mb[3], y); }
+    const props = {}; for (const [k, v] of Object.entries(f.properties || {})) props[k] = typeof v === "string" ? v.trim() : v;
+    feats.push({parts, bb:mb, attrs:props});
+  }
+  return {key, label:brName(key), feats, fields:[...new Set(feats.flatMap(f => Object.keys(f.attrs)))]};
+}
+function defaultOvField(ov){
+  const pref = [/^NAMOBJ$/i, /^POLA_?RUANG/i, /^NAMZON/i, /^ZONA$/i, /^NAMA_?ZONA/i, /^KETERANGAN$/i, /^KELAS$/i, /^LSD$/i, /^REMARK/i, /^JNS/i];
+  for (const re of pref){ const f = ov.fields.find(f => re.test(f)); if (f) return f; }
+  return "";
+}
+const OV_PALETTE = ["#4E9A5B", "#E3C04B", "#7FB3D5", "#E0897A", "#B39DDB", "#F0A35E", "#9CCC65", "#F48FB1", "#4DB6AC", "#BCAAA4", "#90A4AE", "#DCE775", "#FFB74D", "#81C784", "#64B5F6"];
+const ovStyleDefault = (ov, i) => ({by: defaultOvField(ov), fill: OV_PALETTE[(i * 3) % OV_PALETTE.length], fillOp: 40, stroke: "#5B5B5B", strokeW: "0.15", dash: false, legend: true, colors: {}});
+function ovColorMap(ov){
+  const st = ov.style, map = new Map();
+  if (!st.by) return map;
+  const vals = [...new Set(ov.feats.map(f => ovVal(ov, f)))].sort((a, b) => a.localeCompare(b, "id", {numeric:true}));
+  vals.forEach((v, i) => map.set(v, st.colors[v] || OV_PALETTE[i % OV_PALETTE.length]));
+  return map;
+}
+const ovVal = (ov, f) => String(f.attrs[ov.style.by] ?? "(kosong)") || "(kosong)";
+const ovAutoTitle = ov => ov.label + (ov.style.by ? ` (${ov.style.by})` : "");
+function renderOverlays(){
+  const el = $("#ov-body"); $("#ov-hint").hidden = P.overlays.length < 2;
+  el.innerHTML = P.overlays.map((ov, i) => {
+    const st = ov.style;
+    if (ov.loading) return `<div class="ovcard"><header><h3>${esc(ov.label)}</h3></header><p class="status"><span class="spin"></span>Memuat layer…</p></div>`;
+    if (ov.error) return `<div class="ovcard" data-i="${i}"><header><h3>${esc(ov.label)}</h3><button class="ghost" data-act="del">Hapus</button></header><div class="note bad">Gagal memuat: ${esc(ov.error)}</div></div>`;
+    const cm = ovColorMap(ov);
+    return `<div class="ovcard" data-i="${i}">
+      <header><h3>${esc(ov.label)} <span class="pill">${fmt(ov.feats.length)} fitur</span></h3>
+        <span class="row"><button class="ghost" data-act="up" ${i ? "" : "disabled"} aria-label="Pindah ke atas">↑</button><button class="ghost" data-act="down" ${i < P.overlays.length - 1 ? "" : "disabled"} aria-label="Pindah ke bawah">↓</button><button class="ghost" data-act="del">Hapus</button></span></header>
+      <div class="form">
+        <label>Warnai berdasarkan<select data-k="by"><option value="">Satu warna</option>${ov.fields.map(f => `<option ${f === st.by ? "selected" : ""}>${esc(f)}</option>`).join("")}</select></label>
+        ${st.by ? "" : `<label>Warna isi<input type="color" data-k="fill" value="${esc(st.fill)}"></label>`}
+        <label>Opasitas isi <span class="mono">${st.fillOp}%</span><input type="range" min="0" max="100" step="5" data-k="fillOp" value="${st.fillOp}"></label>
+        <label>Warna garis tepi<input type="color" data-k="stroke" value="${esc(st.stroke)}"></label>
+        <label>Tebal garis tepi<select data-k="strokeW">${[["0", "Tanpa garis"], ["0.08", "Sangat tipis"], ["0.15", "Tipis"], ["0.3", "Sedang"], ["0.5", "Tebal"], ["0.8", "Sangat tebal"]].map(([v, t]) => `<option value="${v}" ${v === st.strokeW ? "selected" : ""}>${t}</option>`).join("")}</select></label>
+      </div>
+      <div class="row small">
+        <label class="chk"><input type="checkbox" data-k="dash" ${st.dash ? "checked" : ""}> Garis putus-putus</label>
+        <label class="chk"><input type="checkbox" data-k="legend" ${st.legend ? "checked" : ""}> Tampilkan di legenda</label>
+        <label class="chk"><input type="checkbox" data-k="hidden" ${ov.hidden ? "checked" : ""}> Sembunyikan sementara</label>
+      </div>
+      ${st.by && cm.size ? `<details><summary>Warna per ${esc(st.by)} (${cm.size})</summary><div class="symlist">${[...cm].map(([v, c]) => `<div class="symrow"><input type="color" data-cat="${esc(v)}" value="${esc(c)}" aria-label="Warna ${esc(v)}"><span>${esc(v)}</span><span></span></div>`).join("")}</div></details>` : ""}
+    </div>`; }).join("");
+  el.querySelectorAll(".ovcard[data-i]").forEach(card => {
+    const ov = P.overlays[+card.dataset.i];
+    card.querySelectorAll("[data-act]").forEach(b => b.onclick = () => {
+      const i = +card.dataset.i, a = b.dataset.act;
+      if (a === "del") P.overlays.splice(i, 1);
+      else { const j = i + (a === "up" ? -1 : 1); [P.overlays[i], P.overlays[j]] = [P.overlays[j], P.overlays[i]]; }
+      saveOvPrefs(); renderOverlays(); renderBrList(); changed(); });
+    card.querySelectorAll("[data-k]").forEach(inp => {
+      const k = inp.dataset.k, ev = ["range", "color"].includes(inp.type) ? "oninput" : "onchange";
+      inp[ev] = () => {
+        if (k === "hidden") ov.hidden = inp.checked;
+        else ov.style[k] = inp.type === "checkbox" ? inp.checked : inp.value;
+        if (inp.type === "range") inp.parentElement.querySelector(".mono").textContent = inp.value + "%";
+        saveOvPrefs(); if (k === "by") renderOverlays(); changed(); };
+    });
+    card.querySelectorAll("[data-cat]").forEach(inp => inp.oninput = () => { ov.style.colors[inp.dataset.cat] = inp.value; saveOvPrefs(); changed(); });
+  });
+}
+function saveOvPrefs(){ P.cfg.ovs = P.overlays.filter(o => !o.error).map(o => ({key:o.key, style:o.style, hidden:!!o.hidden})); savePrefs(); }
+async function addOverlay(key, style, hidden){
+  if (P.overlays.some(o => o.key === key)) return;
+  const ov = {key, label:brName(key), loading:true, hidden:!!hidden, style:null};
+  P.overlays.push(ov); renderOverlays(); renderBrList();
+  try {
+    Object.assign(ov, await brLoadLayer(key), {loading:false});
+    ov.style = Object.assign(ovStyleDefault(ov, P.overlays.indexOf(ov)), style || {});
+    if (ov.style.by && !ov.fields.includes(ov.style.by)) ov.style.by = defaultOvField(ov);
+  } catch(e){ ov.loading = false; ov.error = (e.message || String(e)) + ". Periksa koneksi internet."; }
+  saveOvPrefs(); renderOverlays(); renderBrList(); changed();
+}
+let BR_AVAIL = null, BR_AREA = "";
+function renderBrList(){
+  const el = $("#br-list");
+  if (!BR_AVAIL){ el.innerHTML = ""; return; }
+  if (!BR_AVAIL.length){ el.innerHTML = `<p class="small muted">Tidak ada layer Bale Ruang yang mencakup lokasi ini.</p>`; return; }
+  el.innerHTML = `<p class="small muted">${BR_AVAIL.length} layer mencakup lokasi kerja. Centang untuk menambahkan ke peta.</p><div class="brgrid">${BR_AVAIL.map(k => `<label class="chk"><input type="checkbox" data-br="${esc(k)}" ${P.overlays.some(o => o.key === k) ? "checked" : ""}> ${esc(brName(k))}</label>`).join("")}</div>`;
+  el.querySelectorAll("[data-br]").forEach(c => c.onchange = () => {
+    const k = c.dataset.br;
+    if (c.checked) addOverlay(k); else { P.overlays = P.overlays.filter(o => o.key !== k); saveOvPrefs(); renderOverlays(); changed(); } });
+}
+async function brShowAvailable(){
+  const st = $("#br-status"), bb = areaLL(); if (!bb) return;
+  st.innerHTML = `<span class="spin"></span>Membaca katalog Bale Ruang…`;
+  try { const idx = await brIndex(); BR_AVAIL = Object.keys(idx).filter(k => brCellsFor(idx[k], bb).length); BR_AREA = JSON.stringify(bb); st.textContent = ""; }
+  catch(e){ st.textContent = "Gagal membaca Bale Ruang: " + (e.message || e) + ". Periksa koneksi internet."; BR_AVAIL = null; }
+  renderBrList();
+}
+/* setelah data berubah: muat ulang layer yang dipilih untuk area baru */
+let brKey = "";
+function renderBrState(){
+  $("#br-load").disabled = !P.proj;
+  $("#c-adm").checked = P.cfg.adm !== false;
+  const bb = P.proj && areaLL(), key = bb ? bb.map(v => v.toFixed(3)).join(",") + "|" + P.proj.key : "";
+  if (key === brKey) return; brKey = key;
+  BR_AVAIL = null; renderBrList();
+  const saved = (P.cfg.ovs || []).slice(); P.overlays = [];
+  if (key && saved.length){ brShowAvailable(); for (const o of saved) addOverlay(o.key, o.style, o.hidden); }
+  renderOverlays();
+}
+
+/* ---- desa / kecamatan dari batas desa NTB (indeks titik Bale Ruang) ---- */
+const ADM_HEAD = ["Desa/Kelurahan", "Kecamatan", "Kabupaten/Kota"];
+const admCells = a => a ? [a.desa, a.kec, a.kab] : ["", "", ""];
+const admText = a => [a.desa, a.kec && "Kec. " + a.kec, a.kab].filter(Boolean).join(", ");
+const brJson = path => brText(path).then(t => JSON.parse(t));
+const admFeat = id => brText(`data/admin-index/${id}.js`).then(brAssigned);
+function ringHas(r, x, y){ let c = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++){ const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; }
+function geomHas(g, x, y){
+  const polys = g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
+  return polys.some(pl => pl.length && ringHas(pl[0], x, y) && !pl.slice(1).some(h => ringHas(h, x, y)));
+}
+const admOf = p => ({desa: p.WADMKD || p.NAMOBJ || "", kec: p.WADMKC || "", kab: p.WADMKK || ""});
+let ADM_CELLS = null;
+async function admLookup(lon, lat){
+  if (!ADM_CELLS) ADM_CELLS = brJson("data/admin-index/pidx/cells.json").then(l => new Set(l)).catch(e => { ADM_CELLS = null; throw e; });
+  const cells = await ADM_CELLS, G = 0.1, cell = Math.floor(lon / G) + ":" + Math.floor(lat / G);
+  if (!cells.has(cell)) return null;
+  const base = "data/admin-index/pidx/" + cell.replace(":", "_m"), C = await brJson(base + ".json.gz");
+  const sub = G / C.sub, sx = Math.floor(lon / sub), sy = Math.floor(lat / sub), sk = sx + ":" + sy, found = [];
+  (C.g || []).forEach((g, gi) => { const pc = g.x && g.x[sk]; if (pc) found.push({order:g.id, big:g, gi, pc}); });
+  (C.s || []).forEach(e => { if (lon >= e[1] && lon <= e[3] && lat >= e[2] && lat <= e[4]) found.push({order:e[0], small:e[0]}); });
+  found.sort((a, b) => a.order - b.order);
+  for (const it of found){
+    if (it.small != null){ const f = await admFeat(it.small); if (f && geomHas(f.geometry, lon, lat)) return admOf(f.properties || {}); continue; }
+    if (it.pc === 1) return admOf(it.big.p || {});
+    const pc = it.pc === 2 ? (await brJson(base + "/" + sk.replace(/-/g, "m").replace(":", "_") + ".json.gz"))[it.gi] : it.pc;
+    if (pc && geomHas({type:"MultiPolygon", coordinates:pc}, lon, lat)) return admOf(it.big.p || {});
+  }
+  return null;
+}
+let admT = null, admBusy = false, admFail = "";
+function admTargets(){
+  const out = new Set(), objs = P.objs.filter(o => !P.objOff.has(o.id));
+  for (const o of objs){ out.add(o); for (const it of relFor(o)) out.add(it.f); }
+  for (const t of P.tt){ out.add(t.a); out.add(t.b); }
+  if (!objs.length) for (const k of ["bid", "pbt"]) for (const f of P.lyr[k].feats.slice(0, 20000)) out.add(f);
+  return [...out].filter(x => x.adm === undefined);
+}
+function queueAdm(){ clearTimeout(admT); if (P.cfg.adm === false || !P.proj || admFail) return; admT = setTimeout(runAdm, 300); }
+async function runAdm(){
+  if (admBusy) return; const todo = admTargets(); if (!todo.length) return;
+  admBusy = true; const st = $("#adm-status"); let n = 0, t = performance.now();
+  try {
+    for (const x of todo){
+      if (performance.now() - t > 120){ st.innerHTML = `<span class="spin"></span>Membaca desa/kecamatan ${fmt(n)} dari ${fmt(todo.length)}…`; await sleep0(); t = performance.now(); }
+      const pt = x.src ? labOf(x) : x.lab;
+      const [lon, lat] = P.proj.toLL(pt[0], pt[1]);
+      x.adm = await admLookup(lon, lat); n++;
+    }
+    const hit = todo.filter(x => x.adm).length;
+    st.textContent = hit ? "" : "Lokasi di luar cakupan batas desa NTB.";
+  } catch(e){ admFail = e.message || String(e); st.textContent = "Gagal membaca batas desa Bale Ruang: " + admFail + ". Periksa koneksi internet, lalu centang ulang pilihan di atas."; }
+  admBusy = false; renderPreview();
+}
+$("#c-adm").onchange = e => { P.cfg.adm = e.target.checked; admFail = ""; $("#adm-status").textContent = ""; changed(); };
+$("#br-load").onclick = brShowAvailable;
+
 /* ================= Gaya & warna, edit teks langsung di peta, menu bar ================= */
 const STY_ROWS = [
   ["obj", "Objek kerja (titik / garis / poligon)", "Otomatis: warna dari My Maps"],
@@ -2005,9 +2282,9 @@ document.querySelectorAll("[data-proxy]").forEach(b => b.onclick = () => $(b.dat
 const setAbh = () => document.documentElement.style.setProperty("--abh", $("#appbar").offsetHeight + "px");
 setAbh(); addEventListener("resize", setAbh);
 { const links = [...document.querySelectorAll(".secnav a")], secs = links.map(a => $(a.getAttribute("href")));
-  const mark = () => { const y = $("#appbar").offsetHeight + 40, wide = innerWidth >= 1180; let cur = secs[0];
-    for (const s of secs) if ((!wide || s.id !== "sec-prev") && s.getBoundingClientRect().top <= y) cur = s;
-    if (scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 4) cur = secs[secs.length - (wide ? 2 : 1)];
+  const mark = () => { const y = $("#appbar").offsetHeight + 40; let cur = secs[0];
+    for (const s of secs) if (s.getBoundingClientRect().top <= y) cur = s;
+    if (scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 4) cur = secs[secs.length - 1];
     links.forEach((a, i) => a.classList.toggle("on", secs[i] === cur)); };
   addEventListener("scroll", mark, {passive:true}); mark();
   links.forEach((a, i) => a.onclick = e => { e.preventDefault(); secs[i].scrollIntoView({behavior:"smooth", block:"start"}); history.replaceState(null, "", a.getAttribute("href")); }); }
